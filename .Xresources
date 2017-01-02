@@ -1,0 +1,103 @@
+!
+! Comments begin with a "!" character.
+!
+
+XTerm*background:         black
+XTerm*foreground:         white
+XTerm*cursorColor:        white
+XTerm*VT100.geometry:     80x25
+
+! XTerm*faceName:           Terminus:style=Regular:size=10
+! XTerm*font:              -*-dina-medium-r-*-*-16-*-*-*-*-*-*-*
+! These lines you dont need ... 
+
+XTerm*font:                 terminus-10
+XTerm*dynamicColors:      true
+XTerm*utf8:               2
+XTerm*eightBitInput:      true
+XTerm*saveLines:          512
+XTerm*scrollKey:          true
+XTerm*scrollTtyOutput:    false
+XTerm*scrollBar:          true
+XTerm*rightScrollBar:     true
+XTerm*jumpScroll:         true
+XTerm*multiScroll:        true
+XTerm*toolBar:            false
+
+UXTerm*background:         black
+UXTerm*foreground:         white
+UXTerm*cursorColor:        white
+UXTerm*VT100.geometry:     90x30
+
+! UXTerm*faceName:           Terminus:style=Regular:size=10
+! UXTerm*font:              -*-dina-medium-r-*-*-16-*-*-*-*-*-*-*
+
+UXTerm*font:                terminus-10
+UXTerm*dynamicColors:      true
+UXTerm*utf8:               2
+UXTerm*eightBitInput:      true
+UXTerm*saveLines:          512
+UXTerm*scrollKey:          true
+UXTerm*scrollTtyOutput:    false
+UXTerm*scrollBar:          true
+UXTerm*rightScrollBar:     true
+UXTerm*jumpScroll:         true
+UXTerm*multiScroll:        true
+UXTerm*toolBar:            false
+UXTerm*VT100*translations: #override Shift <Btn1Up>: exec-formatted("chromium '%t'", PRIMARY)
+
+URxvt*background:                     #151718
+URxvt*foreground:                     #d6d6d6
+URxvt*cursorColor:                    #d6d6d6
+
+! URxvt*colorBD:                        color
+! URxvt*colorIT:                        color
+! URxvt*colorUL:                        color
+! URxvt*colorRV:                        color
+! URxvt*underlineColor:                 color
+URxvt*scrollColor:                    #d6d6d6
+! URxvt*troughColor:                    color
+URxvt*highlightColor:                 #3B758C
+URxvt*highlightTextColor:             #43a5d5
+! URxvt*cursorColor2:                   color
+! URxvt*pointerColor:                   color
+! URxvt*pointerColor2:                  color
+! URxvt*borderColor:                    color
+! URxvt*tab-bg:                         colour
+! URxvt*tab-fg:                         colour
+! URxvt*tabbar-bg:                      colour
+! URxvt*tabbar-fg:                      colour
+
+URxvt*color0:                         #151718
+URxvt*color1:                         #Cd3f45
+URxvt*color2:                         #9fca56
+URxvt*color3:                         #e6cd69
+URxvt*color4:                         #55b5db
+URxvt*color5:                         #a074c4
+URxvt*color6:                         #55dbbe
+URxvt*color7:                         #d6d6d6
+URxvt*color8:                         #41535B
+URxvt*color9:                         #Cd3f45
+URxvt*color10:                        #9fca56
+URxvt*color11:                        #e6cd69
+URxvt*color12:                        #55b5db
+URxvt*color13:                        #a074c4
+URxvt*color14:                        #55dbbe
+URxvt*color15:                        #ffffff
+
+! 256 color space
+URxvt*color16:                        #db7b55
+URxvt*color17:                        #8a553f
+URxvt*color18:                        #8ec43d
+URxvt*color19:                        #3B758C
+URxvt*color20:                        #43a5d5
+URxvt*color21:                        #eeeeee
+
+Xcursor.size: 16W
+URxvt.urgentOnBell: true
+URxvt.scrollBar: false
+URxvt.font: xft:hack:size=11
+URxvt.depth: 24
+URxvt.url-launcher: /usr/bin/firefox
+URxvt.matcher.button: 1
+URxvt.perl-ext-common: default,matcher,vtwheel
