@@ -1,0 +1,106 @@
+autogroup 1 Firefox
+autogroup 2 discord
+autogroup 3 mpv
+autogroup 9 spotify
+
+borderwidth 4
+
+color activeborder "#55aaaa"
+color font "#FFFFFF"
+color selfont "#e9ffe9"
+color groupborder "#006600"
+color inactiveborder "#9eeeee"
+color menubg "#2f343f"
+color menufg "#55aaaa"
+color urgencyborder "#ff0000"
+color ungroupborder "#aa0000"
+
+command lock "/usr/X11R6/bin/xlock -mode random"
+
+fontname "Go:autohint=false:pixelsize=14"
+gap 24 0 0 0 
+moveamount 12
+snapdist 8 
+unbind-key all
+
+bind-key  4C-r     restart
+bind-key  4C-q     quit
+bind-key  4-Return urxvt
+bind-key  4C-x     lock
+bind-key  M-slash  menu-window
+bind-key  4-period menu-ssh
+bind-key  4-1      group-toggle-1
+bind-key  4-2      group-toggle-2
+bind-key  4-3      group-toggle-3
+bind-key  4-4      group-toggle-4
+bind-key  4-5      group-toggle-5
+bind-key  4-6      group-toggle-6
+bind-key  4-7      group-toggle-7
+bind-key  4-8      group-toggle-8
+bind-key  4-9      group-toggle-9
+bind-key  4-F1     group-only-1
+bind-key  4-F2     group-only-2
+bind-key  4-F3     group-only-3
+bind-key  4-F4     group-only-4
+bind-key  4-F5     group-only-5
+bind-key  4-F6     group-only-6
+bind-key  4-F7     group-only-7
+bind-key  4-F8     group-only-8
+bind-key  4-F9     group-only-9
+bind-key  4-0      window-toggle-all
+bind-key  4-g      window-group
+bind-key  4S-1     window-movetogroup-1
+bind-key  4S-2     window-movetogroup-2
+bind-key  4S-3     window-movetogroup-3
+bind-key  4S-4     window-movetogroup-4
+bind-key  4S-5     window-movetogroup-5
+bind-key  4S-6     window-movetogroup-6
+bind-key  4S-7     window-movetogroup-7
+bind-key  4S-8     window-movetogroup-8
+bind-key  4S-9     window-movetogroup-9
+bind-key  4-v      group-cycle
+bind-key  4-c      group-rcycle
+bind-key  4-Tab    window-cycle
+bind-key  4S-Tab   window-rcycle
+bind-key  M-Tab    window-cycle-ingroup
+bind-key  MS-Tab   window-rcycle-ingroup
+bind-key  4-q      window-delete
+bind-key  4-i      window-hide
+bind-key  4-w      window-lower
+bind-key  4-r      window-raise
+bind-key  4-comma  window-menu-label
+bind-key  4-f      window-freeze
+bind-key  4-s      window-stick
+bind-key  4S-x     window-fullscreen
+bind-key  4-x      window-maximize
+bind-key  4-m      window-vmaximize
+bind-key  4S-m     window-hmaximize
+bind-key  4S-t     window-htile
+bind-key  4-t      window-vtile
+bind-key  4C-k     window-move-up
+bind-key  4C-j     window-move-down
+bind-key  4C-l     window-move-right
+bind-key  4C-h     window-move-left
+bind-key  4-k      window-move-up-big
+bind-key  4-j      window-move-down-big
+bind-key  4-l      window-move-right-big
+bind-key  4-h      window-move-left-big
+bind-key  CS-k     window-resize-up
+bind-key  CS-j     window-resize-down
+bind-key  CS-l     window-resize-right
+bind-key  CS-h     window-resize-left
+bind-key  4S-k     window-resize-up-big
+bind-key  4S-j     window-resize-down-big
+bind-key  4S-l     window-resize-right-big
+bind-key  4S-h     window-resize-left-big
+bind-key  4-d      "rofi -show run -columns 2 -fullscreen"
+unbind-mouse M-1
+unbind-mouse CM-1
+unbind-mouse M-2
+unbind-mouse M-3
+unbind-mouse CM-3
+
+bind-mouse 4-1     window-move
+bind-mouse 4-3     window-resize
+bind-mouse 4-2     window-lower
+bind-mouse 4C-1    window-group

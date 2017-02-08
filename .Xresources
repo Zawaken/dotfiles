@@ -46,7 +46,7 @@ UXTerm*multiScroll:        true
 UXTerm*toolBar:            false
 UXTerm*VT100*translations: #override Shift <Btn1Up>: exec-formatted("chromium '%t'", PRIMARY)
 
-URxvt*background:                     #151718
+URxvt*background:                     #2f343f
 URxvt*foreground:                     #d6d6d6
 URxvt*cursorColor:                    #d6d6d6
 
@@ -96,8 +96,24 @@ URxvt*color21:                        #eeeeee
 Xcursor.size: 16W
 URxvt.urgentOnBell: true
 URxvt.scrollBar: false
-URxvt.font: xft:hack:size=11
+URxvt.font: xft:DejaVu Sans Mono:size=11
 URxvt.depth: 24
 URxvt.url-launcher: /usr/bin/firefox
 URxvt.matcher.button: 1
 URxvt.perl-ext-common: default,matcher,vtwheel
+
+! rofi settings -------------------
+
+rofi.color-enabled: true
+rofi.color-window: #2f343f, #151718, #2f343f
+rofi.color-normal: #2f343f, #bdbdbd, argb:21686c70, #59666e, #d3c2aa
+rofi.color-active: #2f343f, #b5bae1, argb:21686c70, #59666e, #b5bae1
+rofi.color-urgent: #2f343f, #e1b5ba, argb:21686c70, #59666e, #e1b5ba
+rofi.hide-scrollbar: true
+rofi.font: Audimat Mono 15
+rofi.separator-style: solid
+rofi.line-margin: 0
+rofi.padding: 400
+rofi.bw: 2
+rofi.width: 100
+rofi.opacity: 90
