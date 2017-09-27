@@ -17,7 +17,7 @@
 	<LabelVirtualStrip1></LabelVirtualStrip1>
 	<LabelVirtualStrip2></LabelVirtualStrip2>
 	<K7BUSRoute busa='1' busa2='1' busa3='1' busb='1' busb2='1' dblevel='0.00' />
-	<Strip index='1' mute='0' solo='0' mono='0' muc='0' busa='1' busa2='0' busa3='0' busb='1' busb2='0' dblevel='-4.25' />
+	<Strip index='1' mute='0' solo='0' mono='0' muc='0' busa='1' busa2='0' busa3='0' busb='1' busb2='0' dblevel='-4.64' />
 	<Strip index='1' paneltype='1' 3DPanelx='0.000' 3DPanely='0.000' ColorPanelx='0.000' ColorPanely='0.000' ModPanelx='0.000' ModPanely='0.000' audibility_c='0.00' audibility_g='0.00' />
 	<Strip index='2' mute='1' solo='0' mono='0' muc='0' busa='1' busa2='0' busa3='0' busb='1' busb2='0' dblevel='0.00' />
 	<Strip index='2' paneltype='1' 3DPanelx='0.000' 3DPanely='0.000' ColorPanelx='0.000' ColorPanely='0.000' ModPanelx='0.000' ModPanely='0.000' audibility_c='0.00' audibility_g='0.00' />
