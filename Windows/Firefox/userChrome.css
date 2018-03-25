@@ -1,6 +1,10 @@
  .browserContainer {
 background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8)) !important;
 }
+
+.titlebar-placeholder[type="pre-tabs"] {display: none !important;} /* Remove whitespace before */
+.titlebar-placeholder[type="post-tabs"] {display: none !important;} /* Remove whitespace after */
+.titlebar-placeholder[type="pre-tabs"] {border-inline-end: 1px solid black !important;width: 1px !important;} /* Fix one-pixel line from whitespace */
 /*
  * COLORED CERT BAR
  */
@@ -84,4 +88,37 @@ background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8))
 /* http://http-login.badssl.com/ */
 #urlbar[pageproxystate='valid'] #identity-box.insecureLoginForms:after {
   background: #a4000f;  /* Firefox Red 70 */
+}
+/*
+* Small tabs
+ */
+.tabbrowser-tab {
+  --tab-min-width: 120px !important;
+  -moz-box-flex: 0 !important;
+  transition: all 0.2s;
+  width: -10px !important;
+}
+
+.tabbrowser-tab[visuallyselected="true"] {
+  -moz-box-flex: 1 !important;
+}
+
+.tabbrowser-tabs > arrowscrollbox {
+  height: 45px !important;
+}
+
+/*
+* Rounded address bar
+*/
+#urlbar, .searchbar-textbox{
+    border-radius: 2em !important;
+    height: 30px !important;
+    min-height: 30px !important;
+}
+
+/*
+* One Liners
+ */
+.tab-line { 
+	background-color: #323234 !important; /*changes the color of the top bar on tabs*/ 
 }
