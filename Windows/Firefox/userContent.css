@@ -1,0 +1,26 @@
+@-moz-document url(about:newtab) {
+    .activity-stream {
+        background-color: #333333 !important;
+    }
+    .top-sites-list .top-site-outer > a {
+        color: #dddddd !important;
+    }
+    .tile {
+      filter: grayscale(42%) !important;
+      opacity: .9 !important;
+    }
+    @media (min-width: 1280px) {
+      .activity-stream main {
+        width: : 989px !important;
+      }
+    }
+}
+@-moz-document domain(start.duckduckgo.com) {
+    .tag-home__item {
+    display: none !important;
+    }
+    #search_button_homepage,
+    .header--aside {
+    opacity: 0;
+    }
+}
