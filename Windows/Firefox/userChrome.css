@@ -137,3 +137,48 @@ background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8))
   visibility: visible !important;
   display: block !important;
 }
+
+
+
+/* Dark Themed Drop-down */
+/* Dark Theme - Firefox 48+ */
+#PopupAutoCompleteRichResult .autocomplete-richlistbox {
+background-color: #111 !important;
+}
+#PopupAutoCompleteRichResult .autocomplete-richlistitem {
+border-bottom-color: #333 !important;
+}
+.autocomplete-richlistitem .ac-title,
+.autocomplete-richlistitem .ac-action,
+.autocomplete-richlistitem .ac-separator {
+color: #777 !important;
+}
+.autocomplete-richlistitem[selected=true] {
+background-color: #666 !important;
+}
+.autocomplete-richlistitem[selected=true] .ac-title,
+.ac-title[selected],
+.autocomplete-richlistitem[selected=true] .ac-action,
+.ac-action[selected],
+.autocomplete-richlistitem[selected=true] .ac-separator,
+.ac-separator[selected] {
+color: #eee !important;
+}
+.autocomplete-richlistitem[selected=true] .ac-url,
+.ac-url[selected] {
+color: #69f !important;
+}
+
+/*
+* show new tab button on hover
+ */
+
+/* hide new tab button so tab-bar can collapse */
+.tabs-newtab-button { 
+    display: none; 
+}
+
+/* ...but show it on tab-bar hover */
+#tabbrowser-tabs:hover .tabs-newtab-button { 
+    display: block; 
+}
