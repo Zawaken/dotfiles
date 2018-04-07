@@ -3,8 +3,8 @@ background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8))
 }
 
 /*
-* One Liners
-*/
+ * One Liners
+ */
 .tab-line { background-color: #323234 !important; /*changes the color of the top bar on tabs*/ }
 #identity-box.verifiedIdentity #identity-icon-labels {display: none !important;} /* Remove owner name for SSL certs */
 #pageActionButton {display: none !important;} /* Remove page action bar (3 dots) */
@@ -14,6 +14,15 @@ background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8))
 .titlebar-placeholder[type="pre-tabs"] {display: none !important;} /* Remove whitespace before */
 .titlebar-placeholder[type="post-tabs"] {display: none !important;} /* Remove whitespace after */
 .titlebar-placeholder[type="pre-tabs"] {border-inline-end: 1px solid black !important;width: 1px !important;} /* Fix one-pixel line from whitespace */
+
+
+/* 
+ * ---------------------------------------------------------------------
+ * Adress
+ * Bar
+ * Trash
+ * ---------------------------------------------------------------------
+*/
 
 /*
  * COLORED CERT BAR
@@ -100,26 +109,8 @@ background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8))
   background: #a4000f;  /* Firefox Red 70 */
 }
 /*
-* Small tabs
+ * Rounded address bar
  */
-.tabbrowser-tab {
-  --tab-min-width: 120px !important;
-  -moz-box-flex: 0 !important;
-  transition: all 0.2s;
-  width: -10px !important;
-}
-
-.tabbrowser-tab[visuallyselected="true"] {
-  -moz-box-flex: 1 !important;
-}
-
-.tabbrowser-tabs > arrowscrollbox {
-  height: 45px !important;
-}
-
-/*
-* Rounded address bar
-*/
 #urlbar, .searchbar-textbox{
     border-radius: 2em !important;
     height: 30px !important;
@@ -127,7 +118,6 @@ background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8))
 }
 
 /* Dark Themed Drop-down */
-/* Dark Theme - Firefox 48+ */
 #PopupAutoCompleteRichResult .autocomplete-richlistbox {
 background-color: #111 !important;
 }
@@ -156,7 +146,16 @@ color: #69f !important;
 }
 
 /*
-* show new tab button on hover
+ * ---------------------------------------------------------------------
+ * Tab
+ * Bar
+ * Trash
+ * ---------------------------------------------------------------------
+ */
+
+
+/*
+ * show new tab button on hover
  */
 
 /* hide new tab button so tab-bar can collapse */
@@ -169,7 +168,7 @@ color: #69f !important;
     display: block; 
 }
 /*
-* Show close tab button only on hover
+ * Show close tab button only on hover
  */
 .tabbrowser-tab:not([pinned]):not(:hover) .tab-close-button {
   visibility: collapse !important;
@@ -180,4 +179,21 @@ color: #69f !important;
   display: block !important;
   transform: rotate(1440deg) !important;
   transition: transform ease-in-out 2s !important;
+}
+/*
+ * Small tabs
+ */
+.tabbrowser-tab {
+  --tab-min-width: 120px !important;
+  -moz-box-flex: 0 !important;
+  transition: all 0.2s;
+  width: -10px !important;
+}
+
+.tabbrowser-tab[visuallyselected="true"] {
+  -moz-box-flex: 1 !important;
+}
+
+.tabbrowser-tabs > arrowscrollbox {
+  height: 45px !important;
 }
