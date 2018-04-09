@@ -126,19 +126,6 @@ background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8))
     min-height: 30px !important;
 }
 
-/*
-* Show close tab button only on hover
- */
-.tabbrowser-tab:not([pinned]):not(:hover) .tab-close-button {
-  visibility: collapse !important;
-}
-
-.tabbrowser-tab:not([pinned]):hover .tab-close-button {
-  visibility: visible !important;
-  display: block !important;
-}
-
-
 
 /* Dark Themed Drop-down */
 /* Dark Theme - Firefox 48+ */
@@ -182,9 +169,16 @@ color: #69f !important;
 #tabbrowser-tabs:hover .tabs-newtab-button { 
     display: block; 
 }
-/* rotate close button on tab hover */
+/*
+* Show close tab button only on hover
+ */
+.tabbrowser-tab:not([pinned]):not(:hover) .tab-close-button {
+  visibility: collapse !important;
+}
 
-#tabbrowser-tabs .tabbrowser-tab:hover .tab-close-button {
-transform: rotate(1440deg) !important;
-transition: transform ease-in-out 2s !important;
+.tabbrowser-tab:not([pinned]):hover .tab-close-button {
+  visibility: visible !important;
+  display: block !important;
+  transform: rotate(1440deg) !important;
+  transition: transform ease-in-out 2s !important;
 }
