@@ -1,3 +1,6 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+
  .browserContainer {
 background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8)) !important;
 }
@@ -196,4 +199,130 @@ color: #69f !important;
 
 .tabbrowser-tabs > arrowscrollbox {
   height: 45px !important;
+}
+
+/*  
+ * ---------------------------------------------------------------------
+ * Mac
+ * Close/minimize/maximize
+ * buttons
+ * ---------------------------------------------------------------------
+ */
+
+
+.tabs-newtab-button {
+    opacity: 0.3 !important;
+}
+.tabs-newtab-button:hover {
+    opacity: 1 !important;
+}
+
+/*
+.tabbrowser-tab .tab-line:not([selected="false"]){
+	height: 1px !important;
+	background: linear-gradient(90deg, rgba(0,238,224,1) 0%, rgba(179,29,253,1) 50%, rgba(252,185,69,1) 100%) !important;
+
+}
+*/
+
+
+.titlebar-placeholder[type="pre-tabs"] {
+  display:none !important;
+    }   
+
+
+#PanelUI-menu-button{
+background-color: transparent !important;
+	
+	list-style-image:  url('nightly2.png') !important;
+}
+
+#PanelUI-menu-button:active{
+background-color: transparent !important;
+	
+}
+
+
+/* Remove separator between menu and overflow */
+#PanelUI-button {
+    border-inline-start: 0px solid !important;
+
+}
+
+/*
+#titlebar-buttonbox{display: none;}
+#navigator-toolbox{padding-top:3px !important}
+#main-window[sizemode="maximized"] #navigator-toolbox{padding-top:10px !important;} */
+
+
+#titlebar-min {
+	margin-left: 8px !important;
+	margin-right: 5px !important;
+	border-radius:3px !important;
+	padding: 0px  !important;
+	padding-left: 5px !important;
+	padding-right: 5px !important;
+	margin-top: 3px  !important;
+	margin-bottom: 4px  !important;
+	background-color: #0C0C0D !important;
+	 list-style-image: url("yellow.svg") !important;
+}
+#titlebar-max {
+	margin-left: 5px !important;
+	margin-right: 5px !important;
+	border-radius:3px !important;
+	padding: 0px  !important;
+	padding-left: 5px !important;
+	padding-right: 5px !important;
+	margin-top: 3px  !important;
+	margin-bottom: 4px  !important;
+	background-color: #0C0C0D !important;
+    list-style-image: url("green.svg") !important;
+}
+
+#titlebar-close {
+	margin-left: 5px !important;
+	margin-right: 8px !important;
+	border-radius:3px !important;
+	padding: 0px  !important;
+	padding-left: 5px !important;
+	padding-right: 5px !important;
+	margin-top: 3px  !important;
+	margin-bottom: 4px  !important;
+	background-color: #0C0C0D !important;
+	list-style-image: url("red.svg") !important;
+	/* background-image: url("red.svg") !important;
+	 background-size: 16px 16px !important;
+	 background-repeat: no-repeat;*/
+}
+
+
+:root[sizemode="maximized"] #titlebar-max:hover {
+	/* background-color: transparent !important; To remove hover effect*/
+	background-color: rgba(0, 0, 0, 0.1) !important;
+     list-style-image: url("minz.svg") !important;
+}
+#titlebar-max:hover {
+	background-color: rgba(0, 0, 0, 0.1) !important;
+	list-style-image: url("max.svg") !important;
+}
+
+#titlebar-close:hover {
+	
+background-color: rgba(0, 0, 0, 0.1) !important;
+	list-style-image: url("closx.svg") !important;
+}
+
+#titlebar-min:hover {
+	
+	background-color: rgba(0, 0, 0, 0.1) !important;
+	list-style-image: url("min.svg") !important;
+}
+
+.titlebar-button > .toolbarbutton-icon {
+	height: 16px !important;
+	min-height: 16px !important;
+	width: 16px !important;
+	min-width: 16px !important;
+	
 }
