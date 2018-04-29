@@ -1,0 +1,9 @@
+killall -q compton &
+killall -q xmobar &
+sleep 1
+compton -b -f --config ~/.config/compton.conf &
+xsetkbmap no &
+feh --bg-scale ~/Pictures/wallpapers/Makise.png &
+numlockx &
+xrdb -load ~/.Xresources &
+xmobar &
