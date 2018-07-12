@@ -1,0 +1,9 @@
+Xcursor.size:				16W
+URxvt.urgentOnBell:			true
+URxvt.scrollBar:			false
+URxvt.font:				xft:Source Code Pro:size=11
+URxvt.depth:				32
+URxvt.url-launcher:			/usr/bin/firefox-nightly
+URxvt.matcher.button:			1
+URxvt.perl-ext-common:			default,matcher,vtwheel,config-reload
+urxvt*dynamicColors: 			on

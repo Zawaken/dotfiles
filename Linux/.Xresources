@@ -1,2 +1,3 @@
 #include "/home/zawaken/.xres/urxvt"
+#include "/home/zawaken/.xres/urxvt-settings"
 #include "/home/zawaken/.xres/rofi"

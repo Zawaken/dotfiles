@@ -1,0 +1,36 @@
+! modified tango color scheme
+
+URxvt*background: #262626
+URxvt*foreground: #d9e6f2
+
+! black
+URxvt*color0: #141414
+URxvt*color8: #262626
+
+! red
+URxvt*color1: #cf3294
+URxvt*color9: #d573b7
+
+! green
+URxvt*color2: #81cc47
+URxvt*color10: #a5d288
+
+! yellow
+URxvt*color3: #cf7f47
+URxvt*color11: #d5a288
+
+! blue
+URxvt*color4: #357fe2
+URxvt*color12: #75a2e7
+
+! magenta
+URxvt*color5: #8132e2
+URxvt*color13: #a573e7
+
+! cyan
+URxvt*color6: #35cc94
+URxvt*color14: #75d2b7
+
+! white
+URxvt*color7: #dbdbdb
+URxvt*color15: #ffffff
