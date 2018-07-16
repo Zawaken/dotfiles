@@ -2,7 +2,6 @@
 
 URxvt*background: #262626
 URxvt*foreground: #d9e6f2
-
 ! black
 URxvt*color0: #141414
 URxvt*color8: #262626

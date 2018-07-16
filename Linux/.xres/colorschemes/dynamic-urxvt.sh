@@ -1,9 +1,4 @@
 #!/bin/sh
-function switch()
-{
-	rm ~/.xres/urxvt
-	touch ~/.xres/urxvt
-}
 function reloadx()
 {
 	xrdb -load ~/.Xresources
@@ -11,35 +6,22 @@ function reloadx()
 }
 
 while [ "$1" != "" ]; do
-	PARAM=`echo $1 | awk -F= '{print $1}'`
-	VALUE=`echo $1 | awk -F= '{print $2}'`
-	case $PARAM in
-		solarized)
-			switch
-			cat ~/.xres/colorschemes/solarized >> ~/.xres/urxvt
-			reloadx
-			echo "urxvt theme changed to $1"
-			exit
-			;;
-		green)
-			switch
-			cat ~/.xres/colorschemes/green >> ~/.xres/urxvt
-			reloadx
-			echo "urxvt theme changed to $1"
-			exit
-			;;
-		felix)
-			switch
-			cat ~/.xres/colorschemes/felix >> ~/.xres/urxvt
-			reloadx
-			echo "urxvt theme changed to $1"
+	case $1 in
+		-h|--help)
+			echo "This is supposed to apply a colorscheme from the folder: ~/.xres/colorschemes" | lolcat
 			exit
 			;;
 		*)
-			echo "$1 is not a theme"
-			echo "try solarized, green or felix"
+			if [ ! -f ~/.xres/colorschemes/$1 ]; then				
+				echo "$1 is not a theme, why not make it?"
+				exit
+			else
+				cat ~/.xres/colorschemes/$1 > ~/.xres/urxvt
+				reloadx
+				echo "$1 theme succesfully applied"
+			fi
 			exit 1
 			;;
-	esac
+	esac	
 	shift
 done
