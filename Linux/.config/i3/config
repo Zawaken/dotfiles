@@ -14,7 +14,7 @@ exec --no-startup-id urxvtc -name dropdown
 for_window [instance="dropdown"] move scratchpad
 
 # $mod+a, tmux
-exec --no-startup-id urxvtc -name dropdown -e tmux
+exec --no-startup-id urxvtc -name tmux -e tmux
 for_window [instance="tmux"] move scratchpad
 
 
@@ -26,6 +26,9 @@ bindsym $mod+a [instance="tmux"] scratchpad show; move position center
 bindsym $mod+t [instance="dropdown"] scratchpad show; move position center
 #bindsym $mod+Return exec  st
 bindsym Ctrl+Mod1+e exec urxvtc -e vim $HOME/.config/i3/config
+
+bindsym $mod+Shift+a exec --no-startup-id urxvtc -name tmux -e tmux
+bindsym $mod+Shift+t exec --no-startup-id urxvtc -name dropdown
 
 bindsym $mod+q kill
 
