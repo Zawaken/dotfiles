@@ -1,61 +1,75 @@
-# mod
+### --- Variables --- ###
 set $mod Mod4
+hide_edge_borders both
+gaps inner 10
+gaps outer 10
 
-# font
+# Font for window titles
 font pango: Tamsyn, FontAwesome 10
 
-# thin borders
-hide_edge_borders both
 
-# drag windows
+### --- scratchpad(s) --- ###
+# $mod + t, terminal for everything
+exec --no-startup-id urxvtc -name dropdown
+for_window [instance="dropdown"] move scratchpad
+
+# $mod+a, tmux
+exec --no-startup-id urxvtc -name dropdown -e tmux
+for_window [instance="tmux"] move scratchpad
+
+
+### --- Basic Keybinds --- ###
 floating_modifier $mod
 
-# lock
-bindsym $mod+l exec i3lock-fancy -pg
+bindsym $mod+Return exec urxvtc
+bindsym $mod+a [instance="tmux"] scratchpad show; move position center
+bindsym $mod+t [instance="dropdown"] scratchpad show; move position center
+#bindsym $mod+Return exec  st
+bindsym Ctrl+Mod1+e exec urxvtc -e vim $HOME/.config/i3/config
 
-# open terminal
-bindsym $mod+Return exec urxvt
+bindsym $mod+q kill
 
-# open firefox-nightly
-bindsym $mod+Shift+f exec firefox-nightly
+bindsym $mod+l exec i3lock-fancy -p
 
-# change focus:
+bindsym $mod+r mode "resize"
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
-# move focused window:
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# kill focused
-bindsym $mod+Shift+q kill
-
-# split in horizontal orientation
+bindsym $mod+v split v
 bindsym $mod+b split h
 
-# split in vertical orientation
-bindsym $mod+v split v
-
-# enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen
 
-# change container layout
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
-# toggle tiling / floating
+bindsym $mod+Shift+s sticky toggle
 bindsym $mod+Shift+space floating toggle
-
-# change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
 
-# focus the parent container
-bindsym $mod+a focus parent
+
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+
+bindsym $mod+Shift+e exec /home/zawaken/.config/i3/scripts/exit_menu
+
+### --- Workspaces --- ###
+assign [class="Nightly"] $workspace1
+assign [class="Steam"] $workspace5
+assign [class="discord"] $workspace2
+for_window [class="Spotify"] move to workspace $workspace10
+
+for_window [class="Pavucontrol"] floating enable
+for_window [class="mpv"] floating enable
+for_window [class="sxiv"] floating enable
 
 set $workspace1 "1"
 set $workspace2 "2"
@@ -68,7 +82,17 @@ set $workspace8 "8"
 set $workspace9 "9"
 set $workspace10 "10"
 
-# switch to workspace
+workspace $workspace1 output DVI-D-0
+workspace $workspace2 output DVI-D-0
+workspace $workspace3 output DVI-D-0
+workspace $workspace4 output DVI-D-0
+workspace $workspace5 output DVI-D-0
+workspace $workspace6 output HDMI-0
+workspace $workspace7 output HDMI-0
+workspace $workspace8 output HDMI-0
+workspace $workspace9 output HDMI-0
+workspace $workspace10 output HDMI-0
+
 bindsym $mod+1 workspace $workspace1
 bindsym $mod+2 workspace $workspace2
 bindsym $mod+3 workspace $workspace3
@@ -79,8 +103,8 @@ bindsym $mod+7 workspace $workspace7
 bindsym $mod+8 workspace $workspace8
 bindsym $mod+9 workspace $workspace9
 bindsym $mod+0 workspace $workspace10
+bindsym $mod+Tab workspace back_and_forth
 
-# move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $workspace1
 bindsym $mod+Shift+2 move container to workspace $workspace2
 bindsym $mod+Shift+3 move container to workspace $workspace3
@@ -92,17 +116,17 @@ bindsym $mod+Shift+8 move container to workspace $workspace8
 bindsym $mod+Shift+9 move container to workspace $workspace9
 bindsym $mod+Shift+0 move container to workspace $workspace10
 
-# reload the configuration file
-bindsym $mod+Shift+c reload
+workspace $workspace1 output DVI-D-0
+workspace $workspace2 output DVI-D-0
+workspace $workspace3 output DVI-D-0
+workspace $workspace4 output DVI-D-0
+workspace $workspace5 output DVI-D-0
+workspace $workspace6 output HDMI-0
+workspace $workspace7 output HDMI-0
+workspace $workspace8 output HDMI-0
+workspace $workspace9 output HDMI-0
+workspace $workspace10 output HDMI-0
 
-# restart i3 inplace
-bindsym $mod+Shift+r restart
-
-# exit i3
-bindsym $mod+Shift+e exec /home/zawaken/.config/i3/scripts/exit_menu
-
-
-# resize window (you can also use the mouse for that)
 mode "resize" {
     bindsym h resize shrink width 10 px or 10 ppt
     bindsym j resize grow height 10 px or 10 ppt
@@ -118,9 +142,6 @@ mode "resize" {
     bindsym Escape mode "default"
 }
 
-# resize mode
-bindsym $mod+r mode "resize"
-
 set $bg-color 	         #2f343f
 set $inactive-bg-color   #2f343f
 set $text-color          #f3f4f5
@@ -134,59 +155,34 @@ client.unfocused        $iancative-bg-color $inactive-bg-color $inactive-text-co
 client.focused_inactive $iancative-bg-color $inactive-bg-color $inactive-text-color #00ff00
 client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          #00ff00
 
-# sticky window
-bindsym $mod+Shift+s sticky toggle
 
-# floating
-for_window [class="Pavucontrol"] floating enable
-
-# default workspaces
-assign [class="Nightly"] $workspace1 # makes sure that Nightly is placed on $workspace1
-assign [class="Steam"] $workspace5 # makes sure that steam is placed on $workspace5
-assign [class="discord"] $workspace2 # makes sure that discord is placed on $workspace2
-for_window [class="Spotify"] move to workspace $workspace10 # spawns spotify and moves it to $workspace10 when it is loaded
-
-# workspace default monitors
-workspace $workspace1 output DVI-D-0
-workspace $workspace2 output DVI-D-0
-workspace $workspace3 output DVI-D-0
-workspace $workspace4 output DVI-D-0
-workspace $workspace5 output DVI-D-0
-workspace $workspace6 output HDMI-0
-workspace $workspace7 output HDMI-0
-workspace $workspace8 output HDMI-0
-workspace $workspace9 output HDMI-0
-workspace $workspace10 output HDMI-0
-
-# key-bindings
+### --- Specific Keybinds --- ###
 #audio
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 2 +5% #increase sound volume
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 2 -5% #decrease sound volume
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 2 toggle # mute sound
-bindsym XF86AudioPlay exec playerctl play-pause # pause/play music
-bindsym XF86AudioPause exec playerctl play-pause # pause/play music
-bindsym XF86AudioNext exec playerctl next # skips to next song
-bindsym XF86AudioPrev exec playerctl previous # goes back to previous song
-bindsym Ctrl+$mod+j exec playerctl previous
-bindsym Ctrl+$mod+k exec playerctl play-pause
-bindsym Ctrl+$mod+l exec playerctl next
+bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause # pause/play music
+bindsym XF86AudioPause exec --no-startup-id playerctl play-pause # pause/play music
+bindsym XF86AudioNext exec --no-startup-id playerctl next # skips to next song
+bindsym XF86AudioPrev exec --no-startup-id playerctl previous # goes back to previous song
+bindsym Ctrl+$mod+j exec --no-startup-id playerctl previous
+bindsym Ctrl+$mod+k exec --no-startup-id playerctl play-pause
+bindsym Ctrl+$mod+l exec --no-startup-id playerctl next
 bindsym Ctrl+$mod+n exec --no-startup-id pactl set-sink-volume 1 -5% #
 bindsym Ctrl+$mod+m exec --no-startup-id pactl set-sink-volume 1 +5% #
 #utilities
 bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 450 -opacity "85" -color-enabled -bw 0 -bc "#2f343f" -color-window "#2f343f" -fg "#FFFFFF" -hlbg "#2f343f" -hlfg "#FFFFFF" -font "System San Francisco Display 18" #rofi
+bindsym Mod1+Tab exec rofi -show window
 bindsym Ctrl+Shift+c exec ~/sharenix/sharenix-section -n -c #sharenix-section
 bindsym Ctrl+Shift+x exec xfce4-screenshooter -w -o "sharenix -n -c" #sharenix-window
 
-# autoexec
-
-gaps inner 10
-gaps outer 15
-
-exec_always ~/.config/i3/polybar.sh
-exec --no-startup-id feh --bg-scale /home/zawaken/Pictures/shit/REM.png # sets the background
+### --- autoexec --- ###
+exec --no-startup-id pa-applet
+exec_always --no-startup-id ~/.config/i3/polybar.sh
+exec_always --no-startup-id feh --bg-scale /home/zawaken/Pictures/wallpapers/wall.png # sets the background
 exec xrandr --output DVI-D-0 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI-0 --mode 1920x1080 --pos 1920x0 --rotate normal --output DVI-I-1 --off --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off # makes sure the displays are put in the correct position
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec compton -fcCG --backend glx --vsync opengl-swc --xrender-sync-fence # the compositor that i'm currently using
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
 for_window [class="^.*"] border pixel 0 # sets the window borders to 0 pixels
-exec xrdb ~/.Xresources # loads .Xresources
+exec --no-startup-id xrdb ~/.Xresources # loads .Xresources

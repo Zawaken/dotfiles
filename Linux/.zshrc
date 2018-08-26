@@ -1,5 +1,5 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+ export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
   export ZSH=/home/zawaken/.oh-my-zsh
@@ -7,7 +7,7 @@
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="powerlevel9k/powerlevel9k"
+ZSH_THEME="miloshadzic"
 
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
@@ -99,8 +99,9 @@ alias ix='/home/zawaken/ix'
 alias pac='sudo pacman'
 alias adb='/home/zawaken/Documents/platform-tools/adb'
 alias fastboot='/home/zawaken/Documents/platform-tools/fastboot'
-alias neofetch='neofetch --ascii_distro arch'
+alias fetch='neofetch --ascii_distro arch'
 alias ridiculous-name='ncmpcpp'
 alias i3c='vim ~/.config/i3/config'
 alias reloadx='xrdb -load ~/.Xresources'
 alias terminal-colors='~/.xres/colorschemes/dynamic-urxvt.sh'
+alias :q='exit'

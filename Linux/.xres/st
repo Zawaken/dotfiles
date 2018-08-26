@@ -1,0 +1,35 @@
+st.opacity: 240
+st.background:			#282a2e
+st.foreground:			#c5c8c6
+st.cursorColor:			#c5c8c6
+
+st.scrollColor:			#d6d6d6
+st.highlightColor:			#3B758C
+st.highlightTextColor:		#43a5d5
+
+st.color0:				#282a2e
+st.color1:				#a54242
+st.color2:				#8c9440
+st.color3:				#de935f
+st.color4:				#5f819d
+st.color5:				#85678f
+st.color6:				#5e8d87
+st.color7:				#707880
+st.color8:				#373b41
+st.color9:				#cc6666
+st.color10:				#b5bd68
+st.color11:				#f0c674
+st.color12:				#81a2be
+st.color13:				#b294bb
+st.color14:				#8abeb7
+st.color15:				#c5c8c6
+
+
+st.color16:				#db7b55
+st.color17:				#8a553f
+st.color18:				#8ec43d
+st.color19:				#3B758C
+st.color20:				#43a5d5
+st.color21:				#eeeeee
+
+st.font:				Source Code Pro:pixelsize=12;
