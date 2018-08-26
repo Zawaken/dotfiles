@@ -1,0 +1,18 @@
+{
+  "DefaultFileUploader": "i-love.catgirls.me",
+  "DefaultImageUploader": "i-love.catgirls.me",
+
+  "Services": [
+      {
+         "Name": "i-love.catgirls.me",
+         "RequestType": "POST",
+         "RequestURL": "http://i-love.catgirls.me/api/upload",
+	 "FileFormName": "files[]",
+	 "Headers": {
+	      "token": "Did you really think I would have my token laying around?"
+	 },
+	 "ResponseType": "Text",
+	 "URL": "$json:files[0].url$"
+      }
+  ]
+}
