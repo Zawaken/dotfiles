@@ -1,7 +1,7 @@
 Xcursor.size:				16W
 URxvt.urgentOnBell:			true
 URxvt.scrollBar:			false
-URxvt.font:				xft:Source Code Pro:size=11
+URxvt.font:				xft:Source Code Pro:size=11:minspace=false, xft:Terminess Powerline:size=11
 URxvt.depth:				32
 URxvt.perl-ext-common:			default,matcher,vtwheel,config-reload
 URxvt.url-launcher:			firefox-nightly

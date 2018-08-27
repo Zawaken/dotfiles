@@ -1,3 +1,15 @@
+call plug#begin('~/.vim/plugged')
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
+call plug#end()
+
+set guifont=Source\ Code\ Pro\ for\ Powerline "make sure to escape the spaces in the name properly
+
+let g:airline_powerline_fonts = 1
+
 " Some basics:
 	set nocompatible
 	filetype plugin on
@@ -13,6 +25,10 @@
 	map <C-j> <C-w>j
 	map <C-k> <C-w>k
 	map <C-l> <C-w>l
+
+" Smart casing
+	set smartcase
+	set ignorecase
 
 " File interpreting
 	let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}

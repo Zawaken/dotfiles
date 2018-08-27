@@ -62,10 +62,10 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
-bindsym $mod+Shift+e exec /home/zawaken/.config/i3/scripts/exit_menu
+bindsym $mod+Shift+e exec $HOME/.config/i3/scripts/exit_menu
 
 ### --- Workspaces --- ###
-assign [class="Nightly"] $workspace1
+#assign [class="Nightly"] $workspace1
 assign [class="Steam"] $workspace5
 assign [class="discord"] $workspace2
 for_window [class="Spotify"] move to workspace $workspace10
@@ -119,17 +119,6 @@ bindsym $mod+Shift+8 move container to workspace $workspace8
 bindsym $mod+Shift+9 move container to workspace $workspace9
 bindsym $mod+Shift+0 move container to workspace $workspace10
 
-workspace $workspace1 output DVI-D-0
-workspace $workspace2 output DVI-D-0
-workspace $workspace3 output DVI-D-0
-workspace $workspace4 output DVI-D-0
-workspace $workspace5 output DVI-D-0
-workspace $workspace6 output HDMI-0
-workspace $workspace7 output HDMI-0
-workspace $workspace8 output HDMI-0
-workspace $workspace9 output HDMI-0
-workspace $workspace10 output HDMI-0
-
 mode "resize" {
     bindsym h resize shrink width 10 px or 10 ppt
     bindsym j resize grow height 10 px or 10 ppt
@@ -153,10 +142,10 @@ set $urgent-bg-color     #E53935
 
 # window colors
 #                       border              background         text                 indicator
-client.focused          $bg-color           $bg-color          $text-color          #00ff00
-client.unfocused        $iancative-bg-color $inactive-bg-color $inactive-text-color #00ff00
-client.focused_inactive $iancative-bg-color $inactive-bg-color $inactive-text-color #00ff00
-client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          #00ff00
+client.focused          $bg-color           $bg-color          $text-color          #11857D
+client.unfocused        $iancative-bg-color $inactive-bg-color $inactive-text-color #004742
+client.focused_inactive $iancative-bg-color $inactive-bg-color $inactive-text-color #004742
+client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          #11857D
 
 
 ### --- Specific Keybinds --- ###
@@ -182,10 +171,10 @@ bindsym Ctrl+Shift+x exec xfce4-screenshooter -w -o "sharenix -n -c" #sharenix-w
 ### --- autoexec --- ###
 exec --no-startup-id pa-applet
 exec_always --no-startup-id ~/.config/i3/polybar.sh
-exec_always --no-startup-id feh --bg-scale /home/zawaken/Pictures/wallpapers/wall.png # sets the background
-exec xrandr --output DVI-D-0 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI-0 --mode 1920x1080 --pos 1920x0 --rotate normal --output DVI-I-1 --off --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off # makes sure the displays are put in the correct position
+exec_always --no-startup-id feh --bg-scale $HOME/Pictures/wallpapers/wall.png # sets the background
+exec xrandr --no-startup-id --output DVI-D-0 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI-0 --mode 1920x1080 --pos 1920x0 --rotate normal --output DVI-I-1 --off --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off # makes sure the displays are put in the correct position
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec compton -fcCG --backend glx --vsync opengl-swc --xrender-sync-fence # the compositor that i'm currently using
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
-for_window [class="^.*"] border pixel 0 # sets the window borders to 0 pixels
+for_window [class="^.*"] border pixel 2 # sets the window borders to 2 pixels
 exec --no-startup-id xrdb ~/.Xresources # loads .Xresources
