@@ -6,7 +6,7 @@
 ## dependencies
 
 * firefox (nightly)
-* i3 (i3-gaps)
+* i3 ([i3-gaps](https://github.com/Airblader/i3))
 * polybar
 * scrot
 * maim
