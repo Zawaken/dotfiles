@@ -1,6 +1,7 @@
 ### --- Variables --- ###
 set $mod Mod4
 hide_edge_borders both
+set $term urxvtc
 gaps inner 10
 gaps outer 10
 
@@ -10,25 +11,25 @@ font pango: Tamsyn, FontAwesome 10
 
 ### --- scratchpad(s) --- ###
 # $mod + t, terminal for everything
-exec --no-startup-id urxvtc -name dropdown
+exec --no-startup-id $term -name dropdown
 for_window [instance="dropdown"] move scratchpad
 
 # $mod+a, tmux
-exec --no-startup-id urxvtc -name tmux -e tmux
+exec --no-startup-id $term -name tmux -e tmux
 for_window [instance="tmux"] move scratchpad
 
 
 ### --- Basic Keybinds --- ###
 floating_modifier $mod
 
-bindsym $mod+Return exec urxvtc
+bindsym $mod+Return exec $term
 bindsym $mod+a [instance="tmux"] scratchpad show; move position center
 bindsym $mod+t [instance="dropdown"] scratchpad show; move position center
 #bindsym $mod+Return exec  st
-bindsym Ctrl+Mod1+e exec urxvtc -e vim $HOME/.config/i3/config
+bindsym Ctrl+Mod1+e exec $term -e vim $HOME/.config/i3/config
 
-bindsym $mod+Shift+a exec --no-startup-id urxvtc -name tmux -e tmux
-bindsym $mod+Shift+t exec --no-startup-id urxvtc -name dropdown
+bindsym $mod+Shift+a exec --no-startup-id $term -name tmux -e tmux
+bindsym $mod+Shift+t exec --no-startup-id $term -name dropdown
 
 bindsym $mod+q kill
 
