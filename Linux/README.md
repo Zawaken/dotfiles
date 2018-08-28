@@ -27,3 +27,8 @@
 * git
 * w3m
 * [polybar-spotify](https://github.com/Jvanrhijn/polybar-spotify)
+
+
+## nice git repos/additions
+
+* [osu-wine by diamondburned](https://gitlab.com/osu-wine/osu-wine)
