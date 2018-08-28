@@ -27,7 +27,7 @@
 * git
 * w3m
 * [polybar-spotify](https://github.com/Jvanrhijn/polybar-spotify)
-
+* [cwm](https://github.com/weabot/cwm)
 
 ## nice git repos/additions
 
