@@ -166,16 +166,16 @@ bindsym Ctrl+$mod+m exec --no-startup-id pactl set-sink-volume 1 +5% #
 #utilities
 bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 450 -opacity "85" -color-enabled -bw 0 -bc "#2f343f" -color-window "#2f343f" -fg "#FFFFFF" -hlbg "#2f343f" -hlfg "#FFFFFF" -font "System San Francisco Display 18" #rofi
 bindsym Mod1+Tab exec rofi -show window
-bindsym Ctrl+Shift+c exec ~/sharenix/sharenix-section -n -c #sharenix-section
+bindsym Ctrl+Shift+c exec $HOME/sharenix/sharenix-section -n -c #sharenix-section
 bindsym Ctrl+Shift+x exec xfce4-screenshooter -w -o "sharenix -n -c" #sharenix-window
 
 ### --- autoexec --- ###
 exec --no-startup-id pa-applet
-exec_always --no-startup-id ~/.config/i3/polybar.sh
+exec_always --no-startup-id $HOME/.config/i3/polybar.sh
 exec_always --no-startup-id feh --bg-scale $HOME/Pictures/wallpapers/wall.png # sets the background
 exec xrandr --no-startup-id --output DVI-D-0 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI-0 --mode 1920x1080 --pos 1920x0 --rotate normal --output DVI-I-1 --off --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off # makes sure the displays are put in the correct position
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec compton -fcCG --backend glx --vsync opengl-swc --xrender-sync-fence # the compositor that i'm currently using
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
 for_window [class="^.*"] border pixel 2 # sets the window borders to 2 pixels
-exec --no-startup-id xrdb ~/.Xresources # loads .Xresources
+exec --no-startup-id xrdb $HOME/.Xresources # loads .Xresources
