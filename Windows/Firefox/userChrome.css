@@ -1,13 +1,10 @@
-@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
-
-
  .browserContainer {
 background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8)) !important;
 }
 
 /*
- * One Liners
- */
+* One Liners
+*/
 .tab-line { background-color: #323234 !important; /*changes the color of the top bar on tabs*/ }
 #identity-box.verifiedIdentity #identity-icon-labels {display: none !important;} /* Remove owner name for SSL certs */
 #pageActionButton {display: none !important;} /* Remove page action bar (3 dots) */
@@ -18,14 +15,26 @@ background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8))
 .titlebar-placeholder[type="post-tabs"] {display: none !important;} /* Remove whitespace after */
 .titlebar-placeholder[type="pre-tabs"] {border-inline-end: 1px solid black !important;width: 1px !important;} /* Fix one-pixel line from whitespace */
 
-
-/* 
- * ---------------------------------------------------------------------
- * Adress
- * Bar
- * Trash
- * ---------------------------------------------------------------------
+/*
+ * Minimal Responsive Theme
 */
+:root:not([customizing]) #nav-bar toolbarbutton
+ {
+    margin-left: -28px !important;
+    opacity: 0 !important;
+    transform: scale(.85, .85) !important;
+    pointer-events: none !important;
+    transition: all 100ms var(--animation-easing-function) !important;
+}
+
+:root:not([customizing]) :hover > #nav-bar toolbarbutton,
+:root:not([customizing]) #navigator-toolbox:focus-within #nav-bar toolbarbutton,
+:root:not([customizing]) :hover > #titlebar toolbarbutton {
+    transform: scale(1, 1) !important;
+opacity:1 !important;
+margin-left:0 !important;
+pointer-events: auto !important;
+}
 
 /*
  * COLORED CERT BAR
@@ -112,8 +121,26 @@ background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8))
   background: #a4000f;  /* Firefox Red 70 */
 }
 /*
- * Rounded address bar
+* Small tabs
  */
+.tabbrowser-tab {
+  --tab-min-width: 120px !important;
+  -moz-box-flex: 0 !important;
+  transition: all 0.2s;
+  width: -10px !important;
+}
+
+.tabbrowser-tab[visuallyselected="true"] {
+  -moz-box-flex: 1 !important;
+}
+
+.tabbrowser-tabs > arrowscrollbox {
+  height: 45px !important;
+}
+
+/*
+* Rounded address bar
+*/
 #urlbar, .searchbar-textbox{
     border-radius: 2em !important;
     height: 30px !important;
@@ -121,6 +148,7 @@ background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8))
 }
 
 /* Dark Themed Drop-down */
+/* Dark Theme - Firefox 48+ */
 #PopupAutoCompleteRichResult .autocomplete-richlistbox {
 background-color: #111 !important;
 }
@@ -149,29 +177,20 @@ color: #69f !important;
 }
 
 /*
- * ---------------------------------------------------------------------
- * Tab
- * Bar
- * Trash
- * ---------------------------------------------------------------------
- */
-
-
-/*
- * show new tab button on hover
+* show new tab button on hover
  */
 
 /* hide new tab button so tab-bar can collapse */
-.tabs-newtab-button { 
-    display: none; 
+.tabs-newtab-button {
+    display: none;
 }
 
 /* ...but show it on tab-bar hover */
-#tabbrowser-tabs:hover .tabs-newtab-button { 
-    display: block; 
+#tabbrowser-tabs:hover .tabs-newtab-button {
+    display: block;
 }
 /*
- * Show close tab button only on hover
+* Show close tab button only on hover
  */
 .tabbrowser-tab:not([pinned]):not(:hover) .tab-close-button {
   visibility: collapse !important;
@@ -182,147 +201,4 @@ color: #69f !important;
   display: block !important;
   transform: rotate(1440deg) !important;
   transition: transform ease-in-out 2s !important;
-}
-/*
- * Small tabs
- */
-.tabbrowser-tab {
-  --tab-min-width: 120px !important;
-  -moz-box-flex: 0 !important;
-  transition: all 0.2s;
-  width: -10px !important;
-}
-
-.tabbrowser-tab[visuallyselected="true"] {
-  -moz-box-flex: 1 !important;
-}
-
-.tabbrowser-tabs > arrowscrollbox {
-  height: 45px !important;
-}
-
-/*  
- * ---------------------------------------------------------------------
- * Mac
- * Close/minimize/maximize
- * buttons
- * ---------------------------------------------------------------------
- */
-
-
-.tabs-newtab-button {
-    opacity: 0.3 !important;
-}
-.tabs-newtab-button:hover {
-    opacity: 1 !important;
-}
-
-/*
-.tabbrowser-tab .tab-line:not([selected="false"]){
-	height: 1px !important;
-	background: linear-gradient(90deg, rgba(0,238,224,1) 0%, rgba(179,29,253,1) 50%, rgba(252,185,69,1) 100%) !important;
-
-}
-*/
-
-
-.titlebar-placeholder[type="pre-tabs"] {
-  display:none !important;
-    }   
-
-
-#PanelUI-menu-button{
-background-color: transparent !important;
-	
-	list-style-image:  url('nightly2.png') !important;
-}
-
-#PanelUI-menu-button:active{
-background-color: transparent !important;
-	
-}
-
-
-/* Remove separator between menu and overflow */
-#PanelUI-button {
-    border-inline-start: 0px solid !important;
-
-}
-
-/*
-#titlebar-buttonbox{display: none;}
-#navigator-toolbox{padding-top:3px !important}
-#main-window[sizemode="maximized"] #navigator-toolbox{padding-top:10px !important;} */
-
-
-#titlebar-min {
-	margin-left: 8px !important;
-	margin-right: 5px !important;
-	border-radius:3px !important;
-	padding: 0px  !important;
-	padding-left: 5px !important;
-	padding-right: 5px !important;
-	margin-top: 3px  !important;
-	margin-bottom: 4px  !important;
-	background-color: #0C0C0D !important;
-	 list-style-image: url("yellow.svg") !important;
-}
-#titlebar-max {
-	margin-left: 5px !important;
-	margin-right: 5px !important;
-	border-radius:3px !important;
-	padding: 0px  !important;
-	padding-left: 5px !important;
-	padding-right: 5px !important;
-	margin-top: 3px  !important;
-	margin-bottom: 4px  !important;
-	background-color: #0C0C0D !important;
-    list-style-image: url("green.svg") !important;
-}
-
-#titlebar-close {
-	margin-left: 5px !important;
-	margin-right: 8px !important;
-	border-radius:3px !important;
-	padding: 0px  !important;
-	padding-left: 5px !important;
-	padding-right: 5px !important;
-	margin-top: 3px  !important;
-	margin-bottom: 4px  !important;
-	background-color: #0C0C0D !important;
-	list-style-image: url("red.svg") !important;
-	/* background-image: url("red.svg") !important;
-	 background-size: 16px 16px !important;
-	 background-repeat: no-repeat;*/
-}
-
-
-:root[sizemode="maximized"] #titlebar-max:hover {
-	/* background-color: transparent !important; To remove hover effect*/
-	background-color: rgba(0, 0, 0, 0.1) !important;
-     list-style-image: url("minz.svg") !important;
-}
-#titlebar-max:hover {
-	background-color: rgba(0, 0, 0, 0.1) !important;
-	list-style-image: url("max.svg") !important;
-}
-
-#titlebar-close:hover {
-	
-background-color: rgba(0, 0, 0, 0.1) !important;
-	list-style-image: url("closx.svg") !important;
-}
-
-#titlebar-min:hover {
-	
-	background-color: rgba(0, 0, 0, 0.1) !important;
-	list-style-image: url("min.svg") !important;
-}
-
-.titlebar-button > .toolbarbutton-icon {
-	height: 16px !important;
-	min-height: 16px !important;
-	width: 16px !important;
-	min-width: 16px !important;
-	
 }
