@@ -6,6 +6,8 @@ esac
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH=$HOME/.oh-my-zsh
+export VISUAL=vim
+export EDITOR="$VISUAL"
 
 ZSH_THEME="miloshadzic"
 
