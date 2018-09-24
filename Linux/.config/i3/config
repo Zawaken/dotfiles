@@ -11,29 +11,30 @@ font pango: Tamsyn, FontAwesome 10
 
 ### --- scratchpad(s) --- ###
 # $mod + t, terminal for everything
-exec --no-startup-id $term -name dropdown
 for_window [instance="dropdown"] move scratchpad
+bindsym $mod+t exec i3run -e "$term -name dropdown" -i "dropdown" -s
 
 # $mod+a, tmux
-exec --no-startup-id $term -name tmux -e tmux
 for_window [instance="tmux"] move scratchpad
+bindsym $mod+a exec i3run -e "$term -name tmux -e tmux" -i "tmux" -s
 
+# $mod+Shift+g
+for_window [class="Spotify"] move scratchpad
+bindsym $mod+g exec i3run -e "spotify" -c "Spotify" -s
 
 ### --- Basic Keybinds --- ###
 floating_modifier $mod
 
 bindsym $mod+Return exec $term
-bindsym $mod+a [instance="tmux"] scratchpad show; move position center
-bindsym $mod+t [instance="dropdown"] scratchpad show; move position center
+# bindsym $mod+a [instance="tmux"] scratchpad show; move position center
+# bindsym $mod+t [instance="dropdown"] scratchpad show; move position center
+# bindsym $mod+g [class="Spotify"] scratchpad show; move position center
 #bindsym $mod+Return exec  st
 bindsym Ctrl+Mod1+e exec $term -e vim $HOME/.config/i3/config
 
-bindsym $mod+Shift+a exec --no-startup-id $term -name tmux -e tmux attach
-bindsym $mod+Shift+t exec --no-startup-id $term -name dropdown
-
 bindsym $mod+q kill
 
-bindsym $mod+l exec i3lock-fancy -p
+bindsym $mod+Shift+l exec i3lock-fancy -p
 
 bindsym $mod+r mode "resize"
 bindsym $mod+Left focus left
@@ -45,6 +46,11 @@ bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
+
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
 bindsym $mod+v split v
 bindsym $mod+b split h
@@ -69,7 +75,7 @@ bindsym $mod+Shift+e exec $HOME/.config/i3/scripts/exit_menu
 #assign [class="Nightly"] $workspace1
 assign [class="Steam"] $workspace5
 assign [class="discord"] $workspace2
-for_window [class="Spotify"] move to workspace $workspace10
+# for_window [class="Spotify"] move to workspace $workspace10
 
 for_window [class="Pavucontrol"] floating enable
 for_window [class="mpv"] floating enable
@@ -151,8 +157,8 @@ client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color      
 
 ### --- Specific Keybinds --- ###
 #audio
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 2 +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 2 -5% #decrease sound volume
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 1 +5% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 1 -5% #decrease sound volume
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 2 toggle # mute sound
 bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause # pause/play music
 bindsym XF86AudioPause exec --no-startup-id playerctl play-pause # pause/play music
@@ -164,6 +170,7 @@ bindsym Ctrl+$mod+l exec --no-startup-id playerctl next
 bindsym Ctrl+$mod+n exec --no-startup-id pactl set-sink-volume 1 -5% #
 bindsym Ctrl+$mod+m exec --no-startup-id pactl set-sink-volume 1 +5% #
 #utilities
+# bindsym $mod+d exec dmenu_run -b -nb '#1e1e1e' -sf '#1e1e1e' -sb '#f4800d' -nf '#F4800d'
 bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 450 -opacity "85" -color-enabled -bw 0 -bc "#2f343f" -color-window "#2f343f" -fg "#FFFFFF" -hlbg "#2f343f" -hlfg "#FFFFFF" -font "System San Francisco Display 18" #rofi
 bindsym Mod1+Tab exec rofi -show window
 bindsym Ctrl+Shift+c exec $HOME/sharenix/sharenix-section -n -c #sharenix-section
