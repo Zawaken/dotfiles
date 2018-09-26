@@ -3,6 +3,10 @@
 ### Main Distro:
 #### arch
 
+### Secondary Distros:
+#### Fedora
+#### Ubuntu
+
 ## dependencies
 
 * firefox (nightly)
