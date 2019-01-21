@@ -1,0 +1,52 @@
+@-moz-document url(about:newtab) {
+    .activity-stream {
+        background-color: #333333 !important;
+    }
+    .top-sites-list .top-site-outer > a {
+        color: #dddddd !important;
+    }
+    .tile {
+      filter: grayscale(42%) !important;
+      opacity: .9 !important;
+    }
+    @media (min-width: 1280px) {
+      .activity-stream main {
+        width: : 989px !important;
+      }
+    }
+}
+@-moz-document domain(start.duckduckgo.com) {
+    .tag-home__item {
+    display: none !important;
+    }
+    #search_button_homepage,
+    .header--aside {
+    opacity: 0;
+    }
+}
+@-moz-document url-prefix("moz-extension://c3f50325-f422-4f43-9fef-4fc258e30e6c/") {
+    body { background-color: #222 !important; color: #ccc !important; }
+    a { color: #8ad !important; }
+    h2 { background-color: #444 !important; color: #eee !important; }
+    code { background-color: #555 !important; }
+    #switch .fa { color: #369 !important; }
+    body.off #switch .fa { color: #555 !important; }
+    .tool { color: #999 !important; }
+    .tool.enabled:hover { color: #8ad !important; }
+    .permatoolbar { background-color: #333 !important; }
+    .permatoolbar .button { background-color: #444 !important; }
+    .permatoolbar .button:hover { background-color: #666 !important; }
+    #tooltip { background-color: #ccc !important; border: 1px solid #111 !important; color: #111 !important; }
+    #firewallContainer > div { background-color: #333 !important; }
+    #firewallContainer > div:hover { background-color: #444 !important; }
+    #firewallContainer > div > span { color: #eee !important; border-bottom: 1px solid #111 !important; }
+    #firewallContainer > div > span:first-of-type ~ span { border-left: 1px solid #111 !important; }
+    #extraTools { background-color: #444 !important; }
+    #extraTools > span:hover { color: #8ad !important; }
+    #dashboard-nav-widgets { background-color: #111 !important; border-bottom: 1px solid #666 !important; }
+    .tabButton { background-color: #444 !important; border: 1px solid #666 !important; border-bottom: 1px solid #666 !important; color: #eee !important; }
+    .tabButton.selected { background-color: #222 !important; border-bottom: 1px solid #222 !important; }
+    #diff li { background-color: #555 !important; }
+    #diff li:nth-child(even) { background-color: #666 !important; }
+    #diff textarea { background-color: #333 !important; color: #ccc !important; }
+}
