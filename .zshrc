@@ -32,5 +32,8 @@ alias terminal-colors='~/.xres/colorschemes/dynamic-urxvt.sh'
 alias :q='exit'
 alias please='sudo $(fc -ln -1)'
 alias fuck='sudo $(fc -ln -1)'
+alias ga='git add'
+alias gcmsg='git commit -m'
+alias gp='git push'
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
