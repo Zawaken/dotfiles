@@ -32,6 +32,7 @@
 * w3m
 * [polybar-spotify](https://github.com/Jvanrhijn/polybar-spotify)
 * [cwm](https://github.com/weabot/cwm)
+* [qmk](https://github.com/qmk/qmk_firmware)
 
 ## nice git repos/additions
 
