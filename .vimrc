@@ -4,7 +4,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-set guifont=Source\ Code\ Pro\ for\ Powerline "make sure to escape the spaces in the name properly
+set guifont=Source\ Code\ Pro\ for\ Powerline
 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
@@ -15,14 +15,16 @@ let g:airline_powerline_fonts = 1
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'PotatoesMaster/i3-vim-syntax'
 Plug 'scrooloose/nerdtree'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'tyru/caw.vim'
 Plug 'tpope/vim-commentary'
+Plug 'PotatoesMaster/i3-vim-syntax'
+Plug 'junegunn/goyo.vim'
+
+" A E S T H E T I C S
 Plug 'morhetz/gruvbox'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 " Some basics:
@@ -74,10 +76,12 @@ call plug#end()
 " For normal mode when in terminals
 	inoremap jw <Esc>
 	inoremap wj <Esc>
+	inoremap asd <Esc>
 
+" NERDTree config
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif<Paste>
+map <C-n> :NERDTreeToggle<CR>
 
 vnoremap K xkP`[V`]
 vnoremap J xp`[V`]
