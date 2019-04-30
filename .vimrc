@@ -18,6 +18,11 @@ Plug 'junegunn/fzf.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'PotatoesMaster/i3-vim-syntax'
+Plug 'scrooloose/nerdtree'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'tyru/caw.vim'
+Plug 'tpope/vim-commentary'
+Plug 'morhetz/gruvbox'
 call plug#end()
 
 " Some basics:
@@ -69,6 +74,10 @@ call plug#end()
 " For normal mode when in terminals
 	inoremap jw <Esc>
 	inoremap wj <Esc>
+
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif<Paste>
 
 vnoremap K xkP`[V`]
 vnoremap J xp`[V`]
