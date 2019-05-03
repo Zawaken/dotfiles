@@ -89,8 +89,13 @@ call plug#end()
 " Disables automatic commenting on newline:
 	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-" C-T for new tab
+" C-T for new tab, currently only newtab works
 	nnoremap <C-t> :tabnew<cr>
+	nnoremap <C-S-tab> :tabprevious<CR>
+	nnoremap <C-tab> :tabnext<CR>
+	inoremap <C-S-tab> <Esc>:tabprevious<CR>i
+	inoremap <C-tab>   <Esc>:tabnext<CR>i
+	inoremap <C-t> <Esc>:tabnew<CR>
 
 " For normal mode when in terminals
 	inoremap jw <Esc>
