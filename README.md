@@ -11,6 +11,7 @@
 
 * firefox (nightly)
 * i3 ([i3-gaps](https://github.com/Airblader/i3))
+* sxhkd (soon™)
 * polybar
 * scrot
 * maim
