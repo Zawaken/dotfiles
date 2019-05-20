@@ -1,0 +1,10 @@
+super + i
+  $HOME/bin/i3/lock --pixelate --blur=0x8
+
+super + Return
+  exec st
+super + d
+  rofi -show run -lines 6
+super + Tab
+  rofi -show window
+

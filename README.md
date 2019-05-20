@@ -33,6 +33,7 @@
 * [polybar-spotify](https://github.com/Jvanrhijn/polybar-spotify)
 * [cwm](https://github.com/weabot/cwm)
 * [qmk](https://github.com/qmk/qmk_firmware)
+* Million dollar keyboard with qmk support
 
 ## nice git repos/additions
 
