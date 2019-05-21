@@ -1,0 +1,29 @@
+#!/bin/sh
+echo "Deploying zshrc and xresources"
+ln -s $(pwd)/.zshrc $HOME/.zshrc
+ln -s $(pwd)/.xres $HOME/.xres
+ln -s $(pwd)/.Xresources $HOME/.Xresources
+echo "Do you want the home i3cfg? [y,n]"
+read input
+if [[ $input == "Y" || $input == "y" ]]; then
+	echo "Deploying home i3cfg"
+	mkdir -p $HOME/.config/i3 && ln -s $(pwd)/.config/i3/config $HOME/.config/i3/config
+	mkdir -p $HOME/.config/polybar && ln -s $(pwd)/.config/polybar/config $HOME/.config/polybar/config
+	ln -s $(pwd)/.config/polybar/polybar.sh $HOME/.config/polybar/polybar.sh
+else
+	echo "Do you want to deploy the work i3cfg? [y,n]"
+	read input2
+	if [[ $input == "Y" || $input == "y" ]]; then
+		echo "Deploying work i3cfg"
+		mkdir -p $HOME/.config/i3 && ln -s $(pwd)/.config/i3/configwork $HOME/.config/i3/config
+		mkdir -p $HOME/.config/polybar && ln -s $(pwd)/.config/polybar/config $HOME/.config/polybar/config
+		ln -s $(pwd)/.config/polybar/polybar.sh $HOME/.config/polybar/polybar.sh
+	else
+		echo "No i3cfg for you then"
+	fi
+fi
+echo "Deploying vimrc"
+ln -s $(pwd)/.vimrc $HOME/.vimrc
+mkdir -p $HOME/.config/nvim && ln -s $(pwd)/.config/nvim/init.vim $HOME/.config/nvim/init.vim
+
+
