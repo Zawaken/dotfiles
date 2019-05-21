@@ -24,7 +24,6 @@
 * pactl
 * playerctl
 * rofi
-* [sharenix](https://github.com/Francesco149/sharenix)
 * compton
 * ranger
 * vim (+gvim)
@@ -32,7 +31,9 @@
 * git
 * w3m
 * [polybar-spotify](https://github.com/Jvanrhijn/polybar-spotify)
+* [sharenix](https://github.com/Francesco149/sharenix)
 * [cwm](https://github.com/weabot/cwm)
+* [st](https://github.com/LukeSmithxyz/st)
 * [qmk](https://github.com/qmk/qmk_firmware)
 * Million dollar keyboard with qmk support
 
