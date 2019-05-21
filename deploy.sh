@@ -1,7 +1,15 @@
 #!/bin/sh
+if [[ $(lsb_release -is) == "Fedora" ]]; then
+	echo "installing packages"
+elif [[ $(lsb_release -is) == "Antergos" ]]; then
+	echo "installing packages"
+else
+	echo "distro $(lsb_release -is) not supported"
+	exit 1
+fi
 echo "Deploying zshrc and xresources"
 ln -s $(pwd)/.zshrc $HOME/.zshrc
-ln -s $(pwd)/.xres $HOME/.xres
+ln -s $(pwd)/.xres $HOME
 ln -s $(pwd)/.Xresources $HOME/.Xresources
 echo "Do you want the home i3cfg? [y,n]"
 read input
@@ -25,5 +33,3 @@ fi
 echo "Deploying vimrc"
 ln -s $(pwd)/.vimrc $HOME/.vimrc
 mkdir -p $HOME/.config/nvim && ln -s $(pwd)/.config/nvim/init.vim $HOME/.config/nvim/init.vim
-
-
