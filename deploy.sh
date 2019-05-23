@@ -24,7 +24,7 @@ if [[ $input == "Y" || $input == "y" ]]; then
 else
 	echo "Do you want to deploy the work i3cfg? [y,n]"
 	read input2
-	if [[ $input == "Y" || $input == "y" ]]; then
+	if [[ $input2 == "Y" || $input == "y" ]]; then
 		echo "Deploying work i3cfg"
 		mkdir -p $HOME/.config/i3 && ln -s $(pwd)/.config/i3/configwork $HOME/.config/i3/config
 		mkdir -p $HOME/.config/polybar && ln -s $(pwd)/.config/polybar/config $HOME/.config/polybar/config

@@ -1,7 +1,8 @@
 ### --- Variables --- ###
 set $mod Mod4
 hide_edge_borders both
-set $term urxvtc
+# set $term urxvtc
+set $term st
 gaps inner 10
 gaps outer 10
 
@@ -12,15 +13,15 @@ font pango: Tamsyn, FontAwesome 10
 ### --- scratchpad(s) --- ###
 # $mod + t, terminal for everything
 for_window [instance="dropdown"] move scratchpad
-bindsym $mod+t exec i3run -e "$term -name dropdown" -i "dropdown" -s
+bindsym $mod+t exec --no-startup-id i3run -e "$term -name dropdown" -i "dropdown" -s
 
 # $mod+a, tmux
 for_window [instance="tmux"] move scratchpad
-bindsym $mod+a exec i3run -e "$term -name tmux -e tmux" -i "tmux" -s
+bindsym $mod+a exec --no-startup-id i3run -e "$term -name tmux -e tmux" -i "tmux" -s
 
 # $mod+Shift+g
 for_window [class="Spotify"] move scratchpad
-bindsym $mod+g exec i3run -e "spotify" -c "Spotify" -s
+bindsym $mod+g exec --no-startup-id i3run -e "spotify" -c "Spotify" -s
 
 ### --- Basic Keybinds --- ###
 floating_modifier $mod
@@ -30,7 +31,7 @@ bindsym $mod+Return exec $term
 # bindsym $mod+t [instance="dropdown"] scratchpad show; move position center
 # bindsym $mod+g [class="Spotify"] scratchpad show; move position center
 #bindsym $mod+Return exec  st
-bindsym Ctrl+Mod1+e exec $term -e vim $HOME/.config/i3/config
+bindsym Ctrl+Mod1+e exec --no-startup-id $term -e vim $HOME/.config/i3/config
 
 bindsym $mod+q kill
 
