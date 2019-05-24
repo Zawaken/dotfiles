@@ -40,3 +40,4 @@
 ## nice git repos/additions
 
 * [osu-wine by diamondburned](https://gitlab.com/osu-wine/osu-wine)
+* [wallpapers by runarsf](https://github.com/runarsf/wallpapers)
