@@ -24,6 +24,7 @@ Plug 'junegunn/goyo.vim'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-surround'
 Plug 'w0rp/ale'
+Plug 'vimwiki/vimwiki'
 
 
 " A E S T H E T I C S

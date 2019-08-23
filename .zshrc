@@ -15,6 +15,7 @@ export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH
 export ZSH=$HOME/.oh-my-zsh
 export EDITOR=/usr/bin/nvim
 export VISUAL=/usr/bin/nvim
+eval "$(thefuck --alias)"
 
 # ZSH_THEME="miloshadzic"
 # ZSH_THEME="bira"
@@ -38,7 +39,9 @@ alias reloadx='xrdb -load ~/.Xresources'
 alias terminal-colors='$HOME/.xres/colorschemes/dynamic-urxvt.sh'
 alias :q='exit'
 alias please='sudo $(fc -ln -1)'
-alias fuck='sudo $(fc -ln -1)'
+# alias fuck='sudo $(fc -ln -1)'
 alias dnfu='sudo dnf update'
+alias dnfi='sudo dnf install'
+alias dnfr='sudo dnf remove'
 alias jf='journalctl -f'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
