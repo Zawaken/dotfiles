@@ -13,7 +13,7 @@ fi
 for f in * .*; do
 	if ! [[ "$f" =~ ^(\.|\.\.|\.git|README\.md|\.2ndkeyboard\.py|deploy|\.sharenix\.json|\.gitignore|backup)$ ]]; then
 		if [[ -d "$f" ]]; then
-			(set -x; cp -rsvu ${dir}/${f} ${HOME}/${f})
+			(set -x; cp -rsvu ${dir}/${f} ${HOME}/)
 		else
 			(set -x; cp -svu ${dir}/${f} ${HOME}/${f})
 		fi
