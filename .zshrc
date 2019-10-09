@@ -28,7 +28,7 @@ if [[ -f $ANTIGEN/antigen.zsh ]]; then
 	antigen bundle zsh-users/zsh-history-substring-search
 	antigen bundle zsh-users/zsh-syntax-highlighting
 
-	antigen theme powerlevel9k/powerlevel9k
+	antigen theme romkatv/powerlevel10k
 
 	antigen apply
 fi
