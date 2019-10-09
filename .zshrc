@@ -4,27 +4,45 @@ case $- in
 	*) return;;
 esac
 
-plugins=(
-  git
-  zsh-autosuggestions
-  zsh-history-substring-search
-  zsh-syntax-highlighting
-)
+ANTIGEN=$HOME/.antigen/
+[ -f $ANTIGEN/antigen.zsh ] || git clone\
+	https://github.com/zsh-users/antigen.git $ANTIGEN
+if [[ -f $ANTIGEN/antigen.zsh ]]; then
+	source $ANTIGEN/antigen.zsh
+	antigen use oh-my-zsh
+	antigen bundle archlinux
+	antigen bundle colorize
+	antigen bundle command-not-found
+	antigen bundle common-aliases
+	antigen bundle desyncr/auto-ls
+	antigen bundle dnf
+	antigen bundle docker
+	antigen bundle git
+	antigen bundle git-extras
+	antigen bundle systemd
+	antigen bundle thefuck
+	antigen bundle tmux
+	antigen bundle unixorn/autoupdate-antigen.zshplugin
+	antigen bundle yum
+	antigen bundle zsh-users/zsh-autosuggestions
+	antigen bundle zsh-users/zsh-history-substring-search
+	antigen bundle zsh-users/zsh-syntax-highlighting
 
+	antigen theme powerlevel9k/powerlevel9k
+
+	antigen apply
+fi
+
+# Exporting variables
 export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH
-export ZSH=$HOME/.oh-my-zsh
 export EDITOR=/usr/bin/nvim
 export VISUAL=/usr/bin/nvim
-eval "$(thefuck --alias)"
 
-# ZSH_THEME="miloshadzic"
-# ZSH_THEME="bira"
-ZSH_THEME="powerlevel9k/powerlevel9k"
+# Powerlevel9k theme options
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir dir_writable vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history time)
 
-source $ZSH/oh-my-zsh.sh
-
+# Aliases
 alias vim='nvim'
 alias vi='nvim'
 alias ix='$HOME/ix'
@@ -35,13 +53,10 @@ alias fetch='neofetch --ascii_distro arch'
 alias ridiculous-name='ncmpcpp'
 alias i3c='vim $HOME/.config/i3/config'
 alias polycfg='vim $HOME/.config/polybar/config'
+alias reload='source $HOME/.zshrc'
 alias reloadx='xrdb -load ~/.Xresources'
 alias terminal-colors='$HOME/.xres/colorschemes/dynamic-urxvt.sh'
 alias :q='exit'
 alias please='sudo $(fc -ln -1)'
-# alias fuck='sudo $(fc -ln -1)'
-alias dnfu='sudo dnf update'
-alias dnfi='sudo dnf install'
-alias dnfr='sudo dnf remove'
 alias jf='journalctl -f'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
