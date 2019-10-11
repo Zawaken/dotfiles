@@ -11,10 +11,10 @@ if [[ -f $ANTIGEN/antigen.zsh ]]; then
 	source $ANTIGEN/antigen.zsh
 	antigen use oh-my-zsh
 	antigen bundle archlinux
-	antigen bundle colorize
+	antigen bundle zpm-zsh/colorize
 	antigen bundle command-not-found
 	antigen bundle common-aliases
-	antigen bundle desyncr/auto-ls
+	antigen bundle chrissicool/zsh-256color
 	antigen bundle dnf
 	antigen bundle docker
 	antigen bundle git
@@ -24,6 +24,7 @@ if [[ -f $ANTIGEN/antigen.zsh ]]; then
 	antigen bundle tmux
 	antigen bundle unixorn/autoupdate-antigen.zshplugin
 	antigen bundle yum
+	antigen bundle zdharma/zsh-diff-so-fancy
 	antigen bundle zsh-users/zsh-autosuggestions
 	antigen bundle zsh-users/zsh-history-substring-search
 	antigen bundle zsh-users/zsh-syntax-highlighting
@@ -39,8 +40,8 @@ export EDITOR=/usr/bin/nvim
 export VISUAL=/usr/bin/nvim
 
 # Powerlevel9k theme options
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir dir_writable vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history time)
+# POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir dir_writable vcs)
+# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history time)
 
 # Aliases
 alias vim='nvim'
@@ -60,3 +61,6 @@ alias :q='exit'
 alias please='sudo $(fc -ln -1)'
 alias jf='journalctl -f'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
