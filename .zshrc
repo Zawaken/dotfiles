@@ -19,7 +19,7 @@ HIST_STAMPS="dd.mm.yyyy"
 bindkey -e
 
 command -v antibody > /dev/null 2>&1 \
-  || (echo "Installing Antibody."; curl -sfL git.io/antibody | sudo sh -s - -b /usr/local/bin) \
+  || (echo "Installing Antibody."; curl -sfL -v git.io/antibody | sudo sh -v -s - -b /usr/local/bin) \
   && source <(antibody init)
 # heredoc must be indented with tabs
 antibody bundle <<-EOBUNDLES
