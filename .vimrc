@@ -48,6 +48,7 @@ let g:deoplete#enable_at_startup = 1
 call plug#end()
 
 " Some basics:
+	let mapleader=','
 	set nocompatible
 	filetype plugin on
 	syntax on
@@ -108,6 +109,37 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 map <C-n> :NERDTreeToggle<CR>
 
+" Configs depending on filetype
+if has("autocmd")
+  " Enable file type detection
+  filetype on
+
+  " Syntax of these languages is fussy over tabs Vs spaces
+  autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
+  autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
+  " Customisations based on house-style (arbitrary)
+  autocmd BufEnter,BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+  autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
+  autocmd FileType php setlocal ts=4 sts=4 sw=4 expandtab
+  autocmd FileType haskell setlocal ts=4 sts=4 sw=4 expandtab
+  autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd FileType html nnoremap <F5> :!open -a Safari %<CR><CR>
+  autocmd FileType xml setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd FileType css setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd FileType scss setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd FileType javascript setlocal ts=4 sts=4 sw=4 noexpandtab
+  autocmd FileType rb setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd BufRead,BufNewFile *.erb set filetype=eruby.html
+  autocmd FileType eruby.html setlocal ts=2 sts=2 sw=2 expandtab
+  au BufRead,BufNewFile * setfiletype txt
+
+  " Treat .rss files as XML
+  autocmd BufNewFile,BufRead *.rss setfiletype xml
+endif
+
+nmap <leader>c :noh<CR>
+nmap <leader>t :tabnew<CR>
 vnoremap K xkP`[V`]
 vnoremap J xp`[V`]
 vnoremap L >gv
