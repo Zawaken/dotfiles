@@ -70,10 +70,11 @@ if [[ -f $ANTIGEN/antigen.zsh ]]; then
 	antigen bundle tmux
 	antigen bundle unixorn/autoupdate-antigen.zshplugin
 	antigen bundle yum
+	antigen bundle zdharma/fast-syntax-highlighting
 	antigen bundle zdharma/zsh-diff-so-fancy
 	antigen bundle zsh-users/zsh-autosuggestions
 	antigen bundle zsh-users/zsh-history-substring-search
-	antigen bundle zsh-users/zsh-syntax-highlighting
+	# antigen bundle zsh-users/zsh-syntax-highlighting
 
 	antigen theme romkatv/powerlevel10k
 
