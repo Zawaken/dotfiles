@@ -66,7 +66,7 @@
       context                 # user@hostname
       nordvpn                 # nordvpn connection status, linux only (https://nordvpn.com/)
       ranger                  # ranger shell (https://github.com/ranger/ranger)
-      # vpn_ip                # virtual private network indicator
+      vpn_ip                # virtual private network indicator
       # ram                   # free RAM
       # load                  # CPU load
       time                    # current time
