@@ -25,6 +25,7 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-surround'
 Plug 'w0rp/ale'
 Plug 'vimwiki/vimwiki'
+Plug 'rodjek/vim-puppet'
 
 
 " A E S T H E T I C S
@@ -140,6 +141,8 @@ endif
 
 nmap <leader>c :noh<CR>
 nmap <leader>t :tabnew<CR>
+nmap <leader>j :tabprevious<CR>
+nmap <leader>k :tabnext<CR>
 vnoremap K xkP`[V`]
 vnoremap J xp`[V`]
 vnoremap L >gv
