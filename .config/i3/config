@@ -1,13 +1,16 @@
-### --- Variables --- ###
+# vim:foldmethod=marker
+### --- Variables --- ### {{{
 set $mod Mod4
 hide_edge_borders both
 # set $term urxvtc
 set $term kitty
+# Monitors
 gaps inner 10
 gaps outer 10
 
 # Font for window titles
 font pango: Tamsyn, FontAwesome 10
+# }}}
 
 
 ### --- scratchpad(s) --- ###

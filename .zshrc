@@ -65,6 +65,7 @@ if [[ -f $ANTIGEN/antigen.zsh ]]; then
 	antigen bundle docker
 	antigen bundle git
 	antigen bundle git-extras
+	antigen bundle MichaelAquilina/zsh-you-should-use
 	antigen bundle systemd
 	antigen bundle thefuck
 	antigen bundle tmux

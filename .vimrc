@@ -1,16 +1,82 @@
+" --- Zawaken's vimrc --- " {{{
+" vim:foldmethod=marker
+" }}}
+" --- General --- " {{{
+inoremap jw <Esc>
+inoremap wj <Esc>
+inoremap asd <Esc>
+let mapleader=','
+set nocompatible
+filetype plugin on
+syntax on
+set encoding=utf-8
+set number
+set relativenumber
+
+" Splits navigation.
+set splitbelow
+set splitright
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+
+" Smart casing
+set smartcase
+set ignorecase
+
+" File interpreting
+let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+
+" Get line, word and character counts with F3:
+map <F3> :!wc <C-R>%<CR>
+
+" Spell-check set to F6:
+map <F6> :setlocal spell! spelllang=en_us,es<CR>
+
+" Copy selected text to system clipboard (requires gvim installed):
+vnoremap <C-c> "*Y :let @+=@*<CR>
+map <C-p> "+P
+
+" Enable autocompletion:
+set wildmode=longest,list,full
+set wildmenu
+
+" Automatically deletes all trailing whitespace on save.
+autocmd BufWritePre * %s/\s\+$//e
+
+" Disables automatic commenting on newline:
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
+" C-T for new tab, currently only newtab works
+nnoremap <C-t> :tabnew<cr>
+nnoremap <C-S-tab> :tabprevious<CR>
+nnoremap <C-tab> :tabnext<CR>
+inoremap <C-S-tab> <Esc>:tabprevious<CR>i
+inoremap <C-tab>   <Esc>:tabnext<CR>i
+inoremap <C-t> <Esc>:tabnew<CR>
+
+" For normal mode when in terminals
+inoremap jw <Esc>
+inoremap wj <Esc>
+inoremap asd <Esc>
+
+
+nmap <leader>c :noh<CR>
+nmap <leader>t :tabnew<CR>
+nmap <leader>j :tabprevious<CR>
+nmap <leader>k :tabnext<CR>
+vnoremap K xkP`[V`]
+vnoremap J xp`[V`]
+vnoremap L >gv
+vnoremap H <gv
+" }}}
+" --- Plugins --- " {{{
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
-
-set guifont=Source\ Code\ Pro\ for\ Powerline
-
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-  endif
-
-let g:airline_powerline_fonts = 1
 
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -48,69 +114,13 @@ let g:deoplete#enable_at_startup = 1
 
 call plug#end()
 
-" Some basics:
-	let mapleader=','
-	set nocompatible
-	filetype plugin on
-	syntax on
-	set encoding=utf-8
-	set number
-	set relativenumber
-
-" Splits navigation.
-	set splitbelow
-	set splitright
-	map <C-h> <C-w>h
-	map <C-j> <C-w>j
-	map <C-k> <C-w>k
-	map <C-l> <C-w>l
-
-" Smart casing
-	set smartcase
-	set ignorecase
-
-" File interpreting
-	let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-
-" Get line, word and character counts with F3:
-	map <F3> :!wc <C-R>%<CR>
-
-" Spell-check set to F6:
-	map <F6> :setlocal spell! spelllang=en_us,es<CR>
-
-" Copy selected text to system clipboard (requires gvim installed):
-	vnoremap <C-c> "*Y :let @+=@*<CR>
-	map <C-p> "+P
-
-" Enable autocompletion:
-	set wildmode=longest,list,full
-	set wildmenu
-
-" Automatically deletes all trailing whitespace on save.
-	autocmd BufWritePre * %s/\s\+$//e
-
-" Disables automatic commenting on newline:
-	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-
-" C-T for new tab, currently only newtab works
-	nnoremap <C-t> :tabnew<cr>
-	nnoremap <C-S-tab> :tabprevious<CR>
-	nnoremap <C-tab> :tabnext<CR>
-	inoremap <C-S-tab> <Esc>:tabprevious<CR>i
-	inoremap <C-tab>   <Esc>:tabnext<CR>i
-	inoremap <C-t> <Esc>:tabnew<CR>
-
-" For normal mode when in terminals
-	inoremap jw <Esc>
-	inoremap wj <Esc>
-	inoremap asd <Esc>
-
 " NERDTree config
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 map <C-n> :NERDTreeToggle<CR>
 
-" Configs depending on filetype
+" }}}
+" --- Filetype Dependent config --- " {{{
 if has("autocmd")
   " Enable file type detection
   filetype on
@@ -138,12 +148,19 @@ if has("autocmd")
   " Treat .rss files as XML
   autocmd BufNewFile,BufRead *.rss setfiletype xml
 endif
+" }}}
+" --- aesthetics --- " {{{
+colorscheme gruvbox
+let g:gruvbox_italic = 1
 
-nmap <leader>c :noh<CR>
-nmap <leader>t :tabnew<CR>
-nmap <leader>j :tabprevious<CR>
-nmap <leader>k :tabnext<CR>
-vnoremap K xkP`[V`]
-vnoremap J xp`[V`]
-vnoremap L >gv
-vnoremap H <gv
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+  endif
+
+let g:airline_powerline_fonts = 1
+
+set guifont=Source\ Code\ Pro\ for\ Powerline
+
+hi Normal guibg=NONE ctermbg=NONE
+hi Comment cterm=italic
+" }}}
