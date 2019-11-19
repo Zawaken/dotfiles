@@ -1,9 +1,9 @@
-# Zawaken's zshrc
+# Zawaken's zshrc {{{
+# vim:foldmethod=marker
 case $- in
 	*i*) ;;
 	*) return;;
 esac
-
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -12,11 +12,53 @@ zstyle :compinstall filename '/home/zawaken/.zshrc'
 autoload -Uz compinit
 compinit
 
+# }}}
+# --- Variables --- # {{{
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 HIST_STAMPS="dd.mm.yyyy"
 bindkey -e
+export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH
+export EDITOR=/usr/bin/nvim
+export VISUAL=/usr/bin/nvim
+# }}}
+# --- Plugins --- # {{{
+# --- Antigen --- # {{{
+ANTIGEN=$HOME/.antigen/
+[ -f $ANTIGEN/antigen.zsh ] || git clone\
+	https://github.com/zsh-users/antigen.git $ANTIGEN
+if [[ -f $ANTIGEN/antigen.zsh ]]; then
+	source $ANTIGEN/antigen.zsh
+	antigen use oh-my-zsh
+	antigen bundle archlinux
+	antigen bundle zpm-zsh/colorize
+	antigen bundle command-not-found
+	antigen bundle common-aliases
+	antigen bundle chrissicool/zsh-256color
+	antigen bundle dnf
+	antigen bundle docker
+	antigen bundle git
+	antigen bundle git-extras
+	antigen bundle MichaelAquilina/zsh-you-should-use
+	antigen bundle systemd
+	antigen bundle thefuck
+	antigen bundle tmux
+	antigen bundle unixorn/autoupdate-antigen.zshplugin
+	antigen bundle yum
+	antigen bundle zdharma/fast-syntax-highlighting
+	antigen bundle zdharma/zsh-diff-so-fancy
+	antigen bundle zsh-users/zsh-autosuggestions
+	antigen bundle zsh-users/zsh-history-substring-search
+	# antigen bundle zsh-users/zsh-syntax-highlighting
+
+	# antigen prompt theme
+	antigen theme romkatv/powerlevel10k
+
+	antigen apply
+fi
+# }}}
+# --- Antibody --- # {{{
 
 #command -v antibody > /dev/null 2>&1 \
 #  || (echo "Installing Antibody."; curl -sfL -v https://raw.githubusercontent.com/getantibody/installer/master/install | sudo sh -v -s - -b /usr/local/bin -d) \
@@ -50,48 +92,9 @@ bindkey -e
 #	romkatv/powerlevel10k
 #EOBUNDLES
 
-ANTIGEN=$HOME/.antigen/
-[ -f $ANTIGEN/antigen.zsh ] || git clone\
-	https://github.com/zsh-users/antigen.git $ANTIGEN
-if [[ -f $ANTIGEN/antigen.zsh ]]; then
-	source $ANTIGEN/antigen.zsh
-	antigen use oh-my-zsh
-	antigen bundle archlinux
-	antigen bundle zpm-zsh/colorize
-	antigen bundle command-not-found
-	antigen bundle common-aliases
-	antigen bundle chrissicool/zsh-256color
-	antigen bundle dnf
-	antigen bundle docker
-	antigen bundle git
-	antigen bundle git-extras
-	antigen bundle MichaelAquilina/zsh-you-should-use
-	antigen bundle systemd
-	antigen bundle thefuck
-	antigen bundle tmux
-	antigen bundle unixorn/autoupdate-antigen.zshplugin
-	antigen bundle yum
-	antigen bundle zdharma/fast-syntax-highlighting
-	antigen bundle zdharma/zsh-diff-so-fancy
-	antigen bundle zsh-users/zsh-autosuggestions
-	antigen bundle zsh-users/zsh-history-substring-search
-	# antigen bundle zsh-users/zsh-syntax-highlighting
-
-	antigen theme romkatv/powerlevel10k
-
-	antigen apply
-fi
-
-# Exporting variables
-export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH
-export EDITOR=/usr/bin/nvim
-export VISUAL=/usr/bin/nvim
-
-# Powerlevel9k theme options
-# POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir dir_writable vcs)
-# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history time)
-
-# Aliases
+# }}}
+# }}}
+# --- Aliases --- # {{{
 alias vim='nvim'
 alias vi='nvim'
 alias ix='$HOME/bin/ix'
@@ -109,6 +112,12 @@ alias :q='exit'
 alias please='sudo $(fc -ln -1)'
 alias jf='journalctl -f'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# }}}
+# --- Prompt --- # {{{
+# Powerlevel9k theme options
+# POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir dir_writable vcs)
+# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history time)
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+# }}}
