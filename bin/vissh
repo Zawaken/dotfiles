@@ -1,0 +1,4 @@
+#!/bin/sh
+# This thing wasn't possible with an alias, so I had to make a tiny script out of it.
+# This lets you "use" vim with ssh
+$EDITOR scp://${3:-$USER}@$1/$2
