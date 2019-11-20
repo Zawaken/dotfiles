@@ -19,7 +19,7 @@ HISTSIZE=10000
 SAVEHIST=10000
 HIST_STAMPS="dd.mm.yyyy"
 bindkey -e
-export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$HOME/.gem/ruby/2.6.0/bin:$PATH
 export EDITOR=/usr/bin/nvim
 export VISUAL=/usr/bin/nvim
 # }}}
@@ -44,7 +44,7 @@ if [[ -f $ANTIGEN/antigen.zsh ]]; then
 	antigen bundle systemd
 	antigen bundle thefuck
 	antigen bundle tmux
-	antigen bundle unixorn/autoupdate-antigen.zshplugin
+	# antigen bundle unixorn/autoupdate-antigen.zshplugin
 	antigen bundle yum
 	antigen bundle zdharma/fast-syntax-highlighting
 	antigen bundle zdharma/zsh-diff-so-fancy
