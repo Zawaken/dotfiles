@@ -1,19 +1,14 @@
+### --- Zawaken's i3 config --- ### {{{
 # vim:foldmethod=marker
+# }}}
 ### --- Variables --- ### {{{
 set $mod Mod4
 hide_edge_borders both
 # set $term urxvtc
 set $term kitty
 # Monitors
-gaps inner 10
-gaps outer 10
-
-# Font for window titles
-font pango: Tamsyn, FontAwesome 10
 # }}}
-
-
-### --- scratchpad(s) --- ###
+### --- scratchpad(s) --- ### {{{
 # $mod + t, terminal for everything
 for_window [instance="dropdown"] move scratchpad
 bindsym $mod+t exec --no-startup-id i3run -e "$term --name dropdown" -i "dropdown" -s
@@ -29,8 +24,8 @@ bindsym $mod+g exec --no-startup-id i3run -e "spotify" -c "Spotify" -s
 # $mod+x
 for_window [title="PulseEffects"] move scratchpad
 bindsym $mod+x exec --no-startup-id i3run -e "pulseeffects" -t "PulseEffects" -s
-
-### --- Basic Keybinds --- ###
+# }}}
+### --- Basic Keybinds --- ### {{{
 floating_modifier $mod
 
 bindsym $mod+Return exec $term
@@ -78,8 +73,8 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
 bindsym $mod+Shift+e exec $HOME/.config/i3/scripts/exit_menu
-
-### --- Workspaces --- ###
+# }}}
+### --- Workspaces --- ### {{{
 #assign [class="Nightly"] $workspace1
 assign [class="Steam"] $workspace5
 assign [class="discord"] $workspace2
@@ -99,6 +94,7 @@ set $workspace7 "7"
 set $workspace8 "8"
 set $workspace9 "9"
 set $workspace10 "10"
+set $workspace11 "11"
 
 workspace $workspace1 output DVI-D-2
 workspace $workspace2 output DVI-D-2
@@ -121,6 +117,7 @@ bindsym $mod+7 workspace $workspace7
 bindsym $mod+8 workspace $workspace8
 bindsym $mod+9 workspace $workspace9
 bindsym $mod+0 workspace $workspace10
+bindsym $mod+F1 workspace $workspace11
 bindsym $mod+Tab workspace back_and_forth
 
 bindsym $mod+Shift+1 move container to workspace $workspace1
@@ -133,7 +130,9 @@ bindsym $mod+Shift+7 move container to workspace $workspace7
 bindsym $mod+Shift+8 move container to workspace $workspace8
 bindsym $mod+Shift+9 move container to workspace $workspace9
 bindsym $mod+Shift+0 move container to workspace $workspace10
-
+bindsym $mod+Shift+F1 move container to workspace $workspace11
+# }}}
+### --- Functions --- ### {{{
 mode "resize" {
     bindsym h resize shrink width 10 px or 10 ppt
     bindsym j resize grow height 10 px or 10 ppt
@@ -148,7 +147,8 @@ mode "resize" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-
+# }}}
+### --- Appearance --- ### {{{
 set $bg-color 	         #ebdbb2
 # set $inactive-bg-color   #2f343f
 set $inactive-bg-color   #282828
@@ -159,12 +159,16 @@ set $urgent-bg-color     #E53935
 # window colors
 #                       border              background         text                 indicator
 client.focused          $bg-color           $bg-color          $text-color          #a89984
-client.unfocused        $iancative-bg-color $inactive-bg-color $inactive-text-color #282828
-client.focused_inactive $iancative-bg-color $inactive-bg-color $inactive-text-color #004742
+client.unfocused        $inactive-bg-color $inactive-bg-color $inactive-text-color #282828
+client.focused_inactive $inactive-bg-color $inactive-bg-color $inactive-text-color #004742
 client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          #11857D
+gaps inner 10
+gaps outer 10
+# Font for window titles
+font pango: Tamsyn, FontAwesome 10
 
-
-### --- Specific Keybinds --- ###
+# }}}
+### --- Specific Keybinds --- ### {{{
 #audio
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 1 +5% #increase sound volume
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 1 -5% #decrease sound volume
@@ -185,8 +189,8 @@ bindsym $mod+d exec rofi -show run -lines 3 -eh 2
 bindsym Mod1+Tab exec rofi -show window
 bindsym Ctrl+Shift+c exec $HOME/sharenix/sharenix-section -n -c #sharenix-section
 bindsym Ctrl+Shift+x exec xfce4-screenshooter -w -o "sharenix -n -c" #sharenix-window
-
-### --- autoexec --- ###
+# }}}
+### --- Autoexec --- ### {{{
 exec_always --no-startup-id $HOME/bin/dunstreload
 exec --no-startup-id pa-applet
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
@@ -198,3 +202,4 @@ exec compton
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
 for_window [class="^.*"] border pixel 2 # sets the window borders to 0 pixels
 exec --no-startup-id xrdb $HOME/.Xresources # loads .Xresources
+# }}}

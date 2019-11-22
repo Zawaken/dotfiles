@@ -225,6 +225,33 @@ hi Normal guibg=NONE ctermbg=NONE
 hi Comment cterm=italic
 " }}}
 " --- Functions --- " {{{
+" Toggle line numbers
+function! ToggleNumbers()
+  if &number || &relativenumber
+	  set nonumber
+	  set norelativenumber
+  else
+	  call LeaveInsert()
+  endif
+endfunction
+nmap <silent> <leader>n :call ToggleNumbers()<CR>
+
+function! EnterInsert()
+	  set cursorline
+	  set norelativenumber
+	  set number
+endfunction
+function! LeaveInsert()
+	set nocursorline
+	set relativenumber
+	set number
+endfunction
+" autocmd InsertEnter * call EnterInsert()
+" autocmd FocusLost * call EnterInsert()
+" autocmd InsertLeave * call LeaveInsert()
+" autocmd FocusGained * call LeaveInsert()
+autocmd VimEnter * call LeaveInsert()
+
 " Fancy folding
 function! FoldText()
   set fillchars=fold:\ "
@@ -239,4 +266,5 @@ function! FoldText()
   return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endfunction
 set foldtext=FoldText()
+
 " }}}
