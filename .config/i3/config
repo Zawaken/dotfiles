@@ -187,7 +187,7 @@ bindsym Ctrl+$mod+m exec --no-startup-id pactl set-sink-volume 1 +5% #
 bindsym $mod+d exec rofi -show run -lines 3 -eh 2
 # bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 450 -opacity "85" -color-enabled -bw 0 -bc "#2f343f" -color-window "#2f343f" -fg "#FFFFFF" -hlbg "#2f343f" -hlfg "#FFFFFF" -font "System San Francisco Display 18" #rofi
 bindsym Mod1+Tab exec rofi -show window
-bindsym Ctrl+Shift+c exec $HOME/sharenix/sharenix-section -n -c #sharenix-section
+bindsym Ctrl+Shift+c exec sharenix-section -n -c #sharenix-section
 bindsym Ctrl+Shift+x exec xfce4-screenshooter -w -o "sharenix -n -c" #sharenix-window
 # }}}
 ### --- Autoexec --- ### {{{

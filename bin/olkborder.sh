@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # wget -q https://raw.githubusercontent.com/olkb/orders/master/README.md -O - | grep 100005888
 RED='\033[0;31m'
 NC='\033[0m'

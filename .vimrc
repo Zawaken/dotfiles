@@ -85,6 +85,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-github-dashboard'
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'tpope/vim-commentary'
 Plug 'junegunn/goyo.vim'
@@ -126,6 +127,7 @@ Plug 'ObserverOfTime/coloresque.vim'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'dense-analysis/ale'
 Plug 'PotatoesMaster/i3-vim-syntax'
+Plug 'airblade/vim-gitgutter'
 "if has('nvim')
 "  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "else
@@ -141,6 +143,7 @@ call plug#end()
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 map <C-o> :NERDTreeToggle<CR>
+let g:NERDTreeGitStatusWithFlags = 1
 
 " Used by coc
 " Use tab for trigger completion with characters ahead and navigate.
@@ -154,6 +157,7 @@ function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
+set hidden
 
 inoremap <silent><expr> <c-space> coc#refresh() " Use <c-space> to trigger completion.
 
