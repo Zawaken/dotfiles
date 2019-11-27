@@ -96,6 +96,7 @@ Plug 'Raimondi/delimitMate'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'airblade/vim-gitgutter'
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install() }}
 
 
@@ -127,7 +128,6 @@ Plug 'ObserverOfTime/coloresque.vim'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'dense-analysis/ale'
 Plug 'PotatoesMaster/i3-vim-syntax'
-Plug 'airblade/vim-gitgutter'
 "if has('nvim')
 "  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "else
