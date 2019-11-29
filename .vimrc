@@ -232,6 +232,7 @@ hi Comment cterm=italic
 " Toggle line numbers
 function! ToggleNumbers()
   if &number || &relativenumber
+	  call EnterInsert()
 	  set nonumber
 	  set norelativenumber
   else
@@ -241,11 +242,13 @@ endfunction
 nmap <silent> <leader>n :call ToggleNumbers()<CR>
 
 function! EnterInsert()
+	  GitGutterDisable
 	  set cursorline
 	  set norelativenumber
 	  set number
 endfunction
 function! LeaveInsert()
+	GitGutterEnable
 	set nocursorline
 	set relativenumber
 	set number
