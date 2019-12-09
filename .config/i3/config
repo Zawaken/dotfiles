@@ -96,16 +96,16 @@ set $workspace9 "9"
 set $workspace10 "10"
 set $workspace11 "11"
 
-workspace $workspace1 output DVI-D-2
-workspace $workspace2 output DVI-D-2
-workspace $workspace3 output DVI-D-2
-workspace $workspace4 output DVI-D-2
-workspace $workspace5 output DVI-D-2
-workspace $workspace6 output HDMI-2
-workspace $workspace7 output HDMI-2
-workspace $workspace8 output HDMI-2
-workspace $workspace9 output HDMI-2
-workspace $workspace10 output HDMI-2
+workspace $workspace1 output HDMI-0
+workspace $workspace2 output HDMI-0
+workspace $workspace3 output HDMI-0
+workspace $workspace4 output DP-2
+workspace $workspace5 output DP-2
+workspace $workspace6 output DP-2
+workspace $workspace7 output DP-2
+workspace $workspace8 output DVI-D-0
+workspace $workspace9 output DVI-D-0
+workspace $workspace10 output DVI-D-0
 
 bindsym $mod+1 workspace $workspace1
 bindsym $mod+2 workspace $workspace2
@@ -193,9 +193,9 @@ bindsym Ctrl+Shift+x exec xfce4-screenshooter -w -o "sharenix -n -c" #sharenix-w
 ### --- Autoexec --- ### {{{
 exec_always --no-startup-id $HOME/bin/dunstreload
 exec --no-startup-id pa-applet
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec_always --no-startup-id $HOME/.config/polybar/launchtest.sh
 exec_always --no-startup-id feh --bg-scale $HOME/.config/i3/wall.png # sets the background
-exec --no-startup-id xrandr --output DVI-D-0 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI-0 --mode 1920x1080 --pos 1920x0 --rotate normal --output DVI-I-1 --off --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off # makes sure the displays are put in the correct position
+exec --no-startup-id xrandr --output DP-2 --primary --mode 2560x1440 --pos 1920x0 --rotate normal --output HDMI-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DVI-D-0 --mode 1920x1080 --pos 4480x0 --rotate normal --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off # makes sure the displays are put in the correct position
 exec --no-startup-id /usr/bin/lxpolkit
 # exec compton -fcCG --backend glx --vsync opengl-swc --xrender-sync-fence # the compositor that i'm currently using
 exec compton
