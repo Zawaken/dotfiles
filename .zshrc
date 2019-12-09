@@ -111,6 +111,7 @@ alias terminal-colors='$HOME/.xres/colorschemes/dynamic-urxvt.sh'
 alias :q='exit'
 alias please='sudo $(fc -ln -1)'
 alias jf='journalctl -f'
+alias firefox='firejail firefox'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # }}}
 # --- Prompt --- # {{{

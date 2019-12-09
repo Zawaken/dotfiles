@@ -96,6 +96,7 @@ Plug 'Raimondi/delimitMate'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'airblade/vim-gitgutter'
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install() }}
 
 
@@ -127,7 +128,6 @@ Plug 'ObserverOfTime/coloresque.vim'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'dense-analysis/ale'
 Plug 'PotatoesMaster/i3-vim-syntax'
-Plug 'airblade/vim-gitgutter'
 "if has('nvim')
 "  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "else
@@ -232,6 +232,7 @@ hi Comment cterm=italic
 " Toggle line numbers
 function! ToggleNumbers()
   if &number || &relativenumber
+	  call EnterInsert()
 	  set nonumber
 	  set norelativenumber
   else
@@ -241,11 +242,13 @@ endfunction
 nmap <silent> <leader>n :call ToggleNumbers()<CR>
 
 function! EnterInsert()
+	  GitGutterDisable
 	  set cursorline
 	  set norelativenumber
 	  set number
 endfunction
 function! LeaveInsert()
+	GitGutterEnable
 	set nocursorline
 	set relativenumber
 	set number
