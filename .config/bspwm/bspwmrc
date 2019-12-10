@@ -19,7 +19,7 @@ bspc config gapless_monocle      true
 
 bspc config focus_follows_pointer true
 
-$HOME/.config/polybar/launch.sh &
+$HOME/.config/polybar/launchbspwm.sh &
 setxkbmap -v no &
 feh --bg-scale $HOME/.config/i3/wall.png &
 xrandr --output DP-2 --primary --mode 2560x1440 --pos 1920x0 --rotate normal --output HDMI-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DVI-D-0 --mode 1920x1080 --pos 4480x0 --rotate normal --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off &
