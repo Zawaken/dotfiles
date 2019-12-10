@@ -1,5 +1,6 @@
 #compton -b -f --config ~/.config/compton.conf &
-#xrdb -load ~/.Xresources
+compton &
+xrdb -load ~/.Xresources
 #xsetkbmap no
 #feh --bg-scale ~/Pictures/wallpapers/wall.png
 #sxhkd &
@@ -8,4 +9,5 @@ systemctl --user import-environment DISPLAY
 urxvtd -q -o -f
 #exec cwm
 #exec 2bwm
-exec i3
+#exec i3
+exec bspwm
