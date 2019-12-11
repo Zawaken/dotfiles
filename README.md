@@ -1,17 +1,19 @@
 # zawaken's linux dots
 
 ### Main Distro:
-#### arch
+#### Void
 
 ### Secondary Distros:
 #### Fedora
+#### arch
 #### Ubuntu
 
 ## dependencies
 
 * firefox (nightly)
 * i3 ([i3-gaps](https://github.com/Airblader/i3))
-* sxhkd (soon™)
+* bspwm
+* sxhkd
 * polybar
 * scrot
 * maim
