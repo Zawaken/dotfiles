@@ -1,22 +1,22 @@
-#! /bin/sh
+#! /bin/bash
 # vim:foldmethod=marker
 
 sxhkd &
-
-# Home computer {{{
+# Hostname dependent config {{{
 if [[ $(hostname) == 'purity' ]]; then
-	bspc monitor HDMI-0 -d 1 2 3
-	bspc monitor DP-2 -d 4 5 6 7
-	bspc monitor DVI-D-0 -d 8 9 10
+	bspc monitor HDMI-0 -d I II III
+	bspc monitor DP-2 -d IV V VI VII
+	bspc monitor DVI-D-0 -d VIII IX X
 
 	bspc monitor HDMI-0 -g 1920x1080+0+0
 	bspc monitor DP-2 -g 2560x1440+1920+0
 	bspc monitor DVI-D-0 -g 1920x1080+4480+0
 
+	if ! pgrep "urxvtd" > /dev/null 2>&1 ; then
+		urxvtd -q -o -f
+	fi
+
 	xrandr --output DP-2 --primary --mode 2560x1440 --pos 1920x0 --rotate normal --output HDMI-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DVI-D-0 --mode 1920x1080 --pos 4480x0 --rotate normal --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off &
-	urxvtd -q -o -f
-# }}}
-# work {{{
 else
 	bspc monitor DP-2 -d I II III IV V
 	bspc monitor HDMI-1 -d VI VII VIII IX X
@@ -29,8 +29,7 @@ else
 		urxvt256c-mld -q -o -f
 	fi
 fi
-#}}}
-
+# }}}
 bspc config border_width         2
 bspc config window_gap          12
 
@@ -40,7 +39,14 @@ bspc config gapless_monocle      true
 
 bspc config focus_follows_pointer true
 
+bspc rule -a discord desktop=^2
+bspc rule -a Steam desktop=^5
+bspc rule -a Pavucontrol floating=on
+bspc rule -a mpv floating=on
+bspc rule -a sxiv floating=on
+
 $HOME/.config/polybar/launchbspwm.sh &
 setxkbmap -v no &
 feh --bg-scale $HOME/.config/i3/wall.png &
 xrdb $HOME/.Xresources
+xsetroot -cursor_name left_ptr
