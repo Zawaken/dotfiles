@@ -1,14 +1,35 @@
 #! /bin/sh
+# vim:foldmethod=marker
 
 sxhkd &
 
-bspc monitor HDMI-0 -d 1 2 3
-bspc monitor DP-2 -d 4 5 6 7
-bspc monitor DVI-D-0 -d 8 9 10
+# Home computer {{{
+if [[ $(hostname) == 'purity' ]]; then
+	bspc monitor HDMI-0 -d 1 2 3
+	bspc monitor DP-2 -d 4 5 6 7
+	bspc monitor DVI-D-0 -d 8 9 10
 
-bspc monitor HDMI-0 -g 1920x1080+0+0
-bspc monitor DP-2 -g 2560x1440+1920+0
-bspc monitor DVI-D-0 1920x1080+4480+0
+	bspc monitor HDMI-0 -g 1920x1080+0+0
+	bspc monitor DP-2 -g 2560x1440+1920+0
+	bspc monitor DVI-D-0 -g 1920x1080+4480+0
+
+	xrandr --output DP-2 --primary --mode 2560x1440 --pos 1920x0 --rotate normal --output HDMI-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DVI-D-0 --mode 1920x1080 --pos 4480x0 --rotate normal --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off &
+	urxvtd -q -o -f
+# }}}
+# work {{{
+else
+	bspc monitor DP-2 -d I II III IV V
+	bspc monitor HDMI-1 -d VI VII VIII IX X
+
+	bspc monitor DP-2 -g 1920x1080+0+0
+	bspc monitor HDMI-1 -g 1920x1200+1920+0
+
+	xrandr --output DP-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI-1 --mode 1920x1200 --pos 1920x0 --rotate normal &
+	if ! pgrep "urxvt256c-mld" > /dev/null 2>&1 ; then
+		urxvt256c-mld -q -o -f
+	fi
+fi
+#}}}
 
 bspc config border_width         2
 bspc config window_gap          12
@@ -19,7 +40,7 @@ bspc config gapless_monocle      true
 
 bspc config focus_follows_pointer true
 
-$HOME/.config/polybar/launch.sh &
+$HOME/.config/polybar/launchbspwm.sh &
 setxkbmap -v no &
 feh --bg-scale $HOME/.config/i3/wall.png &
-xrandr --output DP-2 --primary --mode 2560x1440 --pos 1920x0 --rotate normal --output HDMI-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DVI-D-0 --mode 1920x1080 --pos 4480x0 --rotate normal --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off &
+xrdb $HOME/.Xresources
