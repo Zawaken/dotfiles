@@ -50,3 +50,7 @@ setxkbmap -v no &
 feh --bg-scale $HOME/.config/i3/wall.png &
 xrdb $HOME/.Xresources
 xsetroot -cursor_name left_ptr
+if ! pgrep "compton" > /dev/null 2>&1 ; then
+	compton &
+fi
+

@@ -124,7 +124,27 @@ super + {Left,Down,Up,Right}
 #
 # sharenix
 #
+
 ctrl + shift + c
 	sharenix-section -n -c
 ctrl + shift + x
 	xfce4-screenshooter -w -o "sharenix -n -c"
+
+#
+# Audio Keys
+#
+
+XF86AudioRaiseVolume
+	pactl set-sink-volume 1 +5% #increase sound volume
+XF86AudioLowerVolume
+	pactl set-sink-volume 1 -5% #decrease sound volume
+XF86AudioMute
+	pactl set-sink-mute 2 toggle # mute sound
+XF86AudioPlay
+	playerctl play-pause # pause/play music
+XF86AudioPause
+	playerctl play-pause # pause/play music
+XF86AudioNext
+	playerctl next # skips to next song
+XF86AudioPrev
+	playerctl previous # goes back to previous song

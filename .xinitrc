@@ -1,5 +1,5 @@
 #compton -b -f --config ~/.config/compton.conf &
-compton &
+#compton &
 xrdb -load ~/.Xresources
 #xsetkbmap no
 #feh --bg-scale ~/Pictures/wallpapers/wall.png
@@ -10,4 +10,5 @@ urxvtd -q -o -f
 #exec cwm
 #exec 2bwm
 #exec i3
-exec bspwm
+#exec bspwm
+exec dbus-launch --autolaunch=$(cat /var/lib/dbus/machine-id) bspwm
