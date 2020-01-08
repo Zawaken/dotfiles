@@ -73,9 +73,9 @@ vnoremap H <gv
 " }}}
 " --- Plugins --- " {{{
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+	\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 call plug#begin('~/.vim/plugged')
@@ -119,6 +119,7 @@ Plug 'jacoborus/tender.vim'
 " why
 " :source vimty.vim
 Plug 'dixonary/vimty'
+Plug 'Kody-Quintana/bspwm_border_color'
 
 "Syntax highlighting/autocompletion
 Plug 'scrooloose/syntastic'
@@ -149,13 +150,13 @@ let g:NERDTreeGitStatusWithFlags = 1
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+	\ pumvisible() ? "\<C-n>" :
+	\ <SID>check_back_space() ? "\<TAB>" :
+	\ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 set hidden
 
@@ -170,55 +171,55 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
+	if (index(['vim','help'], &filetype) >= 0)
+		execute 'h '.expand('<cword>')
+	else
+		call CocAction('doHover')
+	endif
 endfunction
 " }}}
 " --- Filetype Dependent config --- " {{{
 if has("autocmd")
-  " Enable file type detection
-  filetype on
+	" Enable file type detection
+	filetype on
 
-  " Syntax of these languages is fussy over tabs Vs spaces
-  autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
-  autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+	" Syntax of these languages is fussy over tabs Vs spaces
+	autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
+	autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
-  " Customisations based on house-style (arbitrary)
-  autocmd BufEnter,BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
-  autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
-  autocmd FileType php setlocal ts=4 sts=4 sw=4 expandtab
-  autocmd FileType haskell setlocal ts=4 sts=4 sw=4 expandtab
-  autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
-  autocmd FileType html nnoremap <F5> :!open -a Safari %<CR><CR>
-  autocmd FileType xml setlocal ts=2 sts=2 sw=2 expandtab
-  autocmd FileType css setlocal ts=2 sts=2 sw=2 expandtab
-  autocmd FileType scss setlocal ts=2 sts=2 sw=2 expandtab
-  autocmd FileType javascript setlocal ts=4 sts=4 sw=4 noexpandtab
-  autocmd FileType rb setlocal ts=2 sts=2 sw=2 expandtab
-  autocmd BufRead,BufNewFile *.erb set filetype=eruby.html
-  autocmd FileType eruby.html setlocal ts=2 sts=2 sw=2 expandtab
-  au BufRead,BufNewFile * setfiletype txt
+	" Customisations based on house-style (arbitrary)
+	autocmd BufEnter,BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+	autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
+	autocmd FileType php setlocal ts=4 sts=4 sw=4 expandtab
+	autocmd FileType haskell setlocal ts=4 sts=4 sw=4 expandtab
+	autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
+	autocmd FileType html nnoremap <F5> :!open -a Safari %<CR><CR>
+	autocmd FileType xml setlocal ts=2 sts=2 sw=2 expandtab
+	autocmd FileType css setlocal ts=2 sts=2 sw=2 expandtab
+	autocmd FileType scss setlocal ts=2 sts=2 sw=2 expandtab
+	autocmd FileType javascript setlocal ts=4 sts=4 sw=4 noexpandtab
+	autocmd FileType rb setlocal ts=2 sts=2 sw=2 expandtab
+	autocmd BufRead,BufNewFile *.erb set filetype=eruby.html
+	autocmd FileType eruby.html setlocal ts=2 sts=2 sw=2 expandtab
+	au BufRead,BufNewFile * setfiletype txt
 
-  " Treat .rss files as XML
-  autocmd BufNewFile,BufRead *.rss setfiletype xml
+	" Treat .rss files as XML
+	autocmd BufNewFile,BufRead *.rss setfiletype xml
 endif
 " }}}
 " --- aesthetics --- " {{{
 " Colorscheme
-colorscheme gruvbox
+" colorscheme gruvbox
 " colorscheme sierra
 " colorscheme space-vim-dark
 
 " gruvbox
-let g:gruvbox_italic = 1
+" let g:gruvbox_italic = 1
 
 " airline
 if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-  endif
+	let g:airline_symbols = {}
+endif
 let g:airline_powerline_fonts = 1
 
 " Font
@@ -231,21 +232,21 @@ hi Comment cterm=italic
 " --- Functions --- " {{{
 " Toggle line numbers
 function! ToggleNumbers()
-  if &number || &relativenumber
-	  call EnterInsert()
-	  set nonumber
-	  set norelativenumber
-  else
-	  call LeaveInsert()
-  endif
+	if &number || &relativenumber
+		call EnterInsert()
+		set nonumber
+		set norelativenumber
+	else
+		call LeaveInsert()
+	endif
 endfunction
 nmap <silent> <leader>n :call ToggleNumbers()<CR>
 
 function! EnterInsert()
-	  GitGutterDisable
-	  set cursorline
-	  set norelativenumber
-	  set number
+	GitGutterDisable
+	set cursorline
+	set norelativenumber
+	set number
 endfunction
 function! LeaveInsert()
 	GitGutterEnable
@@ -261,16 +262,16 @@ autocmd VimEnter * call LeaveInsert()
 
 " Fancy folding
 function! FoldText()
-  set fillchars=fold:\ "
-  let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
-  let lines_count = v:foldend - v:foldstart + 1
-  let lines_count_text = '⊲ ' . printf("%10s", lines_count . ' lines') . ' ⊳'
-  let foldchar = matchstr(&fillchars, 'fold:\zs.')
-  let foldtextstart = strpart('⨾' . repeat(foldchar, v:foldlevel-1) . line, 0, (winwidth(0)*2)/3)
-  "let foldtextstart = strpart('+' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
-  let foldtextend = lines_count_text . repeat(foldchar, 8)
-  let foldtextlength = strlen(substitute(foldtextstart . foldtextend, '.', 'x', 'g')) + &foldcolumn
-  return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
+	set fillchars=fold:\ "
+	let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
+	let lines_count = v:foldend - v:foldstart + 1
+	let lines_count_text = '⊲ ' . printf("%10s", lines_count . ' lines') . ' ⊳'
+	let foldchar = matchstr(&fillchars, 'fold:\zs.')
+	let foldtextstart = strpart('⨾' . repeat(foldchar, v:foldlevel-1) . line, 0, (winwidth(0)*2)/3)
+	"let foldtextstart = strpart('+' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
+	let foldtextend = lines_count_text . repeat(foldchar, 8)
+	let foldtextlength = strlen(substitute(foldtextstart . foldtextend, '.', 'x', 'g')) + &foldcolumn
+	return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endfunction
 set foldtext=FoldText()
 

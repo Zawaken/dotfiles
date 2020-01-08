@@ -22,6 +22,8 @@ bindkey -e
 export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$HOME/.gem/ruby/2.6.0/bin:$PATH
 export EDITOR=/usr/bin/nvim
 export VISUAL=/usr/bin/nvim
+export BSPWM_VIM_INSERT=#FF0000
+export BSPWM_VIM_NORMAL=#00FF00
 # }}}
 # --- Plugins --- # {{{
 # --- Antigen --- # {{{
