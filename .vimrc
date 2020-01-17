@@ -209,12 +209,26 @@ endif
 " }}}
 " --- aesthetics --- " {{{
 " Colorscheme
-" colorscheme gruvbox
-" colorscheme sierra
-" colorscheme space-vim-dark
+"colorscheme gruvbox
+"colorscheme molokai
+"colorscheme Despacio
+colorscheme cosmic_latte
+"colorscheme snow
+"colorscheme stellarized
+"colorscheme seoul256.vim
+"colorscheme badwolf
+"colorscheme sourcerer.vim
+"colorscheme sierra
+"colorscheme oceanic-next
+"colorscheme one
+"colorscheme space-vim-dark
+"colorscheme tender.vim
+
+" Background
+set background=dark
 
 " gruvbox
-" let g:gruvbox_italic = 1
+let g:gruvbox_italic = 1
 
 " airline
 if !exists('g:airline_symbols')
@@ -228,6 +242,7 @@ set guifont=Source\ Code\ Pro\ for\ Powerline
 " transparency + italic text on comments
 hi Normal guibg=NONE ctermbg=NONE
 hi Comment cterm=italic
+
 " }}}
 " --- Functions --- " {{{
 " Toggle line numbers
