@@ -276,3 +276,4 @@ endfunction
 set foldtext=FoldText()
 
 " }}}
+let b:ff = "-" . &ft
