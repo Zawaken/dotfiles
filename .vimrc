@@ -97,8 +97,8 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
+Plug 'dstein64/vim-startuptime'
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install() }}
-
 
 " Colorschemes
 Plug 'morhetz/gruvbox'
@@ -122,7 +122,7 @@ Plug 'dixonary/vimty'
 Plug 'Kody-Quintana/bspwm_border_color'
 
 "Syntax highlighting/autocompletion
-Plug 'scrooloose/syntastic'
+" Plug 'scrooloose/syntastic'
 Plug 'rodjek/vim-puppet'
 Plug 'chr4/nginx.vim'
 Plug 'ObserverOfTime/coloresque.vim'
@@ -291,4 +291,3 @@ endfunction
 set foldtext=FoldText()
 
 " }}}
-let b:ff = "-" . &ft
