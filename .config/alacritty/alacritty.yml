@@ -103,6 +103,7 @@ font:
     #   - (Linux) monospace
     #   - (Windows) Consolas
     # family: Terminess Powerline
+    # Cozette: https://github.com/slavfox/Cozette
     family: Cozette
 
     # The `style` can be specified to pick a specific face.
