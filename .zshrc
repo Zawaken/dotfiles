@@ -40,6 +40,7 @@ if [[ -f $ANTIGEN/antigen.zsh ]]; then
 	antigen bundle chrissicool/zsh-256color
 	antigen bundle dnf
 	antigen bundle docker
+	antigen bundle akarzim/zsh-docker-aliases
 	antigen bundle git
 	antigen bundle git-extras
 	antigen bundle MichaelAquilina/zsh-you-should-use
