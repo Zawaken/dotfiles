@@ -115,6 +115,7 @@ alias :q='exit'
 alias please='sudo $(fc -ln -1)'
 alias jf='journalctl -f'
 alias firefox='firejail firefox'
+alias dotfiles='git --git-dir="${HOME}/dotfiles" --work-tree="${HOME}"'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # }}}
 # --- Prompt --- # {{{
