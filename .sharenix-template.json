@@ -9,7 +9,7 @@
          "RequestURL": "https://i-love.catgirls.me/api/upload",
 	 "FileFormName": "files[]",
 	 "Headers": {
-	      "token": "Did you really think I would have my token laying around?"
+	      "token": "Did you really think I would have my token lying around?"
 	 },
 	 "ResponseType": "Text",
 	 "URL": "$json:files[0].url$"
