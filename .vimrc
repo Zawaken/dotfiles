@@ -129,6 +129,7 @@ Plug 'ObserverOfTime/coloresque.vim'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'dense-analysis/ale'
 Plug 'PotatoesMaster/i3-vim-syntax'
+Plug 'ap/vim-css-color'
 "if has('nvim')
 "  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "else
