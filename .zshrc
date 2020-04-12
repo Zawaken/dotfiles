@@ -116,11 +116,13 @@ alias please='sudo $(fc -ln -1)'
 alias jf='journalctl -f'
 alias firefox='firejail firefox'
 alias dotfiles='git --git-dir="${HOME}/dotfiles" --work-tree="${HOME}"'
+alias dots='dotfiles'
 alias da='dotfiles add'
 alias dst='dotfiles status'
 alias dcmsg='dotfiles commit -m'
 alias dl='dotfiles pull'
 alias dp='dotfiles push'
+alias dirtydots='GIT_DIR="${HOME}/dotfiles" WORK_TREE="${HOME}" GIT_ADD="-u" dirtygit'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # }}}
 # --- Prompt --- # {{{
