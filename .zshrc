@@ -24,6 +24,12 @@ export EDITOR=/usr/bin/nvim
 export VISUAL=/usr/bin/nvim
 export BSPWM_VIM_INSERT=#FF0000
 export BSPWM_VIM_NORMAL=#00FF00
+if [ ! -S ~/.ssh/ssh_auth_sock ]; then
+  eval `ssh-agent`
+  ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+fi
+export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+ssh-add -l > /dev/null || ssh-add
 # }}}
 # --- Plugins --- # {{{
 # --- Antigen --- # {{{

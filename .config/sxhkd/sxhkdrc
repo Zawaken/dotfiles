@@ -1,6 +1,5 @@
-#
-# wm independent hotkeys
-#
+# wm independent hotkeys {{{
+# vim:foldmethod=marker
 
 # terminal emulator
 super + Return
@@ -12,12 +11,9 @@ super + d
 # make sxhkd reload its configuration files:
 super + Escape
 	pkill -USR1 -x sxhkd; dunstify "sxhkd configuration reloaded"
-super + i
-	$HOME/.i3/lock --pixelate --blur=0x0
 
-#
-# bspwm hotkeys
-#
+# }}}
+# bspwm hotkeys {{{
 
 # quit/restart bspwm
 super + alt + {q,r}
@@ -39,8 +35,8 @@ super + y
 super + g
 	bspc node -s biggest
 
-#
-# state/flags
+# }}}
+# state/flags {{{
 #
 
 # set the window state
@@ -51,13 +47,19 @@ super + {t,shift + t,s,f}
 super + ctrl + {m,x,y,z}
 	bspc node -g {marked,locked,sticky,private}
 
-#
-# focus/swap
+# }}}
+# focus/swap {{{
 #
 
 # focus the node in the given direction
-super + {_,shift + }{h,j,k,l}
-	bspc node -{f,s} {west,south,north,east}
+super + {_,shift,ctrl + }{h,j,k,l}
+	bspc node -{f,s,p} {west,south,north,east}
+
+super + {_,ctrl + }{Left,Down,Up,Right}
+	bspc node -{f,p} {west,south,north,east} --follow
+
+super + shift + {Left,Down,Up,Right}
+	bspc node -s {west,south,north,east} --follow
 
 # focus the node for the given path jump
 super + {p,b,comma,period}
@@ -85,13 +87,9 @@ super + {o,i}
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '{I,II,III,IV,V,VI,VII,VIII,IX,X}'
 
+# }}}
+# preselect {{{
 #
-# preselect
-#
-
-# preselect the direction
-super + ctrl + {h,j,k,l}
-	bspc node -p {west,south,north,east}
 
 # preselect the ratio
 super + ctrl + {1-9}
@@ -105,8 +103,8 @@ super + ctrl + space
 super + ctrl + shift + space
 	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
 
-#
-# move/resize
+# }}}
+# move/resize {{{
 #
 
 # expand a window by moving one of its side outward
@@ -117,12 +115,8 @@ super + alt + {h,j,k,l}
 super + alt + shift + {h,j,k,l}
 	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
 
-# move a floating window
-super + {Left,Down,Up,Right}
-	bspc node -v {-20 0,0 20,0 -20,20 0}
-
-#
-# sharenix
+# }}}
+# sharenix {{{
 #
 
 ctrl + shift + c
@@ -130,8 +124,8 @@ ctrl + shift + c
 ctrl + shift + x
 	xfce4-screenshooter -w -o "sharenix -n -c"
 
-#
-# Audio Keys
+# }}}
+# Audio Keys {{{
 #
 
 XF86AudioRaiseVolume
@@ -148,3 +142,5 @@ XF86AudioNext
 	playerctl next # skips to next song
 XF86AudioPrev
 	playerctl previous # goes back to previous song
+
+# }}}
