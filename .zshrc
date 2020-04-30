@@ -24,6 +24,7 @@ export EDITOR=/usr/bin/nvim
 export VISUAL=/usr/bin/nvim
 export BSPWM_VIM_INSERT=#FF0000
 export BSPWM_VIM_NORMAL=#00FF00
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 if [ ! -S ~/.ssh/ssh_auth_sock ]; then
   eval `ssh-agent`
   ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
@@ -129,6 +130,7 @@ alias dcmsg='dotfiles commit -m'
 alias dl='dotfiles pull'
 alias dp='dotfiles push'
 alias dirtydots='GIT_DIR="${HOME}/dotfiles" WORK_TREE="${HOME}" GIT_ADD="-u" dirtygit'
+[ -f .aliases ] && source .aliases
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # }}}
 # --- Prompt --- # {{{

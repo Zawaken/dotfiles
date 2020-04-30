@@ -1,5 +1,6 @@
 #! /bin/bash
 # vim:foldmethod=marker
+bspc rule -r "*"
 
 sxhkd &
 # Hostname dependent config {{{
@@ -56,7 +57,7 @@ setxkbmap -v no &
 feh --bg-scale $HOME/.config/i3/wall.png &
 xrdb $HOME/.Xresources
 xsetroot -cursor_name left_ptr
-if ! pgrep "compton" > /dev/null 2>&1 ; then
-	compton &
+if ! pgrep "picom" > /dev/null 2>&1 ; then
+	picom -b &
 fi
 
