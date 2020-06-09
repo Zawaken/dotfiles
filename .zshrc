@@ -63,7 +63,8 @@ if [[ -f $ANTIGEN/antigen.zsh ]]; then
 	# antigen bundle zsh-users/zsh-syntax-highlighting
 
 	# antigen prompt theme
-	antigen theme romkatv/powerlevel10k
+	# antigen theme romkatv/powerlevel10k
+	antigen theme miloshadzic
 
 	antigen apply
 fi

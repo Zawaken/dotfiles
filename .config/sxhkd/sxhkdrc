@@ -55,6 +55,11 @@ super + ctrl + {m,x,y,z}
 super + {_,shift,ctrl + }{h,j,k,l}
 	bspc node -{f,s,p} {west,south,north,east}
 
+#super + shift + {Left,Down,Up,Right}
+#  bspc query -T -n focused | grep '"state":"floating"' \
+#  && bspc node --move {-40 0,0 40,0 -40,40 0} \
+#  || bspc node --swap {west,south,north,east} --follow
+
 super + {_,ctrl + }{Left,Down,Up,Right}
 	bspc node -{f,p} {west,south,north,east} --follow
 
