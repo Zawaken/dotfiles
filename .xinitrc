@@ -12,3 +12,4 @@ urxvtd -q -o -f
 #exec i3
 #exec bspwm
 exec dbus-launch --autolaunch=$(cat /var/lib/dbus/machine-id) bspwm
+/usr/libexec/polkit-gnome-authentication-agent-1 &

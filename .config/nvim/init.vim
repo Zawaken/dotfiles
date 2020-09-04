@@ -128,6 +128,7 @@ Plug 'joshdick/onedark.vim'
 " :source vimty.vim
 Plug 'dixonary/vimty'
 Plug 'Kody-Quintana/bspwm_border_color'
+Plug 'hugolgst/vimsence'
 
 "Syntax highlighting/autocompletion
 " Plug 'scrooloose/syntastic'
