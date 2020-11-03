@@ -35,6 +35,9 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
+" coc ignore startup message
+let g:coc_disable_startup_warning = 1
+
 " Smart casing
 set smartcase
 set ignorecase
@@ -106,7 +109,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
 Plug 'dstein64/vim-startuptime'
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install() }}
+Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install() }}
 
 " Colorschemes
 Plug 'tomasr/molokai'
