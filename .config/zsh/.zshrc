@@ -32,9 +32,15 @@ fi
 export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 ssh-add -l > /dev/null || ssh-add
 # }}}
+# --- Functions --- # {{{
+pastor() {
+	[[ "$1" ]] || { echo "Error: Missing file" >&2; return 1}
+	curl -F "a=@$1" "${2:-https://p.btrfs.no}"
+}
+#}}}
 # --- Plugins --- # {{{
 # --- Antigen --- # {{{
-ANTIGEN=$HOME/.antigen/
+ANTIGEN=$HOME/.config/.antigen/
 [ -f $ANTIGEN/antigen.zsh ] || git clone\
 	https://github.com/zsh-users/antigen.git $ANTIGEN
 if [[ -f $ANTIGEN/antigen.zsh ]]; then
@@ -106,6 +112,7 @@ fi
 # }}}
 # }}}
 # --- Aliases --- # {{{
+alias sudo='sudo '
 alias vim='nvim'
 alias vi='nvim'
 alias ix='$HOME/bin/ix'
@@ -116,9 +123,9 @@ alias fetch='neofetch --ascii_distro arch'
 alias ridiculous-name='ncmpcpp'
 alias i3c='vim $HOME/.config/i3/config'
 alias polycfg='vim $HOME/.config/polybar/config'
-alias reload='source $HOME/.zshrc'
-alias reloadx='xrdb -load ~/.Xresources'
-alias terminal-colors='$HOME/.xres/colorschemes/dynamic-urxvt.sh'
+alias reload='source $ZDOTDIR/.zshrc'
+alias reloadx='xrdb -load $HOME/.config/Xresources'
+alias terminal-colors='$HOME/config/xres/colorschemes/dynamic-urxvt.sh'
 alias :q='exit'
 alias please='sudo $(fc -ln -1)'
 alias jf='journalctl -f'
@@ -131,7 +138,7 @@ alias dcmsg='dotfiles commit -m'
 alias dl='dotfiles pull'
 alias dp='dotfiles push'
 alias dirtydots='GIT_DIR="${HOME}/dotfiles" WORK_TREE="${HOME}" GIT_ADD="-u" dirtygit'
-[ -f .aliases ] && source .aliases
+[ -f ${XDG_CONFIG_HOME:-$HOME/.config}/.aliases ] && source .aliases
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # }}}
 # --- Prompt --- # {{{

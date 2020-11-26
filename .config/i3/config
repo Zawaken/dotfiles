@@ -194,7 +194,7 @@ bindsym Ctrl+Shift+x exec xfce4-screenshooter -w -o "sharenix -n -c" #sharenix-w
 exec_always --no-startup-id $HOME/bin/dunstreload
 exec --no-startup-id pa-applet
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-exec_always --no-startup-id feh --bg-scale $HOME/.config/i3/wall.png # sets the background
+exec_always --no-startup-id feh --bg-scale $HOME/.config/wall.png # sets the background
 exec --no-startup-id xrandr --output DP-2 --primary --mode 2560x1440 --pos 1920x0 --rotate normal --output HDMI-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DVI-D-0 --mode 1920x1080 --pos 4480x0 --rotate normal --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off # makes sure the displays are put in the correct position
 exec --no-startup-id /usr/bin/lxpolkit
 # exec compton -fcCG --backend glx --vsync opengl-swc --xrender-sync-fence # the compositor that i'm currently using

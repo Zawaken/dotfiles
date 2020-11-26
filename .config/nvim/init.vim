@@ -102,7 +102,7 @@ Plug 'tpope/vim-commentary'
 Plug 'junegunn/goyo.vim'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-surround'
-Plug 'vimwiki/vimwiki'
+"Plug 'vimwiki/vimwiki'
 Plug 'Raimondi/delimitMate'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-airline/vim-airline'
@@ -190,6 +190,9 @@ function! s:show_documentation()
 		call CocAction('doHover')
 	endif
 endfunction
+
+" Disable vimwiki tab bind
+let g:vimwiki_table_mappings = 0
 " }}}
 " --- Filetype Dependent config --- " {{{
 if has("autocmd")

@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+xrdb -load ${XDG_CONFIG_HOME:-$HOME/.config}/Xresources
+systemctl --user import-environment DISPLAY
+
+#compton -b -f --config ~/.config/compton.conf &
+#compton &
+#xsetkbmap no
+#feh --bg-scale ~/Pictures/wallpapers/wall.png
+#sxhkd &
+#urxvtd -q -o -f
+#exec dbus-launch --autolaunch=$(cat /var/lib/dbus/machine-id) bspwm
+#/usr/libexec/polkit-gnome-authentication-agent-1 &
