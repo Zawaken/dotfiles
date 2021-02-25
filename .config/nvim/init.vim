@@ -1,29 +1,178 @@
 " --- Zawaken's vimrc --- " {{{
 " vim:foldmethod=marker
-" }}}
-" --- General --- " {{{
-" --- Oni --- " {{{
-if exists('g:gui_oni')
-  set noswapfile
-  set smartcase
-  set mouse=a
-  set noshowmode
-  set noruler
-  set laststatus=0
-  set noshowcmd
-endif
-" }}}
-
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath = &runtimepath
 let mapleader=','
+let maplocalleader=','
+" }}}
+" --- Plugins --- " {{{
+" Plug installation {{{
+if empty(glob('~/.vim/autoload/plug.vim'))
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+	\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+" }}}
+
+let g:colorscheme = 'one'
 set nocompatible
+call plug#begin('~/.vim/plugged')
+" General {{{
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim' " {{{
+nmap <silent> <leader>f :FZF<CR>
+let g:fzf_layout = {
+ \ 'window': 'new | wincmd J | resize 1 | call animate#window_percent_height(0.5)'
+\ }
+" }}}
+Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/vim-github-dashboard'
+Plug 'scrooloose/nerdtree' " {{{
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+" NERDTree config
+" Open a NERDTree automatically when vim starts up if no files were specified
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" Open NERDTree automatically when vim starts up on opening a directory
+autocmd StdinReadPre * let s:std_in=1
+map <C-o> :NERDTreeToggle<CR>
+let g:NERDTreeGitStatusWithFlags = 1
+let NERDTreeShowHidden=1
+let g:NERDTreeIgnore = [
+  \ '^.*\.png$',
+  \ '^.*\.jpg$',
+  \ '^.*\.mkv$',
+  \ '^.*\.mp4$',
+  \ '^.*\.mp3$'
+  \ ]
+" }}}
+Plug 'nathanaelkane/vim-indent-guides' " {{{
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_start_level = 1
+let g:indent_guides_auto_colors = 0
+"let g:indent_guides_guide_size = 2
+let g:indent_guides_color_change_percent = 10
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=gray ctermbg=236
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=23
+" }}}
+Plug 'tpope/vim-commentary'
+Plug 'junegunn/goyo.vim'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-surround'
+Plug 'lervag/wiki.vim'
+Plug 'Raimondi/delimitMate'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' " {{{
+" airline
+if !exists('g:airline_symbols')
+	let g:airline_symbols = {}
+endif
+let g:airline_powerline_fonts = 1
+" }}}
+Plug 'airblade/vim-gitgutter'
+Plug 'dstein64/vim-startuptime'
+Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install() }} " {{{
+" Used by coc
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+let g:coc_global_extensions = [
+  \ 'coc-snippets',
+  \ 'coc-pairs',
+  \ 'coc-html',
+  \ 'coc-json',
+  \ 'coc-vetur',
+  \ 'coc-css',
+  \ 'coc-yaml',
+  \ 'coc-highlight',
+  \ 'coc-markdownlint',
+  \ 'coc-emoji',
+  \ 'coc-sh',
+  \ 'coc-pyright'
+  \ ]
+inoremap <silent><expr> <TAB>
+	\ pumvisible() ? "\<C-n>" :
+	\ <SID>check_back_space() ? "\<TAB>" :
+	\ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+function! s:check_back_space() abort
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+set hidden
+
+inoremap <silent><expr> <c-space> coc#refresh() " Use <c-space> to trigger completion.
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Or use `complete_info` if your vim support it, like:
+" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+	if (index(['vim','help'], &filetype) >= 0)
+		execute 'h '.expand('<cword>')
+	else
+		call CocAction('doHover')
+	endif
+endfunction
+" coc ignore startup message
+let g:coc_disable_startup_warning = 1
+" }}}
+" }}}
+" Colorschemes {{{
+Plug 'rakr/vim-one'
+Plug 'tomasr/molokai'
+Plug 'AlessandroYorba/Despacio'
+Plug 'nightsense/cosmic_latte'
+Plug 'nightsense/snow'
+Plug 'nightsense/stellarized'
+Plug 'junegunn/seoul256.vim'
+Plug 'sjl/badwolf'
+Plug 'xero/sourcerer.vim'
+Plug 'AlessandroYorba/Sierra'
+Plug 'mhartington/oceanic-next'
+Plug 'liuchengxu/space-vim-dark'
+Plug 'jacoborus/tender.vim'
+Plug 'joshdick/onedark.vim'
+" }}}
+"Syntax highlighting/autocompletion {{{
+" Plug 'scrooloose/syntastic'
+Plug 'rodjek/vim-puppet'
+Plug 'chr4/nginx.vim', { 'for': 'nginx'}
+Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc'}
+Plug 'ObserverOfTime/coloresque.vim'
+Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile'}
+Plug 'dense-analysis/ale'
+Plug 'PotatoesMaster/i3-vim-syntax'
+Plug 'ap/vim-css-color'
+" }}}
+" useless {{{
+" :source vimty.vim
+Plug 'dixonary/vimty'
+Plug 'Kody-Quintana/bspwm_border_color'
+Plug 'hugolgst/vimsence'
+"if has('nvim') " deoplete {{{
+"  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"else
+"  Plug 'Shougo/deoplete.nvim'
+"  Plug 'roxma/nvim-yarp'
+"  Plug 'roxma/vim-hug-neovim-rpc'
+"endif
+"let g:deoplete#enable_at_startup = 1
+" }}}
+" }}}
+call plug#end()
+
+" }}}
+" --- General --- " {{{
+
 filetype plugin on
 syntax on
 set encoding=utf-8
 set number
 set relativenumber
-let g:colorscheme = 'one'
 set listchars=tab:▸\ ,eol:¬
 set list
 
@@ -35,15 +184,9 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
-" coc ignore startup message
-let g:coc_disable_startup_warning = 1
-
 " Smart casing
 set smartcase
 set ignorecase
-
-" File interpreting
-let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
 
 " Get line, word and character counts with F3:
 map <F3> :!wc <C-R>%<CR>
@@ -81,118 +224,17 @@ vnoremap K xkP`[V`]
 vnoremap J xp`[V`]
 vnoremap L >gv
 vnoremap H <gv
-" }}}
-" --- Plugins --- " {{{
-if empty(glob('~/.vim/autoload/plug.vim'))
-	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-	\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+" --- Oni --- " {{{
+if exists('g:gui_oni')
+  set noswapfile
+  set smartcase
+  set mouse=a
+  set noshowmode
+  set noruler
+  set laststatus=0
+  set noshowcmd
 endif
-
-call plug#begin('~/.vim/plugged')
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'junegunn/vim-easy-align'
-Plug 'junegunn/vim-github-dashboard'
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'nathanaelkane/vim-indent-guides'
-Plug 'tpope/vim-commentary'
-Plug 'junegunn/goyo.vim'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-surround'
-"Plug 'vimwiki/vimwiki'
-Plug 'Raimondi/delimitMate'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'airblade/vim-gitgutter'
-Plug 'dstein64/vim-startuptime'
-Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install() }}
-
-" Colorschemes
-Plug 'tomasr/molokai'
-Plug 'AlessandroYorba/Despacio'
-Plug 'nightsense/cosmic_latte'
-Plug 'nightsense/snow'
-Plug 'nightsense/stellarized'
-Plug 'junegunn/seoul256.vim'
-Plug 'sjl/badwolf'
-Plug 'xero/sourcerer.vim'
-Plug 'AlessandroYorba/Sierra'
-Plug 'mhartington/oceanic-next'
-Plug 'rakr/vim-one'
-Plug 'liuchengxu/space-vim-dark'
-Plug 'jacoborus/tender.vim'
-Plug 'joshdick/onedark.vim'
-
-" why
-" :source vimty.vim
-Plug 'dixonary/vimty'
-Plug 'Kody-Quintana/bspwm_border_color'
-Plug 'hugolgst/vimsence'
-
-"Syntax highlighting/autocompletion
-" Plug 'scrooloose/syntastic'
-Plug 'rodjek/vim-puppet'
-Plug 'chr4/nginx.vim'
-Plug 'ObserverOfTime/coloresque.vim'
-Plug 'ekalinin/Dockerfile.vim'
-Plug 'dense-analysis/ale'
-Plug 'PotatoesMaster/i3-vim-syntax'
-Plug 'ap/vim-css-color'
-"if has('nvim')
-"  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"else
-"  Plug 'Shougo/deoplete.nvim'
-"  Plug 'roxma/nvim-yarp'
-"  Plug 'roxma/vim-hug-neovim-rpc'
-"endif
-"let g:deoplete#enable_at_startup = 1
-
-call plug#end()
-
-" NERDTree config
-" autocmd StdinReadPre * let s:std_in=1
-" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-map <C-o> :NERDTreeToggle<CR>
-let g:NERDTreeGitStatusWithFlags = 1
-
-" Used by coc
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-	\ pumvisible() ? "\<C-n>" :
-	\ <SID>check_back_space() ? "\<TAB>" :
-	\ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-function! s:check_back_space() abort
-	let col = col('.') - 1
-	return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-set hidden
-
-inoremap <silent><expr> <c-space> coc#refresh() " Use <c-space> to trigger completion.
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" Or use `complete_info` if your vim support it, like:
-" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-function! s:show_documentation()
-	if (index(['vim','help'], &filetype) >= 0)
-		execute 'h '.expand('<cword>')
-	else
-		call CocAction('doHover')
-	endif
-endfunction
-
-" Disable vimwiki tab bind
-let g:vimwiki_table_mappings = 0
+" }}}
 " }}}
 " --- Filetype Dependent config --- " {{{
 if has("autocmd")
@@ -244,17 +286,8 @@ highlight Normal     ctermbg=NONE guibg=NONE
 highlight LineNr     ctermbg=NONE guibg=NONE
 highlight SignColumn ctermbg=NONE guibg=NONE
 
-" Background
-set background=dark
-
 " gruvbox
 let g:gruvbox_italic = 1
-
-" airline
-if !exists('g:airline_symbols')
-	let g:airline_symbols = {}
-endif
-let g:airline_powerline_fonts = 1
 
 " Font
 set guifont=Source\ Code\ Pro\ for\ Powerline
@@ -265,7 +298,7 @@ hi Comment cterm=italic
 
 " }}}
 " --- Functions --- " {{{
-" Toggle line numbers
+" Toggle line numbers {{{
 function! ToggleNumbers()
 	if &number || &relativenumber
 		call EnterInsert()
@@ -282,20 +315,23 @@ function! EnterInsert()
 	set cursorline
 	set norelativenumber
 	set number
+    set list!
 endfunction
 function! LeaveInsert()
 	GitGutterEnable
 	set nocursorline
 	set relativenumber
 	set number
+    set list
 endfunction
+
 " autocmd InsertEnter * call EnterInsert()
 " autocmd FocusLost * call EnterInsert()
 " autocmd InsertLeave * call LeaveInsert()
 " autocmd FocusGained * call LeaveInsert()
 autocmd VimEnter * call LeaveInsert()
-
-" Fancy folding
+" }}}
+" Fancy folding {{{
 function! FoldText()
 	set fillchars=fold:\ "
 	let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
@@ -309,5 +345,29 @@ function! FoldText()
 	return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endfunction
 set foldtext=FoldText()
-
+" }}}
+" Automatically close tab/vim if the only open buffers are NERDTree and/or Calendar {{{
+function! TabQuit()
+  " https://vim.fandom.com/wiki/Tabclose_instead_of_quit-all
+  try
+    if tabpagenr('$') > 1
+      silent exec 'tabclose'
+    else
+      silent exec 'qa'
+    endif
+  catch
+    echohl ErrorMsg | echo v:exception | echohl NONE
+  endtry
+endfunction
+function! NerdTreeEnabled()
+  return exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1
+endfunction
+function! CalendarEnabled()
+  return bufwinnr("Calendar") != -1
+endfunction
+function! ShouldClose()
+  return (winnr("$") == 1 && (NerdTreeEnabled() || CalendarEnabled())) || (winnr("$") == 2 && (NerdTreeEnabled() && CalendarEnabled()))
+endfunction
+autocmd BufEnter * if ShouldClose() | call TabQuit() | endif
+" }}}
 " }}}

@@ -1,11 +1,10 @@
 #! /usr/bin/env bash
 # vim:foldmethod=marker
 # general config {{{
-bspc rule -r "*"
-bspc config border_width         2
+bspc config border_width        2
 bspc config window_gap          12
 
-bspc config split_ratio          0.52
+bspc config split_ratio          0.50
 bspc config borderless_monocle   true
 bspc config gapless_monocle      true
 
@@ -19,19 +18,19 @@ bspc config focus_follows_pointer true
 # }}}
 # Hostname dependent config {{{
 if [[ $(hostname) == 'purity' ]]; then
-	bspc monitor HDMI-0 -d I II III
-	bspc monitor DP-2 -d IV V VI VII
-	bspc monitor DVI-D-0 -d VIII IX X
+	bspc monitor HDMI-A-0 -d I II III
+	bspc monitor DisplayPort-0 -d IV V VI VII
+	bspc monitor DisplayPort-1 -d VIII IX X
 
-	bspc monitor HDMI-0 -g 1920x1080+0+0
-	bspc monitor DP-2 -g 2560x1440+1920+0
-	bspc monitor DVI-D-0 -g 1920x1080+4480+0
+	bspc monitor HDMI-A-0 -g 1920x1080+0+0
+	bspc monitor DisplayPort-0 -g 2560x1440+1920+0
+	bspc monitor DisplayPort-1 -g 1920x1080+4480+0
 
-	if ! pgrep "urxvtd" > /dev/null 2>&1 ; then
-		urxvtd -q -o -f
-	fi
+	# if ! pgrep "urxvtd" > /dev/null 2>&1 ; then
+	# 	urxvtd -q -o -f
+	# fi
 
-	xrandr --output DP-2 --primary --mode 2560x1440 --pos 1920x0 --rotate normal --output HDMI-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DVI-D-0 --mode 1920x1080 --pos 4480x0 --rotate normal --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off &
+	xrandr --output DisplayPort-0 --primary --mode 2560x1440 --pos 1920x0 --rotate normal --output HDMI-A-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DisplayPort-1 --mode 1920x1080 --pos 4480x0 --rotate normal --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off &
 else
 	bspc monitor DP-2 -d I II III IV V
 	bspc monitor HDMI-1 -d VI VII VIII IX X
@@ -40,17 +39,20 @@ else
 	bspc monitor HDMI-1 -g 1920x1200+1920+0
 
 	xrandr --output DP-2 --primary --mode 1920x1200 --pos 0x0 --rotate normal --output HDMI-1 --mode 1920x1200 --pos 1920x0 --rotate normal &
-	if ! pgrep "urxvt256c-mld" > /dev/null 2>&1 ; then
-		urxvt256c-mld -q -o -f
-	fi
+	# if ! pgrep "urxvt256c-mld" > /dev/null 2>&1 ; then
+	# 	urxvt256c-mld -q -o -f
+	# fi
 fi
 # }}}
 # rules {{{
+bspc rule -r "*"
 bspc rule -a discord desktop=^2
 bspc rule -a Steam desktop=^5
 bspc rule -a "Pavucontrol":pavucontrol state=floating
 bspc rule -a mpv state=floating
 bspc rule -a "Sxiv":sxiv state=floating
+bspc rule -a mpv floating=on
+bspc rule -a '*:scratchpad' sticky=on state=floating center=true rectangle=1600x1000+0+0
 # }}}
 # autoexec {{{
 killall -q sxhkd; sxhkd &

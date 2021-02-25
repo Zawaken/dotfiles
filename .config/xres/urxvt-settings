@@ -1,7 +1,7 @@
 Xcursor.size:				16W
 URxvt.urgentOnBell:			true
 URxvt.scrollBar:			false
-URxvt.font:				xft:Termsyn:pixelsize=14:minspace=false, xft:TerminessTTF Nerd Font Mono:size=14:Style=Medium
+URxvt.font:				xft:Terminess Powerline:pixelsize=14:minspace=false, xft:TerminessTTF Nerd Font Mono:size=14:Style=Medium
 URxvt.depth:				32
 URxvt.perl-ext-common:			default,matcher,vtwheel
 URxvt.url-launcher:			/usr/bin/firefox-nightly

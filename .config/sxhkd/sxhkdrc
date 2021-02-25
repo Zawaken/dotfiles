@@ -36,6 +36,10 @@ super + g
 	bspc node -s biggest
 
 # }}}
+# scratchpad {{{
+super + a
+	bspwm_scratchpad "scratchpad" "alacritty --class scratchpad --title scratchpad --command tmux" 1000x600+0+0
+#}}}
 # state/flags {{{
 #
 

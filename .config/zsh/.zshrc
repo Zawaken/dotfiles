@@ -24,6 +24,7 @@ export EDITOR=/usr/bin/nvim
 export VISUAL=/usr/bin/nvim
 export BSPWM_VIM_INSERT=#FF0000
 export BSPWM_VIM_NORMAL=#00FF00
+export STARSHIP_CONFIG=$HOME/.config/starship/starship.toml
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 if [ ! -S ~/.ssh/ssh_auth_sock ]; then
   eval `ssh-agent`
@@ -33,12 +34,15 @@ export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 ssh-add -l > /dev/null || ssh-add
 # }}}
 # --- Functions --- # {{{
+# pastor pastebin {{{
 pastor() {
 	[[ "$1" ]] || { echo "Error: Missing file" >&2; return 1}
 	curl -F "a=@$1" "${2:-https://p.btrfs.no}"
 }
+# }}}
 #}}}
 # --- Plugins --- # {{{
+
 # --- Antigen --- # {{{
 ANTIGEN=$HOME/.config/.antigen/
 [ -f $ANTIGEN/antigen.zsh ] || git clone\
@@ -70,11 +74,12 @@ if [[ -f $ANTIGEN/antigen.zsh ]]; then
 
 	# antigen prompt theme
 	# antigen theme romkatv/powerlevel10k
-	antigen theme miloshadzic
+	#antigen theme miloshadzic
 
 	antigen apply
 fi
 # }}}
+
 # --- Antibody --- # {{{
 
 #command -v antibody > /dev/null 2>&1 \
@@ -110,37 +115,54 @@ fi
 #EOBUNDLES
 
 # }}}
+command -v starship >/dev/null 2>&1 || (curl -fsSL https://starship.rs/install.sh | bash)
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down
 # }}}
 # --- Aliases --- # {{{
 alias sudo='sudo '
-alias vim='nvim'
-alias vi='nvim'
-alias ix='$HOME/bin/ix'
-alias pac='sudo pacman'
-alias adb='$HOME/Documents/platform-tools/adb'
-alias fastboot='$HOME/Documents/platform-tools/fastboot'
+alias vim='${EDITOR}'
+alias vi='${EDITOR}'
 alias fetch='neofetch --ascii_distro arch'
-alias ridiculous-name='ncmpcpp'
 alias i3c='vim $HOME/.config/i3/config'
-alias polycfg='vim $HOME/.config/polybar/config'
 alias reload='source $ZDOTDIR/.zshrc'
 alias reloadx='xrdb -load $HOME/.config/Xresources'
-alias terminal-colors='$HOME/config/xres/colorschemes/dynamic-urxvt.sh'
-alias :q='exit'
-alias please='sudo $(fc -ln -1)'
 alias jf='journalctl -f'
 alias firefox='firejail firefox'
+alias mon2cam="deno run --unstable -A -r -q https://raw.githubusercontent.com/ShayBox/Mon2Cam/master/src/mod.ts"
+[ -f ${XDG_CONFIG_HOME:-$HOME/.config}/.aliases ] && source .aliases
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# }}}
+# --- dotfiles --- # {{{
+export DOT_DIR="${HOME}/.config/dotfiles/.git"
+export DOT_TREE="${HOME}"
+export DOTBARE_DIR="${DOT_DIR}"
+export DOTBARE_TREE="${DOT_TREE}"
+
 alias dotfiles='git --git-dir="${HOME}/dotfiles" --work-tree="${HOME}"'
 alias dots='dotfiles'
+alias dirtydots='GIT_DIR="${HOME}/dotfiles" WORK_TREE="${HOME}" GIT_ADD="-u" dirtygit'
+# dotfile short git aliases # {{{
 alias da='dotfiles add'
 alias dst='dotfiles status'
 alias dcmsg='dotfiles commit -m'
 alias dl='dotfiles pull'
 alias dp='dotfiles push'
-alias dirtydots='GIT_DIR="${HOME}/dotfiles" WORK_TREE="${HOME}" GIT_ADD="-u" dirtygit'
-[ -f ${XDG_CONFIG_HOME:-$HOME/.config}/.aliases ] && source .aliases
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # }}}
+#dotfiles () {
+#  if test "${#}" -eq "0"; then
+#    dotfiles status
+#    return 0
+#  fi
+#  #for var in "${@}"; do
+#  #  if test "${var}" = "."; then
+#  #    printf "\'.\' argument disabled by dotfiles git wrapper."
+#  #    return 1
+#  #  fi
+#  #done
+#  git --git-dir="${DOT_DIR}" --work-tree="${DOT_TREE}" "${@}"
+#}
+#}}}
 # --- Prompt --- # {{{
 # Powerlevel9k theme options
 # POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir dir_writable vcs)
@@ -148,4 +170,7 @@ alias dirtydots='GIT_DIR="${HOME}/dotfiles" WORK_TREE="${HOME}" GIT_ADD="-u" dir
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+# }}}
+# --- Sourcing --- # {{{
+eval "$(starship init zsh)"
 # }}}
