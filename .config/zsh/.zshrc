@@ -24,7 +24,7 @@ export EDITOR=/usr/bin/nvim
 export VISUAL=/usr/bin/nvim
 export BSPWM_VIM_INSERT=#FF0000
 export BSPWM_VIM_NORMAL=#00FF00
-export STARSHIP_CONFIG=$HOME/.config/starship/starship.toml
+export STARSHIP_CONFIG=$HOME/.config/starship.toml
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 if [ ! -S ~/.ssh/ssh_auth_sock ]; then
   eval `ssh-agent`
