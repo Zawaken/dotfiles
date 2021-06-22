@@ -18,9 +18,9 @@ bspc config focus_follows_pointer true
 # }}}
 # Hostname dependent config {{{
 if [[ $(hostname) == 'purity' ]]; then
-	bspc monitor HDMI-A-0 -d I II III
-	bspc monitor DisplayPort-0 -d IV V VI VII
-	bspc monitor DisplayPort-1 -d VIII IX X
+	# bspc monitor HDMI-A-0 -d I II III
+	# bspc monitor DisplayPort-0 -d IV V VI VII
+	# bspc monitor DisplayPort-1 -d VIII IX X
 
 	bspc monitor HDMI-A-0 -g 1920x1080+0+0
 	bspc monitor DisplayPort-0 -g 2560x1440+1920+0

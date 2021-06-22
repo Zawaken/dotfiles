@@ -2,4 +2,4 @@
 
 test -f ~/.xprofile && source ~/.xprofile
 
-exec bspwm
+exec xmonad

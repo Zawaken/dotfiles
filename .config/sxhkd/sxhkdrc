@@ -137,19 +137,10 @@ ctrl + shift + x
 # Audio Keys {{{
 #
 
-XF86AudioRaiseVolume
-	pactl set-sink-volume 1 +5% #increase sound volume
-XF86AudioLowerVolume
-	pactl set-sink-volume 1 -5% #decrease sound volume
-XF86AudioMute
-	pactl set-sink-mute 2 toggle # mute sound
-XF86AudioPlay
-	playerctl play-pause # pause/play music
-XF86AudioPause
-	playerctl play-pause # pause/play music
-XF86AudioNext
-	playerctl next # skips to next song
-XF86AudioPrev
-	playerctl previous # goes back to previous song
+XF86Audio{LowerVolume,RaiseVolume}
+  pactl set-sink-volume 2 {-,+}5%
+
+XF86Audio{Next,Prev,Play,Stop}
+  playerctl {next,previous,play-pause,stop}
 
 # }}}
