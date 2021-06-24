@@ -9,12 +9,16 @@ import qualified XMonad.StackSet as W
 -- }}}
 
 -- Data {{{
+import qualified DBus as D
+import qualified DBus.Client as D
+import qualified Codec.Binary.UTF8.String as UTF8
 import qualified Data.Map        as M
 -- }}}
 
 import Graphics.X11.ExtraTypes.XF86
 
 -- Hooks {{{
+import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.SetWMName
@@ -23,6 +27,7 @@ import XMonad.Hooks.ServerMode
 
 -- Layout {{{
 import XMonad.Layout.Gaps
+import XMonad.Layout.Grid
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.Spacing
 -- }}}
@@ -71,6 +76,9 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm]
                 w = 0.9
                 t = 0.95 -h
                 l = 0.95 -w
+
+myBitmapsDir = "/home/zawaken/.xmonad/icons"
+
 -- }}}
 -- keybinds {{{
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
@@ -82,6 +90,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((controlMask .|. shiftMask, xK_x), spawn "xfce4-screenshooter -w -o 'sharenix -n -c'")
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
     , ((modm              , xK_q     ), kill)
+    , ((modm .|. shiftMask, xK_c     ), spawn "toggleprogram 'picom' '-b'")
 -- }}}
 -- layout, focus and swap {{{
     , ((modm,               xK_space ), sendMessage NextLayout) -- Rotate through the available layout algorithms
@@ -127,7 +136,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 -- quit reload and ToggleStruts {{{
     , ((modm              , xK_b     ), sendMessage ToggleStruts) -- Toggle the status bar gap
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess)) -- Quit xmonad
-    , ((modm               , xK_p     ), spawn "xmonad --recompile; xmonad --restart") -- Restart/reload xmonad
+    , ((modm .|. mod1Mask , xK_r     ), spawn "xmonad --recompile; xmonad --restart") -- Restart/reload xmonad
     , ((modm .|. shiftMask, xK_slash ), spawn ("echo \"" ++ help ++ "\" | xmessage -file -")) -- Run xmessage with a summary of the default keybindings (useful for beginners)
     ]
     ++
@@ -142,7 +151,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
     -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+        | (key, sc) <- zip [xK_f, xK_p, xK_w] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 -- }}}
 -- Mouse bindings: default actions bound to mouse events {{{
@@ -176,7 +185,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = mySpacing $ avoidStruts (tiled ||| Mirror tiled ||| Full)
+myLayout = mySpacing $ avoidStruts (tiled ||| Grid ||| Mirror tiled ||| Full)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -231,8 +240,41 @@ myEventHook = serverModeEventHookCmd <+> serverModeEventHook <+> serverModeEvent
 -- Perform an arbitrary action on each internal state change or X event.
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
-myLogHook = return ()
+myLogHook :: D.Client -> PP
+myLogHook dbus = def
+        { ppOutput = dbusOutput dbus
+        , ppCurrent = wrap ("%{B" ++ "#846DCF" ++ "} ") " %{B-}"
+        , ppVisible = wrap ("%{B" ++ "#3c3836" ++ "} ") " %{B-}"
+        , ppUrgent = wrap ("%{F" ++ "#fb4934" ++ "} ") " %{F-}"
+        , ppHidden = wrap " " " "
+        , ppWsSep = ""
+        , ppSep = " | "
+        , ppTitle = const ""
+        , ppLayout = (\x -> case x of
+            --"Spacing Tall"        -> " ^i(" ++ myBitmapsDir ++ "/tall.xbm)"
+            "Spacing Tall"        -> "\xfb3f  "
+            "Spacing Mirror Tall" -> "\xfcf6  "
+            "Spacing Full"        -> "\xf2d0  "
+            "Spacing Grid"        -> "\xfa6f  "
+            _             -> " " ++ x ++ " "
+        )
+        }
 
+myAddSpaces :: Int -> String -> String
+myAddSpaces len str = sstr ++ replicate (len - length sstr) ' '
+  where
+    sstr = shorten len str
+
+dbusOutput :: D.Client -> String -> IO ()
+dbusOutput dbus str = do
+    let signal = (D.signal objectPath interfaceName memberName) {
+            D.signalBody = [D.toVariant $ UTF8.decodeString str]
+        }
+    D.emit dbus signal
+  where
+    objectPath = D.objectPath_ "/org/xmonad/Log"
+    interfaceName = D.interfaceName_ "org.xmonad.Log"
+    memberName = D.memberName_ "Update"
 ------------------------------------------------------------------------
 -- Startup hook
 
@@ -255,8 +297,17 @@ myStartupHook = do
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
+main :: IO ()
 main = do
-    xmonad $ docks $ ewmh defaults
+    dbus <- D.connectSession
+        -- Request access to the DBus name
+    D.requestName dbus (D.busName_ "org.xmonad.Log")
+        [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+
+    xmonad
+        $ docks
+        $ ewmh
+        $ defaults { logHook = dynamicLogWithPP $ namedScratchpadFilterOutWorkspacePP (myLogHook dbus)}
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will
@@ -283,7 +334,7 @@ defaults = def {
         layoutHook         = myLayout,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
-        logHook            = myLogHook,
+        -- logHook            = myLogHook,
         startupHook        = myStartupHook
     }
 -- }}}
