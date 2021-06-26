@@ -123,12 +123,9 @@ bindkey "$terminfo[kcud1]" history-substring-search-down
 alias sudo='sudo '
 alias vim='${EDITOR}'
 alias vi='${EDITOR}'
-alias fetch='neofetch --ascii_distro arch'
-alias i3c='vim $HOME/.config/i3/config'
 alias reload='source $ZDOTDIR/.zshrc'
 alias reloadx='xrdb -load $HOME/.config/Xresources'
 alias jf='journalctl -f'
-alias firefox='firejail firefox'
 alias mon2cam="deno run --unstable -A -r -q https://raw.githubusercontent.com/ShayBox/Mon2Cam/master/src/mod.ts"
 [ -f ${XDG_CONFIG_HOME:-$HOME/.config}/.aliases ] && source .aliases
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

@@ -3,6 +3,7 @@
 
 -- base {{{
 import XMonad
+import XMonad.Actions.Commands
 import Data.Monoid
 import System.Exit
 import qualified XMonad.StackSet as W
@@ -21,11 +22,13 @@ import Graphics.X11.ExtraTypes.XF86
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ServerMode
 -- }}}
 
 -- Layout {{{
+import XMonad.Layout.BinarySpacePartition
 import XMonad.Layout.Gaps
 import XMonad.Layout.Grid
 import XMonad.Layout.LayoutModifier
@@ -60,7 +63,7 @@ myBorderWidth   = 1
 myModMask       = mod4Mask
 
 -- The default number of workspaces (virtual screens) and their names.
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9", "10"]
+myWorkspaces    = [" 1 "," 2 "," 3 "," 4 "," 5 "," 6 "," 7 "," 8 "," 9 ", " 10 "]
 
 myNormalBorderColor  = "#2e2e2e"
 myFocusedBorderColor = "#ebdbb2"
@@ -68,7 +71,7 @@ myFocusedBorderColor = "#ebdbb2"
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm]
     where
-        spawnTerm  = myTerminal ++ " -t scratchpad -e tmux"
+        spawnTerm  = myTerminal ++ " -t scratchpad -e tmux attach"
         findTerm   = title =? "scratchpad"
         manageTerm = customFloating $ W.RationalRect l t w h
             where
@@ -76,19 +79,17 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm]
                 w = 0.9
                 t = 0.95 -h
                 l = 0.95 -w
-
-myBitmapsDir = "/home/zawaken/.xmonad/icons"
-
 -- }}}
 -- keybinds {{{
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 -- terminal, launcher, and misc {{{
-    [ ((modm              , xK_Return), spawn $ XMonad.terminal conf) -- start $term
+    [
+      ((modm              , xK_Return), spawn $ XMonad.terminal conf) -- start $term
     , ((modm              , xK_a     ), namedScratchpadAction myScratchPads "terminal")
     , ((modm,               xK_d     ), spawn "rofi -show run -lines 3 -eh 2") -- launcher
+    , ((modm .|. shiftMask, xK_d     ), spawn "dmenu_run")
     , ((controlMask .|. shiftMask, xK_c), spawn "sharenix-section -n -c") -- screenshot section
     , ((controlMask .|. shiftMask, xK_x), spawn "xfce4-screenshooter -w -o 'sharenix -n -c'")
-    , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
     , ((modm              , xK_q     ), kill)
     , ((modm .|. shiftMask, xK_c     ), spawn "toggleprogram 'picom' '-b'")
 -- }}}
@@ -137,7 +138,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_b     ), sendMessage ToggleStruts) -- Toggle the status bar gap
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess)) -- Quit xmonad
     , ((modm .|. mod1Mask , xK_r     ), spawn "xmonad --recompile; xmonad --restart") -- Restart/reload xmonad
-    , ((modm .|. shiftMask, xK_slash ), spawn ("echo \"" ++ help ++ "\" | xmessage -file -")) -- Run xmessage with a summary of the default keybindings (useful for beginners)
     ]
     ++
 -- }}}
@@ -145,7 +145,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-[1..9], Switch to workspace N
     -- mod-shift-[1..9], Move client to workspace N
     [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+        | (i, k) <- zip (XMonad.workspaces conf) ([xK_1 .. xK_9] ++ [xK_0])
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
     ++
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
@@ -174,18 +174,8 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- }}}
 -- }}}
 -- layouts and window rules {{{
-------------------------------------------------------------------------
 -- Layouts:
-
--- You can specify and transform your layouts by modifying these values.
--- If you change layout bindings be sure to use 'mod-shift-space' after
--- restarting (with 'mod-q') to reset your layout state to the new
--- defaults, as xmonad preserves your old layout settings by default.
---
--- The available layouts.  Note that each layout is separated by |||,
--- which denotes layout choice.
---
-myLayout = mySpacing $ avoidStruts (tiled ||| Grid ||| Mirror tiled ||| Full)
+myLayout = mySpacing $ avoidStruts (tiled ||| Grid ||| Mirror tiled ||| Full ||| emptyBSP)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -216,11 +206,15 @@ mySpacing = spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True
 -- 'className' and 'resource' are used below.
 --
 myManageHook = composeAll
-    [ className =? "discord"        --> doShift "2"
-    , className =? "Steam"          --> doShift "5"
-    , className =? "Pavucontrol"    --> doFloat
+    [ className =? "discord"        --> doShift (myWorkspaces !! 1)
+    , className =? "Steam"          --> doShift (myWorkspaces !! 4)
+    , className =? "Pavucontrol"    --> doCenterFloat
     , className =? "Sxiv"           --> doFloat
-    , resource  =? "desktop_window" --> doIgnore ]
+    , className =? "Spotify"        --> doShift (myWorkspaces !! 8)
+    , title     =? "scratchpad"     --> doCenterFloat
+    , resource  =? "desktop_window" --> doIgnore
+    , (className =? "firefox" <&&> resource =? "Dialog") --> doFloat
+    ] <+> namedScratchpadManageHook myScratchPads
 -- }}}
 -- hooks {{{
 ------------------------------------------------------------------------
@@ -288,7 +282,8 @@ myStartupHook = do
         spawnOnce "xrandr --output DisplayPort-0 --primary --mode 2560x1440 --pos 1920x0 --rotate normal --output HDMI-A-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DisplayPort-1 --mode 1920x1080 --pos 4480x0 --rotate normal --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off &"
         spawnOnce "picom -b &"
         spawnOnce "xrdb $HOME/.Xresources"
-        spawnOnce "$HOME/.config/herbstluftwm/panel.sh"
+        spawnOnce "$HOME/.xmonad/panel.sh"
+        spawnOnce "xsetroot -cursor_name left_ptr"
         setWMName "LG3D"
 --}}}
 -- main and defaults {{{
@@ -337,55 +332,4 @@ defaults = def {
         -- logHook            = myLogHook,
         startupHook        = myStartupHook
     }
--- }}}
--- help {{{
--- | Finally, a copy of the default bindings in simple textual tabular format.
-help :: String
-help = unlines ["The default modifier key is 'alt'. Default keybindings:",
-    "",
-    "-- launching and killing programs",
-    "mod-Enter  Launch xterminal",
-    "mod-d            Launch dmenu",
-    "mod-Shift-p      Launch gmrun",
-    "mod-q            Close/kill the focused window",
-    "mod-Space        Rotate through the available layout algorithms",
-    "mod-Shift-Space  Reset the layouts on the current workSpace to default",
-    "mod-n            Resize/refresh viewed windows to the correct size",
-    "",
-    "-- move focus up or down the window stack",
-    "mod-Tab        Move focus to the next window",
-    "mod-Shift-Tab  Move focus to the previous window",
-    "mod-j          Move focus to the next window",
-    "mod-k          Move focus to the previous window",
-    "mod-m          Move focus to the master window",
-    "",
-    "-- modifying the window order",
-    "mod-Shift-j  Swap the focused window with the next window",
-    "mod-Shift-k  Swap the focused window with the previous window",
-    "",
-    "-- resizing the master/slave ratio",
-    "mod-h  Shrink the master area",
-    "mod-l  Expand the master area",
-    "",
-    "-- floating layer support",
-    "mod-t  Push window back into tiling; unfloat and re-tile it",
-    "",
-    "-- increase or decrease number of windows in the master area",
-    "mod-comma  (mod-,)   Increment the number of windows in the master area",
-    "mod-period (mod-.)   Deincrement the number of windows in the master area",
-    "",
-    "-- quit, or restart",
-    "mod-Shift-q  Quit xmonad",
-    "mod-p        Restart xmonad",
-    "mod-[1..9]   Switch to workSpace N",
-    "",
-    "-- Workspaces & screens",
-    "mod-Shift-[1..9]   Move client to workspace N",
-    "mod-{w,e,r}        Switch to physical/Xinerama screens 1, 2, or 3",
-    "mod-Shift-{w,e,r}  Move client to screen 1, 2, or 3",
-    "",
-    "-- Mouse bindings: default actions bound to mouse events",
-    "mod-button1  Set the window to floating mode and move by dragging",
-    "mod-button2  Raise the window to the top of the stack",
-    "mod-button3  Set the window to floating mode and resize by dragging"]
 -- }}}
