@@ -32,6 +32,9 @@ import XMonad.Layout.BinarySpacePartition
 import XMonad.Layout.Gaps
 import XMonad.Layout.Grid
 import XMonad.Layout.LayoutModifier
+import XMonad.Layout.MultiToggle
+import XMonad.Layout.MultiToggle.Instances
+import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing
 -- }}}
 
@@ -84,8 +87,8 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm]
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 -- terminal, launcher, and misc {{{
     [
-      ((modm              , xK_Return), spawn $ XMonad.terminal conf) -- start $term
-    , ((modm              , xK_a     ), namedScratchpadAction myScratchPads "terminal")
+      ((modm,               xK_Return), spawn $ XMonad.terminal conf) -- start $term
+    , ((modm,               xK_a     ), namedScratchpadAction myScratchPads "terminal")
     , ((modm,               xK_d     ), spawn "rofi -show run -lines 3 -eh 2") -- launcher
     , ((modm .|. shiftMask, xK_d     ), spawn "dmenu_run")
     , ((controlMask .|. shiftMask, xK_c), spawn "sharenix-section -n -c") -- screenshot section
@@ -94,14 +97,15 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_c     ), spawn "toggleprogram 'picom' '-b'")
 -- }}}
 -- layout, focus and swap {{{
+    , ((modm,               xK_r     ), sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
     , ((modm,               xK_space ), sendMessage NextLayout) -- Rotate through the available layout algorithms
     , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf) --  Reset the layouts on the current workspace to default
     , ((modm,               xK_n     ), refresh) -- Resize viewed windows to the correct size
     , ((modm,               xK_Tab   ), windows W.focusDown) -- Move focus to the next window
     , ((modm,               xK_j     ), windows W.focusDown)
     , ((modm,               xK_k     ), windows W.focusUp  ) -- Move focus to the previous window
-    , ((modm,               xK_Up  ), windows W.focusUp    )
-    , ((modm,               xK_Down), windows W.focusDown  )
+    , ((modm,               xK_Up    ), windows W.focusUp    )
+    , ((modm,               xK_Down  ), windows W.focusDown  )
     , ((modm,               xK_m     ), windows W.focusMaster  ) -- Move focus to the master window
     -- Swap the focused window and the master window
 --    , ((modm,               xK_Return), windows W.swapMaster)
@@ -175,7 +179,15 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- }}}
 -- layouts and window rules {{{
 -- Layouts:
-myLayout = mySpacing $ avoidStruts (tiled ||| Grid ||| Mirror tiled ||| Full ||| emptyBSP)
+myLayout
+    = mySpacing
+    $ avoidStruts
+    $ mkToggle (NOBORDERS ?? FULL ?? EOT)
+    (tiled |||
+    Grid |||
+    Mirror tiled |||
+    Full |||
+    emptyBSP)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -245,11 +257,12 @@ myLogHook dbus = def
         , ppSep = " | "
         , ppTitle = const ""
         , ppLayout = (\x -> case x of
-            --"Spacing Tall"        -> " ^i(" ++ myBitmapsDir ++ "/tall.xbm)"
+            -- Icons found on https://nerdfonts.net/cheat-sheet
             "Spacing Tall"        -> "\xfb3f  "
             "Spacing Mirror Tall" -> "\xfcf6  "
             "Spacing Full"        -> "\xf2d0  "
             "Spacing Grid"        -> "\xfa6f  "
+            "Spacing BSP"         -> "\xfa6d  "
             _             -> " " ++ x ++ " "
         )
         }
@@ -279,7 +292,7 @@ dbusOutput dbus str = do
 -- By default, do nothing.
 myStartupHook = do
         spawnOnce "feh --bg-scale $HOME/.config/wall.png &"
-        spawnOnce "xrandr --output DisplayPort-0 --primary --mode 2560x1440 --pos 1920x0 --rotate normal --output HDMI-A-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DisplayPort-1 --mode 1920x1080 --pos 4480x0 --rotate normal --output DVI-I-0 --off --output DP-1 --off --output DP-0 --off &"
+        spawnOnce "autorandr --change"
         spawnOnce "picom -b &"
         spawnOnce "xrdb $HOME/.Xresources"
         spawnOnce "$HOME/.xmonad/panel.sh"
