@@ -1,1 +1,1 @@
-/home/zawaken/.profile
+.profile
