@@ -84,7 +84,7 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm]
                 l = 0.95 -w
 -- }}}
 -- keybinds {{{
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
+myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
 -- terminal, launcher, and misc {{{
     [
       ((modm,               xK_Return), spawn $ XMonad.terminal conf) -- start $term
@@ -135,8 +135,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0, xF86XK_AudioPause         ), spawn "playerctl play-pause") -- play/pause audio
     , ((0, xF86XK_AudioNext          ), spawn "playerctl next") -- next song
     , ((0, xF86XK_AudioPrev          ), spawn "playerctl previous") -- previous song
-    , ((0, xF86XK_AudioLowerVolume   ), spawn "pactl set-sink-volume 2 -5%") -- previous song
-    , ((0, xF86XK_AudioRaiseVolume   ), spawn "pactl set-sink-volume 2 +5%") -- previous song
+    , ((0, xF86XK_AudioLowerVolume   ), spawn "pactl set-sink-volume 2 -5%") -- volume down
+    , ((0, xF86XK_AudioRaiseVolume   ), spawn "pactl set-sink-volume 2 +5%") -- volume up
 -- }}}
 -- quit reload and ToggleStruts {{{
     , ((modm              , xK_b     ), sendMessage ToggleStruts) -- Toggle the status bar gap
@@ -160,18 +160,18 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 -- }}}
 -- Mouse bindings: default actions bound to mouse events {{{
 --
-myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
+myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList 
 
     -- mod-button1, Set the window to floating mode and move by dragging
-    [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
-                                       >> windows W.shiftMaster))
+    [ ((modm, button1), \w -> focus w >> mouseMoveWindow w
+                                       >> windows W.shiftMaster)
 
     -- mod-button2, Raise the window to the top of the stack
-    , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
+    , ((modm, button2), \w -> focus w >> windows W.shiftMaster)
 
     -- mod-button3, Set the window to floating mode and resize by dragging
-    , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
-                                       >> windows W.shiftMaster))
+    , ((modm, button3), \w -> focus w >> mouseResizeWindow w
+                                       >> windows W.shiftMaster)
 
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
@@ -256,7 +256,7 @@ myLogHook dbus = def
         , ppWsSep = ""
         , ppSep = " | "
         , ppTitle = const ""
-        , ppLayout = (\x -> case x of
+        , ppLayout = \x -> case x of
             -- Icons found on https://nerdfonts.net/cheat-sheet
             "Spacing Tall"        -> "\xfb3f  "
             "Spacing Mirror Tall" -> "\xfcf6  "
@@ -264,7 +264,6 @@ myLogHook dbus = def
             "Spacing Grid"        -> "\xfa6f  "
             "Spacing BSP"         -> "\xfa6d  "
             _             -> " " ++ x ++ " "
-        )
         }
 
 myAddSpaces :: Int -> String -> String
