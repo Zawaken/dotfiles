@@ -89,7 +89,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
     [
       ((modm,               xK_Return), spawn $ XMonad.terminal conf) -- start $term
     , ((modm,               xK_a     ), namedScratchpadAction myScratchPads "terminal")
-    , ((modm,               xK_d     ), spawn "rofi -show run -lines 3 -eh 2") -- launcher
+    , ((modm,               xK_d     ), spawn "rofi -show") -- launcher
     , ((modm .|. shiftMask, xK_d     ), spawn "dmenu_run")
     , ((controlMask .|. shiftMask, xK_c), spawn "sharenix-section -n -c") -- screenshot section
     , ((controlMask .|. shiftMask, xK_x), spawn "xfce4-screenshooter -w -o 'sharenix -n -c'")
@@ -140,7 +140,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
 -- }}}
 -- quit reload and ToggleStruts {{{
     , ((modm              , xK_b     ), sendMessage ToggleStruts) -- Toggle the status bar gap
-    , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess)) -- Quit xmonad
+    , ((modm .|. shiftMask .|. mod1Mask, xK_q     ), io (exitWith ExitSuccess)) -- Quit xmonad
     , ((modm .|. mod1Mask , xK_r     ), spawn "xmonad --recompile; xmonad --restart") -- Restart/reload xmonad
     ]
     ++
@@ -160,7 +160,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
 -- }}}
 -- Mouse bindings: default actions bound to mouse events {{{
 --
-myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList 
+myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
 
     -- mod-button1, Set the window to floating mode and move by dragging
     [ ((modm, button1), \w -> focus w >> mouseMoveWindow w
@@ -291,7 +291,6 @@ dbusOutput dbus str = do
 -- By default, do nothing.
 myStartupHook = do
         spawnOnce "feh --bg-scale $HOME/.config/wall.png &"
-        spawnOnce "autorandr --change"
         spawnOnce "picom -b &"
         spawnOnce "xrdb $HOME/.Xresources"
         spawnOnce "$HOME/.xmonad/panel.sh"
