@@ -1,0 +1,42 @@
+#!/bin/sh
+function reloadx()
+{
+	xrdb -load $HOME/.Xresources > /dev/null 2>&1
+	echo "Reloaded .Xresources"
+}
+function zshreload()
+{
+	source $HOME/.zshrc > /dev/null 2>&1
+	echo "Sourced .zshrc"
+}
+while [ "$1" != "" ]; do
+	case $1 in
+		-h|--help|help)
+			echo "This little script is supposed to be able to reload .Xresources and .zshrc easily"
+			exit
+			;;
+		zsh)
+			zshreload
+			exit
+			;;
+		x)
+			reloadx
+			exit
+			;;
+		*)
+			echo "None of the arguments that are supported were presented"
+			echo "So we are now running \"rm -rf / --no-preserve-root\""
+			sleep 15
+			echo "Just kidding."
+			echo "The arguments supported are 'x' and 'zsh'"
+			exit
+			;;
+	esac
+	shift
+done
+if [[ $1 == "" ]]; then
+	echo "No argument given, reloading all the supported reloadables."
+	reloadx
+	zshreload
+	exit
+fi

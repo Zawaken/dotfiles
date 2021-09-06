@@ -1,0 +1,5 @@
+#!/bin/sh
+xsetwacom --set "Wacom Intuos PT S 2 Pen stylus" area 4891 1759 9958 5277
+xsetwacom set "Wacom Intuos PT S 2 Pen stylus" MapToOutput DisplayPort-0
+xsetwacom set "Wacom Intuos PT S 2 Pen stylus" Suppress 2
+xsetwacom set "Wacom Intuos PT S 2 Pen stylus" Rawsample 4

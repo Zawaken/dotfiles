@@ -75,7 +75,7 @@ font:
     #
     # family: Terminess Powerline
     # Cozette: https://github.com/slavfox/Cozette
-    #family: xos4 Terminess Powerline
+    # family: xos4 Terminess Powerline
     family: Misc Termsyn
     # family: scientifica
     # family: Cozette
@@ -87,7 +87,7 @@ font:
   # Bold font face
   bold:
     #
-    #family: xos4 Terminess Powerline
+    # family: xos4 Terminess Powerline
     family: Misc Termsyn
     # family: scientifica
     # family: Cozette

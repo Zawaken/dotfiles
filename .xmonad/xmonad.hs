@@ -95,6 +95,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
     , ((controlMask .|. shiftMask, xK_x), spawn "xfce4-screenshooter -w -o 'sharenix -n -c'")
     , ((modm              , xK_q     ), kill)
     , ((modm .|. shiftMask, xK_c     ), spawn "toggleprogram 'picom' '-b'")
+    , ((modm .|. shiftMask, xK_v     ), spawn "xclip -selection clipboard -out | xdotool selectwindow windowfocus type --clearmodifiers --delay 25 --window %@ --file -")
 -- }}}
 -- layout, focus and swap {{{
     , ((modm,               xK_r     ), sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
