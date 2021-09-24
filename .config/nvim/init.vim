@@ -26,39 +26,58 @@ let g:fzf_layout = {
 " }}}
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-github-dashboard'
-Plug 'scrooloose/nerdtree' " {{{
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-" NERDTree config
-" Open a NERDTree automatically when vim starts up if no files were specified
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-" Open NERDTree automatically when vim starts up on opening a directory
-autocmd StdinReadPre * let s:std_in=1
-map <C-o> :NERDTreeToggle<CR>
-let g:NERDTreeGitStatusWithFlags = 1
-let NERDTreeShowHidden=1
-let g:NERDTreeIgnore = [
-  \ '^.*\.png$',
-  \ '^.*\.jpg$',
-  \ '^.*\.mkv$',
-  \ '^.*\.mp4$',
-  \ '^.*\.mp3$'
-  \ ]
-" }}}
 if has('nvim-0.5')
     Plug 'nvim-lua/popup.nvim'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
 endif
-Plug 'nathanaelkane/vim-indent-guides' " {{{
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_start_level = 1
-let g:indent_guides_auto_colors = 0
-"let g:indent_guides_guide_size = 2
-let g:indent_guides_color_change_percent = 10
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=gray ctermbg=236
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=23
+Plug 'tpope/vim-vinegar' " netrw {{{
+  "let loaded_netrwPlugin = 0 " netrw version, 0 to disable
+  let g:netrw_banner = 0
+  let g:netrw_liststyle = 3 " 1 or 3
+  let g:netrw_browse_split = 4 " 1
+  let g:netrw_altv = 1
+  let g:netrw_winsize = 25
+  let g:netrw_keepdir = 0
+  let g:netrw_sort_options = 'i'
+  let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
+  let g:netrw_sort_sequence = '[\/]$,*'
+  let g:netrw_list_hide = '.*.swp$,
+                        \ *.pyc$,
+                        \ *.log$,
+                        \ *.o$,
+                        \ *.xmi$,
+                        \ *.swp$,
+                        \ *.bak$,
+                        \ *.pyc$,
+                        \ *.class$,
+                        \ *.jar$,
+                        \ *.war$,
+                        \ *.png$,
+                        \ *.jpg$,
+                        \ *.mkv$,
+                        \ *.mp4$,
+                        \ *.mp3$,
+                        \ *node_modules*,
+                        \ *__pycache__*'
+
+  augroup ProjectDrawer | autocmd!
+    "autocmd VimEnter * silent Vexplore | wincmd p
+    "autocmd FileType netrw set nolist
+    " No argument was specified
+    autocmd VimEnter * if !argc() && !exists("s:std_in") | silent Lexplore | wincmd p | endif
+    autocmd StdinReadPre * let s:std_in=1
+    " Specified argument is a directory
+    autocmd VimEnter * if isdirectory(expand('<afile>')) && !exists("s:std_in") | silent vnew | endif
+    " Only window left
+    autocmd BufEnter * if (winnr("$") == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw") | q | endif
+    autocmd FileType netrw setlocal bufhidden=wipe
+    autocmd FileType netrw vertical resize 25
+    autocmd FileType netrw nnoremap <buffer> q :q<CR>
+  augroup END
+
+  "map <silent> <C-n> :NetrwToggle <bar> wincmd p<CR>
+  map <silent> <C-o> :Lexplore<CR>
 " }}}
 Plug 'tpope/vim-commentary'
 Plug 'junegunn/goyo.vim'
@@ -92,7 +111,8 @@ let g:coc_global_extensions = [
   \ 'coc-markdownlint',
   \ 'coc-emoji',
   \ 'coc-sh',
-  \ 'coc-pyright'
+  \ 'coc-pyright',
+  \ 'coc-tsserver',
   \ ]
 inoremap <silent><expr> <TAB>
 	\ pumvisible() ? "\<C-n>" :
@@ -155,19 +175,9 @@ Plug 'ap/vim-css-color'
 " }}}
 " useless {{{
 " :source vimty.vim
-Plug 'dixonary/vimty'
-Plug 'Kody-Quintana/bspwm_border_color'
 Plug 'hugolgst/vimsence'
-"if has('nvim') " deoplete {{{
-"  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"else
-"  Plug 'Shougo/deoplete.nvim'
-"  Plug 'roxma/nvim-yarp'
-"  Plug 'roxma/vim-hug-neovim-rpc'
-"endif
-"let g:deoplete#enable_at_startup = 1
 " }}}
-" }}}
+
 call plug#end()
 
 " }}}
