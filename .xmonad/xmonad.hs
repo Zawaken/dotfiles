@@ -6,6 +6,8 @@ import XMonad
 import XMonad.Actions.Commands
 import Data.Monoid
 import System.Exit
+import XMonad.Prompt
+import XMonad.Prompt.Shell
 import qualified XMonad.StackSet as W
 -- }}}
 
@@ -54,6 +56,27 @@ myTerminal      = "alacritty"
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = True
 
+myPrompt = def
+        {
+            font = "xft:Termsyn:size=9"
+          , bgColor = "#292d3e"
+          , fgColor = "#d0d0d0"
+          , bgHLight = "#c792ea"
+          , fgHLight = "#000000"
+          , borderColor = "#535974"
+          , promptBorderWidth = 1
+          , position = Top
+          , height = 30
+          , historySize = 256
+          , historyFilter = id
+          , defaultText = []
+          , autoComplete = Just 100000
+          , showCompletionOnTab = True
+          -- , searchPredicate = isPrefixOf
+          , alwaysHighlight = True
+          , maxComplRows = Just 3
+        }
+
 -- Whether clicking on a window to focus also passes the click to the window
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
@@ -89,7 +112,8 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
     [
       ((modm,               xK_Return), spawn $ XMonad.terminal conf) -- start $term
     , ((modm,               xK_a     ), namedScratchpadAction myScratchPads "terminal")
-    , ((modm,               xK_d     ), spawn "rofi -show") -- launcher
+    -- , ((modm,               xK_d     ), spawn "rofi -show") -- launcher
+    , ((modm,               xK_d     ), shellPrompt myPrompt) -- launcher
     , ((modm .|. shiftMask, xK_d     ), spawn "dmenu_run")
     , ((controlMask .|. shiftMask, xK_c), spawn "sharenix-section -n -c") -- screenshot section
     , ((controlMask .|. shiftMask, xK_x), spawn "xfce4-screenshooter -w -o 'sharenix -n -c'")

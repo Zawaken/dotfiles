@@ -1,0 +1,23 @@
+configuration {
+	color-enabled: true;
+	color-window: "#282828, #928374, #ebdbb2";
+	color-normal: "#282828, #ebdbb2, argb:21686c70, #a89984, #ebdbb2";
+	color-active: "#201D1D, #b5bae1, argb:21686c70, #59666e, #b5bae1";
+	color-urgent: "#201D1D, #e1b5ba, argb:21686c70, #59666e, #e1b5ba";
+	terminal: "alacritty";
+	modi: "combi,window,drun,ssh,filebrowser";
+	combi-modi: "run,window";
+	show-icons: true;
+	icon-theme: "Tela circle dark";
+	combi-hide-mode-prefix: true;
+	drun-show-actions: true;
+	drun-display-format: "{name}";
+	lines: 3;
+	eh: 2;
+	bw: 2;
+	transparency: "real";
+	width: 30;
+	font: "Audimat Mono 15";
+	hide-scrollbar: true;
+	theme: "./themes/own2.rasi";
+}

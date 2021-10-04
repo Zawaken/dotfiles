@@ -24,8 +24,6 @@ let g:fzf_layout = {
  \ 'window': 'new | wincmd J | resize 1 | call animate#window_percent_height(0.5)'
 \ }
 " }}}
-Plug 'junegunn/vim-easy-align'
-Plug 'junegunn/vim-github-dashboard'
 if has('nvim-0.5')
     Plug 'nvim-lua/popup.nvim'
     Plug 'nvim-lua/plenary.nvim'
@@ -80,12 +78,10 @@ Plug 'tpope/vim-vinegar' " netrw {{{
   map <silent> <C-o> :Lexplore<CR>
 " }}}
 Plug 'tpope/vim-commentary'
-Plug 'junegunn/goyo.vim'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-surround'
 Plug 'lervag/wiki.vim'
 Plug 'Raimondi/delimitMate'
-Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' " {{{
 " airline
 if !exists('g:airline_symbols')
@@ -163,18 +159,13 @@ Plug 'jacoborus/tender.vim'
 Plug 'joshdick/onedark.vim'
 " }}}
 "Syntax highlighting/autocompletion {{{
-" Plug 'scrooloose/syntastic'
 Plug 'rodjek/vim-puppet'
 Plug 'chr4/nginx.vim', { 'for': 'nginx'}
 Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc'}
 Plug 'ObserverOfTime/coloresque.vim'
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile'}
-Plug 'dense-analysis/ale'
-Plug 'PotatoesMaster/i3-vim-syntax'
-Plug 'ap/vim-css-color'
 " }}}
 " useless {{{
-" :source vimty.vim
 Plug 'hugolgst/vimsence'
 " }}}
 
@@ -263,6 +254,7 @@ if has("autocmd")
 	" Customisations based on house-style (arbitrary)
 	autocmd BufEnter,BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 	autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
+	autocmd FileType typescript setlocal ts=4 sts=4 sw=4 expandtab
 	autocmd FileType php setlocal ts=4 sts=4 sw=4 expandtab
 	autocmd FileType haskell setlocal ts=4 sts=4 sw=4 expandtab
 	autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
