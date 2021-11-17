@@ -315,6 +315,7 @@ dbusOutput dbus str = do
 --
 -- By default, do nothing.
 myStartupHook = do
+        spawnOnce "autorandr --change &"
         spawnOnce "feh --bg-scale $HOME/.config/wall.png &"
         spawnOnce "picom -b &"
         spawnOnce "xrdb $HOME/.Xresources"
