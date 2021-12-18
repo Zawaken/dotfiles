@@ -226,6 +226,7 @@ myLayout
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
 
+-- gaps
 mySpacing = spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True
 ------------------------------------------------------------------------
 -- Window rules:

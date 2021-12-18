@@ -165,9 +165,6 @@ Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc'}
 Plug 'ObserverOfTime/coloresque.vim'
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile'}
 " }}}
-" useless {{{
-Plug 'hugolgst/vimsence'
-" }}}
 
 call plug#end()
 
