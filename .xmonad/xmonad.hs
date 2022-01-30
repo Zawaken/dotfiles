@@ -210,8 +210,8 @@ myLayout
     $ avoidStruts
     $ mkToggle (NOBORDERS ?? FULL ?? EOT)
     (tiled |||
-    Grid |||
     Mirror tiled |||
+    Grid |||
     Full |||
     emptyBSP)
   where
