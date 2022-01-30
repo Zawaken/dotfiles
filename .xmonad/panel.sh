@@ -1,21 +1,20 @@
 #!/usr/bin/env bash
 
-## Add this to your wm startup file.
-
 # Terminate already running bar instances
 killall -q polybar
-
 # Wait until the processes have been shut down
 while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 
-# Launch bar1 and bar2
-# polybar -c ~/.config/polybar/config.ini main &
-
-# Launch bar1 and bar2
-if type "xrandr"; then
-  for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
-    MONITOR=$m polybar --reload -c $HOME/.config/polybar/config.ini herbst &
+if test -z "$(pgrep -x polybar)"; then
+  for MONITOR in $(polybar --list-monitors | cut -d" " -f1 | cut -d":" -f1); do
+    IS_PRIMARY="$(polybar --list-monitors | grep "${MONITOR}" | cut -d" " -f3)"
+    if [[ $IS_PRIMARY == *"primary"* ]]; then
+      TRAY=right
+    else
+      TRAY=none
+    fi
+    TRAY=$TRAY MONITOR=$MONITOR polybar --reload -c $HOME/.config/polybar/config.ini xmonad &
   done
 else
-  polybar --reload example &
+  polybar-msg cmd restart
 fi

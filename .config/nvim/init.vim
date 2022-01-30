@@ -178,6 +178,7 @@ set number
 set relativenumber
 set listchars=tab:▸\ ,eol:¬
 set list
+set foldmethod=marker foldmarker={{{,}}}
 
 " Splits navigation.
 set splitbelow
@@ -186,6 +187,15 @@ map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
+
+" Tabs
+set smarttab
+set autoindent
+set tabstop=2
+set shiftwidth=2
+set softtabstop=0
+set expandtab
+
 
 " Smart casing
 set smartcase

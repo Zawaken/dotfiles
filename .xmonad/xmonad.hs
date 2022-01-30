@@ -27,6 +27,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ServerMode
+import XMonad.Hooks.WindowSwallowing
 -- }}}
 
 -- Layout {{{
@@ -115,8 +116,8 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
     -- , ((modm,               xK_d     ), spawn "rofi -show") -- launcher
     , ((modm,               xK_d     ), shellPrompt myPrompt) -- launcher
     , ((modm .|. shiftMask, xK_d     ), spawn "dmenu_run")
-    , ((controlMask .|. shiftMask, xK_c), spawn "sharenix-section -n -c") -- screenshot section
-    , ((controlMask .|. shiftMask, xK_x), spawn "xfce4-screenshooter -w -o 'sharenix -n -c'")
+    , ((controlMask .|. shiftMask, xK_c), spawn "screenshot -m region --open 'sharenix -n -c'") -- screenshot section
+    , ((controlMask .|. shiftMask, xK_x), spawn "screenshot -m window --open 'sharenix -n -c'")
     , ((modm              , xK_q     ), kill)
     , ((modm .|. shiftMask, xK_c     ), spawn "toggleprogram 'picom' '-b'")
     , ((modm .|. shiftMask, xK_v     ), spawn "xclip -selection clipboard -out | xdotool selectwindow windowfocus type --clearmodifiers --delay 25 --window %@ --file -")
@@ -264,7 +265,7 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = serverModeEventHookCmd <+> serverModeEventHook <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn)
+myEventHook = serverModeEventHookCmd <+> serverModeEventHook <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn) <+> swallowEventHook (className =? "Alacritty") (return True)
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -282,14 +283,15 @@ myLogHook dbus = def
         , ppWsSep = ""
         , ppSep = " | "
         , ppTitle = const ""
-        , ppLayout = \x -> case x of
-            -- Icons found on https://nerdfonts.net/cheat-sheet
-            "Spacing Tall"        -> "\xfb3f  "
-            "Spacing Mirror Tall" -> "\xfcf6  "
-            "Spacing Full"        -> "\xf2d0  "
-            "Spacing Grid"        -> "\xfa6f  "
-            "Spacing BSP"         -> "\xfa6d  "
-            _             -> " " ++ x ++ " "
+        , ppLayout = (\x -> case x of
+           -- Icons found on https://nerdfonts.net/cheat-sheet
+           "Spacing Tall"        -> "Tall" -- "\xfb3f  "
+           "Spacing Mirror Tall" -> "Mirror Tall" -- "\xfcf6  "
+           "Spacing Full"        -> "Full" -- "\xf2d0  "
+           "Spacing Grid"        -> "Grid" -- "\xfa6f  "
+           "Spacing BSP"         -> "BSP" -- "\xfa6d  "
+--             _             -> " " ++ x ++ " "
+        )
         }
 
 myAddSpaces :: Int -> String -> String
@@ -336,11 +338,15 @@ main = do
         -- Request access to the DBus name
     D.requestName dbus (D.busName_ "org.xmonad.Log")
         [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+-- main = do
+--     dbus <- XD.connect
+--     --Request access
+--     XD.requestAccess dbus
 
     xmonad
         $ docks
         $ ewmh
-        $ defaults { logHook = dynamicLogWithPP $ namedScratchpadFilterOutWorkspacePP (myLogHook dbus)}
+        $ defaults { logHook = dynamicLogWithPP $ filterOutWsPP ["NSP"] (myLogHook dbus)}
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will
