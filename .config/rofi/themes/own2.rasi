@@ -20,9 +20,9 @@
 	alternate-urgent-background:     rgba(104,108,112,0.12941176470588237);
 	selected-urgent-background:      #59666e;
 	selected-urgent-foreground:      #e1b5ba;
-	alternate-normal-foreground:     @normal-foreground;
-	alternate-urgent-foreground:     @urgent-foreground;
-	alternate-active-foreground:     @active-foreground;
+	/* alternate-normal-foreground:     @normal-foreground; */
+	/* alternate-urgent-foreground:     @urgent-foreground; */
+	/* alternate-active-foreground:     @active-foreground; */
 	foreground:                      @normal-foreground;
 }
 
