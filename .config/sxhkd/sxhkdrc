@@ -1,5 +1,4 @@
 # wm independent hotkeys {{{
-# vim:foldmethod=marker
 
 # terminal emulator
 super + Return
@@ -7,10 +6,15 @@ super + Return
 
 # program launcher
 super + d
-	rofi -show run -lines 3 -eh 2
+	rofi -show
+
 # make sxhkd reload its configuration files:
 super + Escape
 	pkill -USR1 -x sxhkd; dunstify "sxhkd configuration reloaded"
+
+# toggle picom
+super + shift + c
+	toggleprogram 'picom' '-b'
 
 # }}}
 # sharenix {{{

@@ -1,5 +1,4 @@
 # bspwm hotkeys {{{
-# vim:foldmethod=marker
 
 # quit/restart bspwm
 super + alt + {q,r}
