@@ -1,0 +1,39 @@
+# quit/restart xmonad
+super + alt + {q,r}
+	xmonadctl {quit,restart}
+
+# Kill window
+super + q
+	xmonadctl kill-window
+
+# Focus and swap {{{
+# focus/swap with master
+super + {_,alt +}m
+	xmonadctl {focus-master, swap-with-master}
+
+# focus next/prev
+super + {Down,Up}
+	xmonadctl {focus-prev,focus-next}
+
+# swap next/prev
+super + shift + {Down,Up}
+	xmonadctl {swap-with-prev, swap-with-next}
+
+# focus or send to the given workspace
+super + {_,shift +}{1-9,0}
+	xmonadctl {focus-workspace-,send-to-workspace-}{1-9,0}
+
+super + {_,shift +}{1-3}
+	xmonadctl {focus-screen-,send-to-screen-}{0-2}
+# }}}
+# Rezising and master count {{{
+# increase/decrease master size
+super + {h,l,Left,Right}
+	xmonadctl {decrease-master-size,increase-master-size,decrease-master-size,increase-master-size}
+super + {comma,period}
+	xmonadctl {increase-master-count, decrease-master-count}
+# }}}
+# Layouts {{{
+super + {_,shift + }space
+	xmonadctl {change-layout,reset-layout}
+# }}}
