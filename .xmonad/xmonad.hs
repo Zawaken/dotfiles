@@ -90,7 +90,7 @@ myBorderWidth   = 1
 myModMask       = mod4Mask
 
 -- The default number of workspaces (virtual screens) and their names.
-myWorkspaces    = [" 1 "," 2 "," 3 "," 4 "," 5 "," 6 "," 7 "," 8 "," 9 ", " 10 "]
+myWorkspaces    = ["1","2","3","4","5","6","7","8","9", "10"]
 
 myNormalBorderColor  = "#2e2e2e"
 myFocusedBorderColor = "#ebdbb2"
@@ -113,8 +113,8 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
     [
       ((modm,               xK_Return), spawn $ XMonad.terminal conf) -- start $term
     , ((modm,               xK_a     ), namedScratchpadAction myScratchPads "terminal")
-    -- , ((modm,               xK_d     ), spawn "rofi -show") -- launcher
-    , ((modm,               xK_d     ), shellPrompt myPrompt) -- launcher
+    , ((modm,               xK_d     ), spawn "rofi -show") -- launcher
+    -- , ((modm,               xK_d     ), shellPrompt myPrompt) -- launcher
     , ((modm .|. shiftMask, xK_d     ), spawn "dmenu_run")
     , ((controlMask .|. shiftMask, xK_c), spawn "screenshot -m region --open 'sharenix -n -c'") -- screenshot section
     , ((controlMask .|. shiftMask, xK_x), spawn "screenshot -m window --open 'sharenix -n -c'")
@@ -184,6 +184,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
         | (key, sc) <- zip [xK_f, xK_p, xK_w] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 -- }}}
+-- }}}
 -- Mouse bindings: default actions bound to mouse events {{{
 --
 myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
@@ -202,9 +203,7 @@ myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
     -- }}}
--- }}}
--- layouts and window rules {{{
--- Layouts:
+-- Layouts: {{{
 myLayout
     = mySpacing
     $ avoidStruts
@@ -229,8 +228,8 @@ myLayout
 
 -- gaps
 mySpacing = spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True
-------------------------------------------------------------------------
--- Window rules:
+------------------------------------------------------------------------ }}}
+-- Window rules: {{{
 
 -- Execute arbitrary actions and WindowSet manipulations when managing
 -- a new window. You can use this to, for example, always float a
@@ -254,10 +253,8 @@ myManageHook = composeAll
     , resource  =? "desktop_window" --> doIgnore
     , (className =? "firefox" <&&> resource =? "Dialog") --> doFloat
     ] <+> namedScratchpadManageHook myScratchPads
--- }}}
--- hooks {{{
-------------------------------------------------------------------------
--- Event handling
+------------------------------------------------------------------------ }}}
+-- Event handling {{{
 
 -- * EwmhDesktops users should change this to ewmhDesktopsEventHook
 --
@@ -265,10 +262,49 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = serverModeEventHookCmd <+> serverModeEventHook <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn) <+> swallowEventHook (className =? "Alacritty") (return True)
+-- myEventHook = serverModeEventHookCmd <+> serverModeEventHook <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn) <+> swallowEventHook (className =? "Alacritty") (return True)
+myEventHook = myServerModeEventHook <+> swallowEventHook (className =? "Alacritty") (return True)
 
-------------------------------------------------------------------------
--- Status bars and logging
+------------------------------------------------------------------------ }}}
+-- Server mode commands{{{
+myCommands :: [(String, X ())]
+myCommands =
+    [ ("decrease-master-size"   , sendMessage Shrink                                                )
+    , ("increase-master-size"   , sendMessage Expand                                                )
+    , ("decrease-master-count"  , sendMessage $ IncMasterN (-1)                                     )
+    , ("increase-master-count"  , sendMessage $ IncMasterN (1)                                      )
+    , ("focus-prev"             , windows W.focusUp                                                 )
+    , ("focus-next"             , windows W.focusDown                                               )
+    , ("focus-master"           , windows W.focusMaster                                             )
+    , ("swap-with-prev"         , windows W.swapUp                                                  )
+    , ("swap-with-next"         , windows W.swapDown                                                )
+    , ("swap-with-master"       , windows W.swapMaster                                              )
+    , ("kill-window"            , kill                                                              )
+    , ("quit"                   , io $ exitWith ExitSuccess                                         )
+    , ("restart"                , spawn "xmonad --recompile; xmonad --restart"                      )
+    , ("change-layout"          , sendMessage NextLayout                                            )
+    -- , ("reset-layout"           , setLayout $ XMonad.layoutHook conf                                )
+    , ("fullscreen"             , sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts]   )
+    ]
+-- }}}
+-- Server mode event hook {{{
+myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
+myCommands' = ("list-commands", listMyServerCmds) : myCommands ++ wscs ++ sccs -- ++ spcs
+    where
+        wscs = [((m ++ s), windows $f s) | s <- myWorkspaces
+               , (f, m) <- [(W.view, "focus-workspace-"), (W.shift, "send-to-workspace-")] ]
+
+        sccs = [((m ++ show sc), screenWorkspace (fromIntegral sc) >>= flip whenJust (windows . f))
+               | sc <- [0..3], (f, m) <- [(W.view, "focus-screen-"), (W.shift, "send-to-screen-")]]
+
+--        spcs = [("toggle-" ++ sp, namedScratchpadAction myScratchpads sp)
+--               | sp <- (flip map) (myScratchpads) (\(NS x _ _ _) -> x) ]
+
+listMyServerCmds :: X ()
+listMyServerCmds = spawn ("echo '" ++ asmc ++ "' | xmessage -file -")
+    where asmc = concat $ "Available commands:" : map (\(x, _)-> "    " ++ x) myCommands'
+-- }}}
+-- Status bars and logging {{{
 
 -- Perform an arbitrary action on each internal state change or X event.
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
@@ -276,23 +312,27 @@ myEventHook = serverModeEventHookCmd <+> serverModeEventHook <+> serverModeEvent
 myLogHook :: D.Client -> PP
 myLogHook dbus = def
         { ppOutput = dbusOutput dbus
-        , ppCurrent = wrap ("%{B" ++ "#846DCF" ++ "} ") " %{B-}"
-        , ppVisible = wrap ("%{B" ++ "#3c3836" ++ "} ") " %{B-}"
-        , ppUrgent = wrap ("%{F" ++ "#fb4934" ++ "} ") " %{F-}"
-        , ppHidden = wrap " " " "
+        , ppCurrent = wrap ("%{B" ++ purple ++ "}  ") "  %{B-}"
+        , ppVisible = wrap ("%{B" ++ gray ++ "}  ") "  %{B-}"
+        , ppUrgent = wrap ("%{F" ++ red ++ "} ") " %{F-}"
+        , ppHidden = wrap "  " "  "
         , ppWsSep = ""
         , ppSep = " | "
         , ppTitle = const ""
         , ppLayout = (\x -> case x of
            -- Icons found on https://nerdfonts.net/cheat-sheet
            "Spacing Tall"        -> "Tall" -- "\xfb3f  "
-           "Spacing Mirror Tall" -> "Mirror Tall" -- "\xfcf6  "
+           "Spacing Mirror Tall" -> "MTall" -- "\xfcf6  "
            "Spacing Full"        -> "Full" -- "\xf2d0  "
            "Spacing Grid"        -> "Grid" -- "\xfa6f  "
            "Spacing BSP"         -> "BSP" -- "\xfa6d  "
 --             _             -> " " ++ x ++ " "
         )
         }
+        where
+            purple  = "#846DCF"
+            gray    = "#3c3836"
+            red     = "#fb4934"
 
 myAddSpaces :: Int -> String -> String
 myAddSpaces len str = sstr ++ replicate (len - length sstr) ' '
@@ -309,8 +349,8 @@ dbusOutput dbus str = do
     objectPath = D.objectPath_ "/org/xmonad/Log"
     interfaceName = D.interfaceName_ "org.xmonad.Log"
     memberName = D.memberName_ "Update"
-------------------------------------------------------------------------
--- Startup hook
+------------------------------------------------------------------------ }}}
+-- Startup hook {{{
 
 -- Perform an arbitrary action each time xmonad starts or is restarted
 -- with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
@@ -326,7 +366,7 @@ myStartupHook = do
         spawnOnce "xsetroot -cursor_name left_ptr"
         setWMName "LG3D"
 --}}}
--- main and defaults {{{
+-- main {{{
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 
@@ -347,7 +387,8 @@ main = do
         $ docks
         $ ewmh
         $ defaults { logHook = dynamicLogWithPP $ filterOutWsPP ["NSP"] (myLogHook dbus)}
-
+-- }}}
+-- defaults {{{
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will
 -- use the defaults defined in xmonad/XMonad/Config.hs
