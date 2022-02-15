@@ -5,7 +5,7 @@ configuration {
 	color-active: "#201D1D, #b5bae1, argb:21686c70, #59666e, #b5bae1";
 	color-urgent: "#201D1D, #e1b5ba, argb:21686c70, #59666e, #e1b5ba";
 	terminal: "alacritty";
-	modi: "combi,window,drun,ssh,filebrowser";
+	modi: "combi,window,drun,ssh,file-browser";
 	combi-modi: "run,window";
 	show-icons: true;
 	icon-theme: "Tela circle dark";
