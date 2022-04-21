@@ -164,6 +164,7 @@ Plug 'chr4/nginx.vim', { 'for': 'nginx'}
 Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc'}
 Plug 'ObserverOfTime/coloresque.vim'
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile'}
+Plug 'elkowar/yuck.vim', { 'for': 'yuck' }
 " }}}
 
 call plug#end()

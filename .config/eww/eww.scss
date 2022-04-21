@@ -1,0 +1,106 @@
+* {
+  all: unset; //Unsets everything so you can style everything from scratch
+}
+
+//Global Styles
+window {
+  //background-color: #3a3a3a;
+  background-color: #161320;
+  // background-color: #1e2127;
+  color: #b0b4bc;
+  & > * {
+    padding: 5px;
+  }
+}
+
+// Styles on classes (see eww.yuck for more information)
+
+.sidestuff {
+  background-color: #302D41;
+  border-radius: 3px;
+  border: 1px solid #575268;
+  margin-right: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.sidestuff slider {
+  all: unset;
+  color: #ffd5cd;
+}
+
+.metric label {
+  color: green;
+}
+
+.sidestuff.time {
+  color: green;
+}
+
+.metric scale trough highlight {
+  all: unset;
+  // background-color: #D35D6E;
+  background-color: #F28FAD;
+  color: #000000;
+  border-radius: 10px;
+}
+.metric scale trough {
+  all: unset;
+  background-color: #4e4e4e;
+  border-radius: 50px;
+  min-height: 3px;
+  min-width: 50px;
+  margin-left: 10px;
+  margin-right: 20px;
+}
+.metric scale trough highlight {
+  all: unset;
+  // background-color: #D35D6E;
+  background-color: #F28FAD;
+  color: #000000;
+  border-radius: 10px;
+}
+.metric scale trough {
+  all: unset;
+  background-color: #4e4e4e;
+  border-radius: 50px;
+  min-height: 3px;
+  min-width: 50px;
+  margin-left: 10px;
+  margin-right: 20px;
+}
+.label-ram {
+  font-size: large;
+}
+.workspaces {
+  background-color: #302D41;
+  border-radius: 3px;
+  border: 1px solid #575268;
+  button {
+    background: none;
+    margin: 3px;
+    padding-left: 1px;
+    transition-duration: 0.1s;
+    &.active {
+      background-color: #C9CBFF;
+      color: #000;
+      padding: 0px 5px;
+      border-radius: 3px;
+    }
+    &.visible {
+      background-color: #3c3836;
+    }
+    &.inactive {
+      background-color: #302D41;
+      padding: 0px 5px;
+    }
+  }
+  button:hover {
+    color: #161320;
+    background-color: #F5E0DC;
+    border-radius: 3px;
+  }
+}
+// .workspaces button:hover {
+//   color: #D35D6E;
+// }
+

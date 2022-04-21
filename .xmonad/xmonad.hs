@@ -32,19 +32,24 @@ import XMonad.Hooks.WindowSwallowing
 
 -- Layout {{{
 import XMonad.Layout.BinarySpacePartition
+import XMonad.Layout.ThreeColumns
 import XMonad.Layout.Gaps
 import XMonad.Layout.Grid
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.NoBorders
+import XMonad.Layout.Reflect
 import XMonad.Layout.Spacing
+import qualified XMonad.Layout.WindowNavigation as WN
 -- }}}
 
 -- Util {{{
+import XMonad.Util.Loggers
 import XMonad.Util.Run
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.SpawnOnce
+import XMonad.Util.WorkspaceCompare
 -- }}}
 
 -- }}}
@@ -130,15 +135,20 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
     , ((modm,               xK_Tab   ), windows W.focusDown) -- Move focus to the next window
     , ((modm,               xK_j     ), windows W.focusDown)
     , ((modm,               xK_k     ), windows W.focusUp  ) -- Move focus to the previous window
-    , ((modm,               xK_Up    ), windows W.focusUp    )
-    , ((modm,               xK_Down  ), windows W.focusDown  )
     , ((modm,               xK_m     ), windows W.focusMaster  ) -- Move focus to the master window
     -- Swap the focused window and the master window
 --    , ((modm,               xK_Return), windows W.swapMaster)
-    , ((modm .|. shiftMask, xK_j     ), windows W.swapDown  ) -- Swap the focused window with the next window
-    , ((modm .|. shiftMask, xK_Down  ), windows W.swapDown  )
+    , ((modm,                 xK_Right), sendMessage $ WN.Go R)
+    , ((modm,                 xK_Left ), sendMessage $ WN.Go L)
+    , ((modm,                 xK_Up   ), sendMessage $ WN.Go U)
+    , ((modm,                 xK_Down ), sendMessage $ WN.Go D)
+    , ((modm .|. shiftMask,   xK_Right), sendMessage $ WN.Swap R)
+    , ((modm .|. shiftMask,   xK_Left ), sendMessage $ WN.Swap L)
+    , ((modm .|. shiftMask,   xK_Up   ), sendMessage $ WN.Swap U)
+    , ((modm .|. shiftMask,   xK_Down ), sendMessage $ WN.Swap D)
     , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    ) -- Swap the focused window with the previous window
-    , ((modm .|. shiftMask, xK_Up    ), windows W.swapUp    )
+    , ((modm .|. shiftMask, xK_j     ), windows W.swapDown  ) -- Swap the focused window with the next window
+
 -- }}}
 -- resizing {{{
     -- Shrink the master area
@@ -208,26 +218,21 @@ myLayout
     = mySpacing
     $ avoidStruts
     $ mkToggle (NOBORDERS ?? FULL ?? EOT)
+    $ WN.windowNavigation
     (tiled |||
     Mirror tiled |||
+    ThreeColMid 1 (3/100) (1/2) |||
     Grid |||
     Full |||
     emptyBSP)
   where
-     -- default tiling algorithm partitions the screen into two panes
-     tiled   = Tall nmaster delta ratio
-
-     -- The default number of windows in the master pane
-     nmaster = 1
-
-     -- Default proportion of screen occupied by master pane
-     ratio   = 1/2
-
-     -- Percent of screen to increment by when resizing panes
-     delta   = 3/100
+     mySpacing = spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True
+     tiled   = Tall nmaster delta ratio -- default tiling algorithm partitions the screen into two panes
+     nmaster = 1 -- The default number of windows in the master pane
+     ratio   = 1/2 -- Default proportion of screen occupied by master pane
+     delta   = 3/100 -- Percent of screen to increment by when resizing panes
 
 -- gaps
-mySpacing = spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True
 ------------------------------------------------------------------------ }}}
 -- Window rules: {{{
 
@@ -251,6 +256,10 @@ myManageHook = composeAll
     , className =? "Spotify"        --> doShift (myWorkspaces !! 8)
     , title     =? "scratchpad"     --> doCenterFloat
     , resource  =? "desktop_window" --> doIgnore
+    , className =? "eww-bar_0"      --> doLower
+    , className =? "eww-bar_1"      --> doLower
+    , className =? "eww-bar_2"      --> doLower
+    -- , className =? "eww-bar"        --> doSink
     , (className =? "firefox" <&&> resource =? "Dialog") --> doFloat
     ] <+> namedScratchpadManageHook myScratchPads
 ------------------------------------------------------------------------ }}}
@@ -309,16 +318,27 @@ listMyServerCmds = spawn ("echo '" ++ asmc ++ "' | xmessage -file -")
 -- Perform an arbitrary action on each internal state change or X event.
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
+mySort = getSortByXineramaRule
 myLogHook :: D.Client -> PP
 myLogHook dbus = def
         { ppOutput = dbusOutput dbus
+        -- , ppCurrent = wrap "(button :class \"occupied active\" :onclick \"wmctrl -s 0\" \"" "\")"
+        -- , ppVisible = wrap "(button :class \"occupied visible\" :onclick \"wmctrl -s 0\" \"" "\")"
+        -- , ppUrgent = wrap "" " "
+        -- , ppHidden = wrap "(button :class \"occupied inactive\" :onclick \"wmctrl -s 0\" \"" "\")"
         , ppCurrent = wrap ("%{B" ++ purple ++ "}  ") "  %{B-}"
         , ppVisible = wrap ("%{B" ++ gray ++ "}  ") "  %{B-}"
         , ppUrgent = wrap ("%{F" ++ red ++ "} ") " %{F-}"
         , ppHidden = wrap "  " "  "
-        , ppWsSep = ""
+
+        -- , ppWsSep = ""
         , ppSep = " | "
+        -- , ppSep = ""
         , ppTitle = const ""
+        -- , ppOrder = \(ws:_:l:_:t:_) -> [l,ws,t]
+        , ppOrder = \(ws:l:t:_) -> [t,ws,l]
+        -- , ppTitle = wrap "Arst" "\n(box :orientation \"h\" :class \"workspaces\" :space-evenly true :halign \"center\" :valign \"center\" :vexpand true "
+        -- , ppTitle = const "(box :orientation \"h\" :class \"workspaces\" :space-evenly true :halign \"center\" :valign \"center\" :vexpand true "
         , ppLayout = (\x -> case x of
            -- Icons found on https://nerdfonts.net/cheat-sheet
            "Spacing Tall"        -> "Tall" -- "\xfb3f  "
@@ -326,7 +346,8 @@ myLogHook dbus = def
            "Spacing Full"        -> "Full" -- "\xf2d0  "
            "Spacing Grid"        -> "Grid" -- "\xfa6f  "
            "Spacing BSP"         -> "BSP" -- "\xfa6d  "
---             _             -> " " ++ x ++ " "
+           "Spacing ThreeCol"    -> "ThreeColM"
+        --     _             -> " " ++ x ++ " "
         )
         }
         where
@@ -385,7 +406,8 @@ main = do
 
     xmonad
         $ docks
-        $ ewmh
+        . setEwmhWorkspaceSort mySort
+        . ewmh
         $ defaults { logHook = dynamicLogWithPP $ filterOutWsPP ["NSP"] (myLogHook dbus)}
 -- }}}
 -- defaults {{{

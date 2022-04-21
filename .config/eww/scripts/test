@@ -1,0 +1,4 @@
+#!/bin/bash
+log="$(xmonad-log | grep -v '^[A-Z][a-z]')"
+2	printf '%s\n' "${log}" | sed -E 's/\%\{(B|F)#.{6}\}\s//' | awk '{print $1}'
+

@@ -129,6 +129,7 @@ alias reloadx='xrdb -load $HOME/.config/Xresources'
 alias jf='journalctl -f'
 alias mon2cam="deno run --unstable -A -r -q https://raw.githubusercontent.com/ShayBox/Mon2Cam/master/src/mod.ts"
 alias cliptype="xclip -selection clipboard -out | tr \\n \\r | xdotool selectwindow windowfocus type --clearmodifiers --delay 25 --window %@ --file -"
+alias yay="paru "
 [ -f ${XDG_CONFIG_HOME:-$HOME/.config}/.aliases ] && source .aliases
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # }}}

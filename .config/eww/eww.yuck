@@ -1,0 +1,99 @@
+; audio cpu temperature memory date layout
+(defwidget bar [] ; {{{
+  (centerbox :orientation "h"
+    (workspaces)
+    (music)
+    (sidestuff)))
+; }}}
+(defwidget sidestuff [] ; {{{
+  (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end"
+    (metric :label "🔊"
+            :value volume
+            :onchange "amixer -D pulse sset Master {}%")
+    (metric :label ""
+            :value {EWW_RAM.used_mem_perc}
+            :onchange "")
+    (metric :label "xd"
+            :value {EWW_CPU.avg}
+            :onchange "")
+    (metric :label "💾"
+            :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}
+            :onchange "")
+    time))
+; }}}
+(defwidget workspaces [] ; {{{
+    ; (box :class layout (label :text layout)))
+    (literal :content workspaces_listen))
+(deflisten workspaces_listen "scripts/workspace")
+; }}}
+(defwidget music [] ; {{{
+  (box :class "music"
+       :orientation "h"
+       :space-evenly false
+       :halign "center"
+    {music != "" ? "🎵${music}" : ""}))
+; }}}
+(defwidget metric [label value onchange] ; {{{
+  (box :orientation "h"
+       :class "metric"
+       :space-evenly false
+    (box :class "label" label)
+    (scale :min 0
+           :max 101
+           :active {onchange != ""}
+           :value value
+           :onchange onchange)))
+; }}}
+
+(deflisten layout :initial "Tall"
+  "scripts/getlayout")
+(deflisten music :initial ""
+  "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
+
+; (defpoll layout :interval "1s"
+;   "scripts/getlayout")
+
+(defpoll volume :interval "1s"
+  "scripts/getvol")
+
+(defpoll time :interval "10s"
+  "date '+%H:%M %b %d, %Y'")
+
+; defwindow bars {{{
+(defwindow bar_0
+  :monitor 0
+  ; :wm-ignore true
+  :stacking "bg"
+  :windowtype "dock"
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "99%"
+                      :height "10px"
+                      :anchor "top center")
+  :reserve (struts :side "top" :distance "36px")
+  (bar))
+(defwindow bar_1
+  :monitor 1
+  ; :wm-ignore true
+  :stacking "bg"
+  :windowtype "dock"
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "99%"
+                      :height "10px"
+                      :anchor "top center")
+  :reserve (struts :side "top" :distance "36px")
+  (bar))
+(defwindow bar_2
+  :monitor 2
+  ; :wm-ignore true
+  :stacking "bg"
+  :windowtype "dock"
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "99%"
+                      :height "10px"
+                      :anchor "top center")
+  :reserve (struts :side "top" :distance "36px")
+  (bar))
+; }}}

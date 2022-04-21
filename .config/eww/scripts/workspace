@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+monitor="$1"
+
+gib_workspace_names() {
+  wmctrl -d \
+    | awk '{ print $1 " " $2 " " $9 }' \
+    | grep -v NSP
+}
+
+gib_workspace_yuck() {
+  buffered=""
+  gib_workspace_names | while read -r id active name; do
+    name="${name#*_}"
+    if [ "$active" == '*' ]; then
+      active_class="active"
+    else
+      active_class="inactive"
+    fi
+
+    # if wmctrl -l | grep --regexp '.*\s\+'"$id"'\s\+.*' >/dev/null; then
+    if wmctrl -l | awk '{print "(" $2}' | tr '\n' ')' | grep "($id)" >/dev/null; then
+      button_class="occupied"
+      button_name="$name"
+    else
+      continue
+      # button_class="empty"
+      # button_name="◇"
+    fi
+    buffered+="(button :class \"$button_class $active_class\"  :onclick \"wmctrl -s $id\" \"$button_name\")"
+    if [ $button_class = "occupied" -o $active_class = "active" ]; then
+      echo -n "$buffered"
+      buffered=""
+    fi
+  done
+}
+
+# xprop -spy -root _NET_CURRENT_DESKTOP | while read -r; do
+xprop -spy -root _NET_ACTIVE_WINDOW | while read -r; do
+sleep 0.1
+aws="$(wmctrl -d | awk '$2 == "*" {print $1 "-" $NF}')"
+if test "${aws:-}" != "${paws:-}"; then
+  echo '(box :orientation "h" :class "workspaces" :space-evenly true :halign "start" :valign "center" :vexpand true '"$(gib_workspace_yuck)"')'
+fi
+paws="${aws}"
+done
