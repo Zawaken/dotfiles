@@ -58,42 +58,42 @@ return packer.startup(function(use)
   use "nvim-lua/popup.nvim" -- An implementation of the Popup API from vim in Neovim
   use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
   use({"windwp/nvim-autopairs", -- Autopairs, integrates with both cmp and treesitter
-    -- config = function()
-    --   require("config.autopairs")
-    -- end,
+    config = function()
+      require("config.autopairs")
+    end,
   })
   use({"numToStr/Comment.nvim", -- Easily comment stuff
     config = function()
-      require("user.config.comment")
+      require("config.comment")
     end,
   })
   -- use "kyazdani42/nvim-web-devicons"
   use({"kyazdani42/nvim-tree.lua",
-    -- config = function ()
-    --   require("config.nvim-tree")
-    -- end
+    config = function ()
+      require("config.nvim-tree")
+    end
   })
   -- use "akinsho/bufferline.nvim"
   -- use "moll/vim-bbye"
   use({"nvim-lualine/lualine.nvim",
-    -- config = function()
-    --   require("config.lualine")
-    -- end
+    config = function()
+      require("config.lualine")
+    end
   })
   -- use "akinsho/toggleterm.nvim"
   -- use "ahmedkhalf/project.nvim"
   use({"lewis6991/impatient.nvim",
-    -- config = function ()
-    --   require("config.impatient")
-    -- end
+    config = function ()
+      require("config.impatient")
+    end
   })
   -- use "lukas-reineke/indent-blankline.nvim"
   -- use "goolord/alpha-nvim"
   use "antoinemadec/FixCursorHold.nvim" -- This is needed to fix lsp doc highlight
   use({"folke/which-key.nvim",
-    -- config = function ()
-    --   require("config.whichkey")
-    -- end
+    config = function ()
+      require("config.whichkey")
+    end
   })
 
   -- Colorschemes
@@ -102,9 +102,9 @@ return packer.startup(function(use)
     -- use "lunarvim/darkplus.nvim"
     "folke/tokyonight.nvim",
 
-    -- config = function()
-    --   require("config.theme")
-    -- end,
+    config = function()
+      require("config.theme")
+    end,
   })
   -- cmp plugins
   use({ "hrsh7th/nvim-cmp", -- The completion plugin
@@ -114,20 +114,14 @@ return packer.startup(function(use)
       "hrsh7th/cmp-cmdline", -- cmdline completions
       "saadparwaiz1/cmp_luasnip", -- snippet completions
       "hrsh7th/cmp-nvim-lsp",
+      -- -- snippets
+      "L3MON4D3/LuaSnip", --snippet engine
+      "rafamadriz/friendly-snippets", -- a bunch of snippets to use
     },
-    -- config = function()
-    --   require("config.cmp")
-    -- end
+    config = function()
+      require("config.cmp")
+    end
   })
-  -- use "hrsh7th/cmp-buffer" -- buffer completions
-  -- use "hrsh7th/cmp-path" -- path completions
-  -- use "hrsh7th/cmp-cmdline" -- cmdline completions
-  -- use "saadparwaiz1/cmp_luasnip" -- snippet completions
-  -- use "hrsh7th/cmp-nvim-lsp"
-
-  -- -- snippets
-  use "L3MON4D3/LuaSnip" --snippet engine
-  use "rafamadriz/friendly-snippets" -- a bunch of snippets to use
 
   -- LSP
   use({ "neovim/nvim-lspconfig", -- enable LSP
@@ -136,32 +130,32 @@ return packer.startup(function(use)
       "tamago324/nlsp-settings.nvim", -- language server settings defined in json for
       "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
     },
-    -- config = function()
-    --   require("config.lsp")
-    -- end
+    config = function()
+      require("config.lsp")
+    end
   })
   -- -- Telescope
   use({"nvim-telescope/telescope.nvim",
-    -- config = function ()
-    --   require("config.telescope")
-    -- end
+    config = function ()
+      require("config.telescope")
+    end
   })
 
   -- -- Treesitter
   use ({
     "nvim-treesitter/nvim-treesitter",
     run = ":TSUpdate",
-    -- config = function ()
-    --   require("config.treesitter")
-    -- end
+    config = function ()
+      require("config.treesitter")
+    end
   })
   use "JoosepAlviste/nvim-ts-context-commentstring"
 
   -- -- Git
   use({"lewis6991/gitsigns.nvim",
-    -- config = function ()
-    --   require("config.gitsigns")
-    -- end
+    config = function ()
+      require("config.gitsigns")
+    end
   })
 
   -- Automatically set up your configuration after cloning packer.nvim
