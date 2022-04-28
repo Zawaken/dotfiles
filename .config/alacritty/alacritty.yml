@@ -75,8 +75,8 @@ font:
     #
     # family: Terminess Powerline
     # Cozette: https://github.com/slavfox/Cozette
-    # family: xos4 Terminess Powerline
-    family: Misc Termsyn
+    family: xos4 Terminess Powerline
+    # family: Misc Termsyn
     # family: scientifica
     # family: Cozette
     # family: TerminessTTF Nerd Font Mono
@@ -87,8 +87,8 @@ font:
   # Bold font face
   bold:
     #
-    # family: xos4 Terminess Powerline
-    family: Misc Termsyn
+    family: xos4 Terminess Powerline
+    # family: Misc Termsyn
     # family: scientifica
     # family: Cozette
 
@@ -103,7 +103,7 @@ font:
     #style: Italic
 
   # Point size
-  size: 7.0
+  size: 9.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
