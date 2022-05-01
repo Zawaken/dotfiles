@@ -1,20 +1,16 @@
--- vim.cmd [[
--- try
---   colorscheme tokyonight
--- catch /^Vim\%((\a\+)\)\=:E185/
---   colorscheme default
---   set background=dark
--- endtry
--- ]]
-
-
 local colorscheme = "tokyonight"
 
--- local status_ok, _ = pcall(require(colorscheme).colorscheme())
+
+vim.g.tokyonight_style = "night"
+vim.g.tokyonight_italic_comments = true
+
+
+-- local status_ok, _ = pcall(vim.cmd, "colorscheme " .. colorscheme)
 -- if not status_ok then
 --   vim.cmd [[
 --     colorscheme default
 --     set background=dark
 --   ]]
 -- end
-require(colorscheme).colorscheme()
+-- vim.cmd("colorscheme tokyonight")
+require("tokyonight").colorscheme()

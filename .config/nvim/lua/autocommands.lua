@@ -37,6 +37,9 @@ vim.cmd [[
 
   " Return to previous position when opening a file
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+  " Autoclose nvim/tab if nvim-tree is the last window in the tab
+  autocmd BufEnter * ++nested if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif
 ]]
 -- Autoformat
 -- augroup _lsp

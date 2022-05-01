@@ -17,7 +17,9 @@ vim.g.maplocalleader = ","
 --   term_mode = "t",
 --   command_mode = "c",
 
-keymap("n", "<leader>n", "<cmd>lua require'user.togglenumbers'.ToggleNumbers()<CR>", opts)
+
+keymap("n", "<leader>n", "<cmd>lua require'util'.CopyMode()<CR>", opts)
+-- keymap("n", "<leader>n", "<cmd>lua ToggleNumbers()<CR>", opts)
 keymap("n", "<leader>f", "<cmd>lua require'telescope.builtin'.find_files(require('telescope.themes').get_dropdown())<cr>", opts)
 keymap("n", "<leader>c", ":noh<CR>", opts)
 

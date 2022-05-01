@@ -54,42 +54,79 @@ packer.init {
 -- Install your plugins here {{{
 return packer.startup(function(use)
   -- My plugins here
-  use({"wbthomason/packer.nvim"}) -- Have packer manage itself
-  use "nvim-lua/popup.nvim" -- An implementation of the Popup API from vim in Neovim
-  use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
-  use({"windwp/nvim-autopairs", -- Autopairs, integrates with both cmp and treesitter
-    config = function()
-      require("config.autopairs")
-    end,
-  })
-  use({"numToStr/Comment.nvim", -- Easily comment stuff
-    config = function()
-      require("config.comment")
-    end,
-  })
-  -- use "kyazdani42/nvim-web-devicons"
-  use({"kyazdani42/nvim-tree.lua",
-    config = function ()
-      require("config.nvim-tree")
-    end
-  })
-  -- use "akinsho/bufferline.nvim"
-  -- use "moll/vim-bbye"
-  use({"nvim-lualine/lualine.nvim",
-    config = function()
-      require("config.lualine")
-    end
-  })
-  -- use "akinsho/toggleterm.nvim"
-  -- use "ahmedkhalf/project.nvim"
+  use({ "wbthomason/packer.nvim" }) -- Have packer manage itself
+  use({ "nvim-lua/popup.nvim" }) -- An implementation of the Popup API from vim in Neovim
+  use({ "nvim-lua/plenary.nvim" }) -- Useful lua functions used ny lots of plugins
+  use({ "antoinemadec/FixCursorHold.nvim" }) -- This is needed to fix lsp doc highlight
   use({"lewis6991/impatient.nvim",
     config = function ()
       require("config.impatient")
     end
   })
-  -- use "lukas-reineke/indent-blankline.nvim"
-  -- use "goolord/alpha-nvim"
-  use "antoinemadec/FixCursorHold.nvim" -- This is needed to fix lsp doc highlight
+
+  use({ "windwp/nvim-autopairs",
+    config = function()
+      require("config.autopairs")
+    end,
+  })
+
+  use({"numToStr/Comment.nvim", -- Easily comment stuff
+    config = function()
+      require("config.comment")
+    end,
+  })
+
+  use "kyazdani42/nvim-web-devicons"
+  use({"kyazdani42/nvim-tree.lua",
+    config = function ()
+      require("config.nvim-tree")
+    end
+  })
+  use({"akinsho/bufferline.nvim",
+    config = function()
+      require("config.bufferline")
+    end
+  })
+
+  -- use "moll/vim-bbye"
+
+  use({"nvim-lualine/lualine.nvim",
+    config = function()
+      require("config.lualine")
+    end
+  })
+  -- use({"akinsho/toggleterm.nvim",
+  --   config = function()
+  --     require("config.toggleterm")
+  --   end
+  -- })
+
+  -- use({"ahmedkhalf/project.nvim"
+  --   config = function ()
+  --     require("config.project")
+  --   end
+  -- })
+
+
+  use({"lukas-reineke/indent-blankline.nvim",
+    config = function ()
+      require("config.indentline")
+    end
+  })
+
+  -- use({"goolord/alpha-nvim",
+  --   config = function ()
+  --     require("config.alpha")
+  --   end
+  -- })
+
+  use({"anuvyklack/pretty-fold.nvim",
+    requires = 'anuvyklack/nvim-keymap-amend',
+    config = function ()
+      require("config.prettyfold")
+    end
+  })
+
   use({"folke/which-key.nvim",
     config = function ()
       require("config.whichkey")
@@ -147,7 +184,7 @@ return packer.startup(function(use)
     run = ":TSUpdate",
     config = function ()
       require("config.treesitter")
-    end
+    end,
   })
   use "JoosepAlviste/nvim-ts-context-commentstring"
 

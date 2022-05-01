@@ -19,7 +19,7 @@ HISTSIZE=10000
 SAVEHIST=10000
 HIST_STAMPS="dd.mm.yyyy"
 bindkey -e
-export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$HOME/.gem/ruby/2.6.0/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$HOME/.gem/ruby/*/bin:$HOME/.local/share/gem/ruby/*/bin:$PATH
 export EDITOR=/usr/bin/nvim
 export VISUAL=/usr/bin/nvim
 export BSPWM_VIM_INSERT=#FF0000
