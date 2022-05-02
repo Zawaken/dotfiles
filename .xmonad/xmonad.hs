@@ -1,5 +1,4 @@
 -- imports {{{
--- vim:foldmethod=marker
 
 -- base {{{
 import XMonad
