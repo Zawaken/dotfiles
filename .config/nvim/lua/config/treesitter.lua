@@ -11,6 +11,7 @@ configs.setup {
     "haskell",
     "json",
     "lua",
+    "markdown",
     "ruby",
     "scss",
     "typescript",
