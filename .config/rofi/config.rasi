@@ -20,4 +20,4 @@ configuration {
   font: "Audimat Mono 15";
   hide-scrollbar: true;
 }
-@theme "./themes/own2.rasi"
+@theme "./themes/dmenu.rasi"

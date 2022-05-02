@@ -1,0 +1,69 @@
+/* RASI Theme */
+
+configuration {
+    /* combi-hide-mode-prefix: true; */
+    /* fixed-num-lines: true; */
+    eh: 1;
+    sidebar-mode: false;
+  }
+
+* {
+	background:                      #161320;
+	bordercolor:                     #575268;
+	separatorcolor:                  #ebdbb2;
+	normal-background:               #282828;
+	/* normal-foreground:               #ebdbb2; */
+	normal-foreground:               #FFF;
+	selected-normal-background:      #C9CBFF;
+	selected-normal-foreground:      #000;
+	selected-active-background:      #59666e;
+	selected-active-foreground:      #b5bae1;
+	foreground:                      @normal-foreground;
+}
+
+* {
+    background-color: transparent;
+    text-color: @foreground;
+    font: "Misc Termsyn 9";
+}
+#window {
+    anchor: north;
+    location: north;
+    border:     1px;
+    padding:    5px 6px 4px 6px;
+    border-radius: 5px;
+    border-color: @bordercolor;
+    background-color: @background;
+    width: 99%;
+    height: 37px;
+    children: [ horibox ];
+}
+#horibox {
+  orientation: horizontal;
+  children: [ prompt, entry, listview ];
+}
+
+element-text {
+    padding: 2px 5px;
+  }
+element-text selected {
+    background-color: @selected-normal-background;
+    border-radius: 2px;
+    text-color: @selected-normal-foreground;
+  }
+
+#prompt {
+  padding: 2px;
+}
+#entry {
+  padding: 2px;
+  expand: false;
+  width: 10em;
+}
+
+#listview {
+    layout: horizontal;
+    spacing: 10px;
+    border-color: @separatorcolor;
+    lines: 50;
+}
