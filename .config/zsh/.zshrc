@@ -174,4 +174,7 @@ alias dp='dotfiles push'
 # --- Sourcing --- # {{{
 eval "$(starship init zsh)"
 source <(kubectl completion zsh)
+if [[ -f $HOME/.aliases ]]; then
+  source $HOME/.aliases
+fi
 # }}}
