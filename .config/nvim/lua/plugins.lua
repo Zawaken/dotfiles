@@ -142,7 +142,7 @@ local plugins = function(use)
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
-  if pkg.Boot then
+  if pkg.Bootstrap then
     pkg.update()
   end
 end

@@ -4,11 +4,11 @@ local fn = vim.fn
 
 local install_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
 if fn.empty(fn.glob(install_path)) > 0 then
-  M.Pboot = true
+  M.Bootstrap = true
 end
 
-M.boot = function()
-  if M.Boot then
+M.bootstrap = function()
+  if M.Bootstrap then
     fn.system {
       "git",
       "clone",
@@ -17,8 +17,8 @@ M.boot = function()
       "https://github.com/wbthomason/packer.nvim",
       install_path,
     }
-    print "Installing packer, close and reopen nvim"
     vim.cmd[["packadd packer.nvim"]]
+    print "Installing packer, close and reopen nvim"
   end
 
   vim.cmd[[
@@ -58,7 +58,7 @@ M.config = {
 M.setup = function(plugins, config)
   local cfg = vim.tbl_deep_extend("force", M.config, config or {})
 
-  M.boot()
+  M.bootstrap()
 
   local ok, packer = pcall(require, "packer")
   if not ok then
