@@ -3,4 +3,5 @@
 test -f ~/.xprofile && source ~/.xprofile
 
 exec autorandr --change &
-exec xmonad
+exec awesome
+# exec xmonad
