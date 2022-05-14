@@ -7,6 +7,7 @@
 local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
+require("patches.eminent")
 -- widget and layout lib
 local wibox = require("wibox")
 -- notification lib
@@ -17,7 +18,6 @@ local beautiful = require("beautiful")
 local ruled = require("ruled")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
-local sharedtags = require("patches.sharedtags")
 local charitable = require("patches.charitable")
 -- }}}
 
@@ -252,7 +252,7 @@ awful.mouse.append_global_mousebindings({
 
 -- {{{ Key bindings
 
--- General
+-- {{{ General
 awful.keyboard.append_global_keybindings({
   awful.key({ modkey }, "s",
     hotkeys_popup.show_help,
@@ -293,8 +293,9 @@ awful.keyboard.append_global_keybindings({
   awful.key({ "Control", "Shift"}, "x",
     function() awful.util.spawn("screenshot -m -window --open 'sharenix -n -c'") end),
 })
+-- }}}
 
--- Tag-related
+-- {{{ Tag-related
 awful.keyboard.append_global_keybindings({
   awful.key({ modkey }, "h",
             awful.tag.viewprev,
@@ -306,8 +307,9 @@ awful.keyboard.append_global_keybindings({
             awful.tag.history.restore,
             { description="go back", group="tag" }),
 })
+-- }}}
 
--- Focus-related
+-- {{{ Focus-related
 awful.keyboard.append_global_keybindings({
   -- awful.key({ modkey }, "j",
   --           function() awful.client.focus.byidx(1) end,
@@ -339,8 +341,9 @@ awful.keyboard.append_global_keybindings({
             end,
             { description="restore minimized", group="client" }),
 })
+-- }}}
 
--- Layout
+-- {{{ Layout
 awful.keyboard.append_global_keybindings({
   -- awful.key({ modkey, "Shift" }, "j",
   --           function() awful.client.swap.byidx(1) end,
@@ -376,7 +379,9 @@ awful.keyboard.append_global_keybindings({
             function() awful.layout.inc(-1) end,
             { description="select previous", group="layout" }),
 })
+-- }}}
 
+-- {{{ Tag-Switching etc
 awful.keyboard.append_global_keybindings({
   awful.key {
     modifiers = { modkey },
@@ -384,7 +389,11 @@ awful.keyboard.append_global_keybindings({
     description = "view tag",
     group = "tag",
     on_press = function(i)
-      charitable.select_tag(tags[i], awful.screen.focused())end,
+      local tag = tags[i]
+      if tag then
+        charitable.select_tag(tag, awful.screen.focused())
+      end
+    end
   },
   awful.key {
     modifiers = { modkey, "Control" },
@@ -392,7 +401,11 @@ awful.keyboard.append_global_keybindings({
     description = "toggle tag",
     group = "tag",
     on_press = function(i)
-      charitable.toggle_tag(tags[i], awful.screen.focused())end,
+      local tag = tags[i]
+      if tag then
+        charitable.toggle_tag(tag, awful.screen.focused())
+      end
+    end
   },
   awful.key {
     modifiers = { modkey, "Shift" },
@@ -477,7 +490,9 @@ awful.keyboard.append_global_keybindings({
   --   end,
   -- } -- }}}
 })
+-- }}}
 
+-- {{{ Resizing
 awful.keyboard.append_client_keybindings({
   -- Resize windows
   awful.key({ modkey, "Control" }, "Up",
@@ -588,7 +603,7 @@ awful.keyboard.append_client_keybindings({
             end,
             { description="toggle alacritty", group="client" }),
 })
-
+-- }}}
 client.connect_signal("request::default_mousebindings", function()
   awful.mouse.append_client_mousebindings({
     awful.button({ }, 1,
@@ -600,6 +615,7 @@ client.connect_signal("request::default_mousebindings", function()
   })
 end)
 
+-- {{{ General 2.0
 client.connect_signal("request::default_keybindings", function()
   awful.keyboard.append_client_keybindings({
     awful.key({ "Mod1" }, "Return",
@@ -638,6 +654,7 @@ client.connect_signal("request::default_keybindings", function()
               { description="(un)maximize", group="client" }),
   })
 end)
+-- }}}
 
 -- }}}
 
@@ -775,3 +792,7 @@ tag.connect_signal("request::screen", function(t)
   end
 end
 ) --}}}
+
+-- {{{ fix wrong warping tags
+awful.tag.history.restore = function() end
+-- }}}
