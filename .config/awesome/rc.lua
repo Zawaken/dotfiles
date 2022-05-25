@@ -7,7 +7,7 @@
 local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
-require("patches.eminent")
+require("eminent")
 -- widget and layout lib
 local wibox = require("wibox")
 -- notification lib
@@ -18,7 +18,9 @@ local beautiful = require("beautiful")
 local ruled = require("ruled")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
-local charitable = require("patches.charitable")
+local charitable = require("charitable")
+local lain = require("lain")
+-- local nice = require("patches.nice")
 -- }}}
 
 -- {{{ awesomewm error handling with naughty
@@ -33,6 +35,8 @@ end)
 
 -- {{{ variables
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
+
+-- nice()
 
 awesome.set_preferred_icon_size(32)
 
@@ -84,6 +88,8 @@ tag.connect_signal("request::default_layouts", function()
     -- awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier,
     -- awful.layout.suit.corner.nw,
+    lain.layout.centerwork,
+    lain.layout.cascade,
   })
 end)
 -- }}}
@@ -134,6 +140,18 @@ local tags = charitable.create_tags(
 screen.connect_signal("request::desktop_decoration", function(s)
 --   -- Each screen has its own tag table.
 --   awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+  local cpu = lain.widget.cpu {
+    settings = function()
+      widget:set_markup("﬙ " .. cpu_now.usage .. "%")
+    end
+  }
+
+  local temp = lain.widget.temp {
+    settings = function()
+      widget:set_markup("Temp: " .. temp_now[2])
+    end
+  }
+
 
   for i = 1, #tags do
     if not tags[i].selected then
@@ -232,6 +250,8 @@ screen.connect_signal("request::desktop_decoration", function(s)
       s.mytasklist, -- Middle widget
       { -- Right widgets
         layout = wibox.layout.fixed.horizontal,
+        temp.widget,
+        cpu.widget,
         mykeyboardlayout,
         wibox.widget.systray(),
         mytextclock,
@@ -289,9 +309,21 @@ awful.keyboard.append_global_keybindings({
     function() menubar.show() end,
     { description="show the menubar", group="launcher" }),
   awful.key({ "Control", "Shift"}, "c",
-    function() awful.util.spawn("screenshot -m region --open 'sharenix -n -c") end),
+    function() awful.util.spawn("screenshot -m region --open 'sharenix -n -c'") end),
   awful.key({ "Control", "Shift"}, "x",
-    function() awful.util.spawn("screenshot -m -window --open 'sharenix -n -c'") end),
+    function() awful.util.spawn("screenshot -m window --open 'sharenix -n -c'") end),
+  awful.key({}, "XF86AudioPlay",
+    function() awful.util.spawn("playerctl play-pause") end),
+  awful.key({}, "XF86AudioPause",
+    function() awful.util.spawn("playerctl play-pause") end),
+  awful.key({}, "XF86AudioNext",
+    function() awful.util.spawn("playerctl next") end),
+  awful.key({}, "XF86AudioPrev",
+    function() awful.util.spawn("playerctl previous") end),
+  awful.key({}, "XF86AudioLowerVolume",
+    function() awful.util.spawn("pactl set-sink-volume 2 -5%") end),
+  awful.key({}, "XF86AudioRaiseVolume",
+    function() awful.util.spawn("pactl set-sink-volume 2 +5%") end),
 })
 -- }}}
 
@@ -680,7 +712,7 @@ ruled.client.connect_signal("request::rules", function()
       instance = { "copyq", "pinentry" },
       class    = {
         "Arandr", "Blueman-manager", "Gpick", "Kruler", "Sxiv",
-        "Tor Browser", "Wpa_gui", "veromix", "xtightvncviewer"
+        "Tor Browser", "Wpa_gui", "veromix", "xtightvncviewer", "Pavucontrol"
       },
       -- Note that the name property shown in xprop might be set slightly after creation of the client
       -- and the name shown there might not match defined rules here.
@@ -693,25 +725,56 @@ ruled.client.connect_signal("request::rules", function()
         "pop-up",         -- e.g. Google Chrome's (detached) Developer Tools.
       }
     },
-    properties = { floating=true }
+    properties = { floating=true, ontop=true }
   }
 
   -- Add titlebars to normal clients and dialogs
   ruled.client.append_rule {
     id         = "titlebars",
     rule_any   = { type = { "normal", "dialog" } },
-    properties = { titlebars_enabled=true      }
+    properties = { titlebars_enabled=false      }
   }
 
   ruled.client.append_rule {
     rule       = { class="discord"   },
-    properties = { screen=2, tag="2" }
+    properties = { tag="2" }
   }
 
   ruled.client.append_rule {
     rule       = { instance="scratch"   },
     properties = { floating=true, titlebars_enabled=false }
   }
+  ruled.client.append_rule {
+    rule       = { class="Steam" },
+    properties = { tag="5" }
+  }
+end)
+
+
+-- Make floating windows behave like they should (always on top)
+client.connect_signal("property::floating", function(c)
+  if c.floating then
+    c.ontop = true
+  else
+    c.ontop = false
+  end
+  end)
+  client.connect_signal("manage", function(c)
+  if c.floating or c.first_tag.layout.name == "floating" then
+    c.ontop = true
+  else
+    c.ontop = false
+  end
+  end)
+  tag.connect_signal("property::layout", function(t)
+  local clients = t:clients()
+  for k,c in pairs(clients) do
+    if c.floating or c.first_tag.layout.name == "floating" then
+      c.ontop = true
+    else
+      c.ontop = false
+    end
+  end
 end)
 
 -- }}}
@@ -796,3 +859,32 @@ end
 -- {{{ fix wrong warping tags
 awful.tag.history.restore = function() end
 -- }}}
+
+-- {{{Make clients not spawn as master
+client.connect_signal("manage", function (c)
+if not awesome.startup then awful.client.setslave(c) end
+
+if awesome.startup
+  and not c.size_hints.user_position
+  and not c.size_hints.program_position then
+    -- Prevent clients from being unreachable after screen count changes.
+    awful.placement.no_offscreen(c)
+end
+end)
+-- }}}
+
+-- {{{Remove borders when only one client visible in tag
+-- No borders when rearranging only 1 non-floating or maximized client
+screen.connect_signal("arrange", function (s)
+    local only_one = #s.tiled_clients == 1
+    for _, c in pairs(s.clients) do
+        if only_one and not c.floating or c.maximized then
+            c.border_width = 0
+        else
+            c.border_width = beautiful.border_width -- your border width
+        end
+    end
+end)
+-- client.connect_signal("request::border", set_border)
+-- client.connect_signal("property::maximized", set_border)
+--}}}

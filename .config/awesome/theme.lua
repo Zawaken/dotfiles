@@ -59,7 +59,7 @@ theme.red                                   = "#E27878" -- xrdb.color9
 -- theme.opacity                               = "e6" -- 90%
 
 -- theme.font                                  = "JetBrainsMonoMedium Nerd Font 10"
-theme.font                                  = "Misc Termsyn 7"
+theme.font                                  = "xos4 Terminess Powerline 9"
 theme.font_bold                             = "JetBrainsMonoExtraBold Nerd Font 10"
 theme.bg_normal                             = theme.bg
 theme.bg_focus                              = theme.bg
@@ -74,7 +74,8 @@ theme.fg_urgent                             = theme.fg
 -- theme.wibar_fg                              = theme.gray
 -- theme.wibar_bg                              = theme.black
 
-theme.gap_single_client                     = true
+theme.gap_single_client                     = false
+theme.border_single_client                  = false
 theme.useless_gap                           = dpi(4)
 theme.border_width                          = dpi(2)
 theme.border_radius                         = dpi(5)
@@ -206,6 +207,7 @@ local myshape = function(cr, width, height)
   -- gears_shape.transform(gears_shape.rectangle) : translate(width/2+ipad, height/2+ipad)(cr, width/2-opad-ipad, height/2-opad-ipad)
 end
 theme.awesome_icon = gears_surface.load_from_shape(20, 20, myshape, theme.tertiary)
+-- theme.awesome_icon = gears_surface.load_from_shape(20, 20, wibox.container.background(wibox.widget.textbox("a"), theme.tertiary, wibox.widget.textbox("a")), theme.tertiary)
 
 -- theme.awesome_icon = theme_assets.awesome_icon(theme.menu_height, theme.magenta, theme.black)
 
