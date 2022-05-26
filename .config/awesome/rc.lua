@@ -7,7 +7,7 @@
 local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
-require("eminent")
+require("eminent.eminent")
 -- widget and layout lib
 local wibox = require("wibox")
 -- notification lib
@@ -20,6 +20,7 @@ local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
 local charitable = require("charitable")
 local lain = require("lain")
+local zen = require("zen.bootstrap")
 -- local nice = require("patches.nice")
 -- }}}
 
@@ -146,11 +147,14 @@ screen.connect_signal("request::desktop_decoration", function(s)
     end
   }
 
-  local temp = lain.widget.temp {
-    settings = function()
-      widget:set_markup("Temp: " .. temp_now[2])
-    end
-  }
+  -- local temp = lain.widget.temp {
+  --   settings = function()
+  --     widget:set_markup("Temp: " .. temp_now[2])
+  --   end
+  -- }
+  -- local temp = load_widget({
+  --   widget = "widgets.temperature.widget"
+  -- })
 
 
   for i = 1, #tags do
@@ -250,7 +254,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
       s.mytasklist, -- Middle widget
       { -- Right widgets
         layout = wibox.layout.fixed.horizontal,
-        temp.widget,
+        -- temp.widget,
         cpu.widget,
         mykeyboardlayout,
         wibox.widget.systray(),
@@ -823,7 +827,7 @@ ruled.notification.connect_signal('request::rules', function()
   ruled.notification.append_rule {
     rule       = { },
     properties = {
-      screen           = awful.screen.preferred,
+      screen           = awful.screen.focused,
       implicit_timeout = 5,
     }
   }
@@ -856,13 +860,19 @@ tag.connect_signal("request::screen", function(t)
 end
 ) --}}}
 
--- {{{ fix wrong warping tags
-awful.tag.history.restore = function() end
--- }}}
-
--- {{{Make clients not spawn as master
+-- {{{Make clients spawn "normally"
 client.connect_signal("manage", function (c)
-if not awesome.startup then awful.client.setslave(c) end
+if not awesome.startup then
+  awful.client.setslave(c)
+  -- local prev_focused = awful.client.focus.history.get(awful.screen.focused(), 1, nil)
+  -- local prev_c = awful.client.next(-1, c)
+  -- if prev_c and prev_focused then
+  --   while prev_c ~= prev_focused do
+  --     c:swap(prev_c)
+  --     prev_c = awful.client.next(-1, c)
+  --   end
+  -- end
+end
 
 if awesome.startup
   and not c.size_hints.user_position
@@ -888,3 +898,7 @@ end)
 -- client.connect_signal("request::border", set_border)
 -- client.connect_signal("property::maximized", set_border)
 --}}}
+
+-- {{{ fix wrong warping tags
+awful.tag.history.restore = function() end
+-- }}}

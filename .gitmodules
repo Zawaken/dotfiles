@@ -10,3 +10,6 @@
 [submodule ".config/awesome/eminent"]
 	path = .config/awesome/eminent
 	url = https://github.com/guotsuan/eminent
+[submodule ".config/awesome/zen"]
+	path = .config/awesome/zen
+	url = https://github.com/atsepkov/awesome-zen
