@@ -110,12 +110,14 @@ theme.taglist_shape_border_color_focus      = theme.bg
 -- theme.taglist_shape_border_color_volatile   = theme.red
 theme.taglist_squares_sel                   = theme_assets.taglist_squares_sel(dpi(6), theme.secondary)
 theme.taglist_squares_unsel                 = theme_assets.taglist_squares_unsel(dpi(6), theme.bg)
+theme.tasklist_font_focus                   = theme.font
+theme.tasklist_disable_task_name            = true
+theme.tasklist_spacing                      = dpi(5)
+
 -- theme.tasklist_fg_normal                    = theme.gray
 -- theme.tasklist_bg_normal                    = theme.black
 -- theme.tasklist_fg_focus                     = theme.black
 -- theme.tasklist_bg_focus                     = theme.blue
--- theme.tasklist_font_focus                   = theme.font
--- theme.tasklist_spacing                      = dpi(2)
 
 -- theme.tasklist_shape_border_width           = dpi(1)
 -- theme.tasklist_shape_border_color           = theme.black

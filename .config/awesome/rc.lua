@@ -2,12 +2,20 @@
 -- standard awesome libs
 -- pcall(require, "luarocks.loader")
 
--- local scratch = require("scratch")
+-- Xmonad-like workspaces
+local charitable = require("charitable")
+-- Dynamic tags
+require("eminent.eminent")
+-- lain utils, widgets & layouts
+local lain = require("lain")
+-- zen widgets
+local zen = require("zen.bootstrap")
+-- scratchpads
+local scratch = require("scratch.scratch")
 
 local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
-require("eminent.eminent")
 -- widget and layout lib
 local wibox = require("wibox")
 -- notification lib
@@ -18,10 +26,6 @@ local beautiful = require("beautiful")
 local ruled = require("ruled")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
-local charitable = require("charitable")
-local lain = require("lain")
-local zen = require("zen.bootstrap")
--- local nice = require("patches.nice")
 -- }}}
 
 -- {{{ awesomewm error handling with naughty
@@ -84,13 +88,13 @@ tag.connect_signal("request::default_layouts", function()
     awful.layout.suit.fair,
     -- awful.layout.suit.fair.horizontal,
     awful.layout.suit.spiral,
-    awful.layout.suit.spiral.dwindle,
-    awful.layout.suit.max,
-    -- awful.layout.suit.max.fullscreen,
+    -- awful.layout.suit.spiral.dwindle,
+    -- awful.layout.suit.max,
+    awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier,
     -- awful.layout.suit.corner.nw,
     lain.layout.centerwork,
-    lain.layout.cascade,
+    -- lain.layout.cascade,
   })
 end)
 -- }}}
@@ -316,6 +320,11 @@ awful.keyboard.append_global_keybindings({
     function() awful.util.spawn("screenshot -m region --open 'sharenix -n -c'") end),
   awful.key({ "Control", "Shift"}, "x",
     function() awful.util.spawn("screenshot -m window --open 'sharenix -n -c'") end),
+  awful.key({ modkey, "Shift"}, "c",
+    function () awful.spawn("toggleprogram picom")end
+  ),
+
+  -- Audio related
   awful.key({}, "XF86AudioPlay",
     function() awful.util.spawn("playerctl play-pause") end),
   awful.key({}, "XF86AudioPause",
@@ -396,10 +405,10 @@ awful.keyboard.append_global_keybindings({
   -- awful.key({ modkey, "Control" }, "Left",
   --           function() awful.tag.incmwfact(-0.05) end,
   --           { description="decrease master width factor", group="layout" }),
-  awful.key({ modkey }, "c",
+  awful.key({ modkey }, ",",
             function() awful.tag.incnmaster(1, nil, true) end,
             { description="increase the number of master clients", group="layout" }),
-  awful.key({ modkey, "Shift" }, "c",
+  awful.key({ modkey }, ".",
             function() awful.tag.incnmaster(-1, nil, true) end,
             { description="decrease the number of master clients", group="layout" }),
   awful.key({ modkey }, "v",
@@ -570,74 +579,74 @@ awful.keyboard.append_client_keybindings({
 
   -- Moving windows
   awful.key({ modkey, "Shift" }, "Down",
-            function(c)
-              if c.floating then
-                c:relative_move(0, 20, 0, 0)
-              else
-                awful.client.swap.global_bydirection("down")
-                c:raise()
-              end
-            end,
-            { description="Move Down", group="client" }),
+    function(c)
+      if c.floating then
+        c:relative_move(0, 20, 0, 0)
+      else
+        awful.client.swap.global_bydirection("down")
+        c:raise()
+      end
+    end,
+    { description="Move Down", group="client" }),
   awful.key({ modkey, "Shift" }, "Up",
-            function(c)
-              if c.floating then
-                c:relative_move(0, -20, 0, 0)
-              else
-                awful.client.swap.global_bydirection("up")
-                c:raise()
-              end
-            end,
-            { description="Move Up", group="client" }),
+    function(c)
+      if c.floating then
+        c:relative_move(0, -20, 0, 0)
+      else
+        awful.client.swap.global_bydirection("up")
+        c:raise()
+      end
+    end,
+    { description="Move Up", group="client" }),
   awful.key({ modkey, "Shift" }, "Left",
-            function(c)
-              if c.floating then
-                c:relative_move(-20, 0, 0, 0)
-              else
-                awful.client.swap.global_bydirection("left")
-                c:raise()
-              end
-            end,
-            { description="Move Left", group="client" }),
+    function(c)
+      if c.floating then
+        c:relative_move(-20, 0, 0, 0)
+      else
+        awful.client.swap.global_bydirection("left")
+        c:raise()
+      end
+    end,
+    { description="Move Left", group="client" }),
   awful.key({ modkey, "Shift" }, "Right",
-            function(c)
-              if c.floating then
-                c:relative_move(20, 0, 0, 0)
-              else
-                awful.client.swap.global_bydirection("right")
-                c:raise()
-              end
-            end,
-            { description="Move Right", group="client" }),
+    function(c)
+      if c.floating then
+        c:relative_move(20, 0, 0, 0)
+      else
+        awful.client.swap.global_bydirection("right")
+        c:raise()
+      end
+    end,
+    { description="Move Right", group="client" }),
   awful.key({ modkey }, "Down",
-            function(c)
-              awful.client.focus.global_bydirection("down")
-              c:lower()
-            end,
-            { description="focus next window up", group="client" }),
+    function(c)
+      awful.client.focus.global_bydirection("down")
+      c:lower()
+    end,
+    { description="focus next window up", group="client" }),
   awful.key({ modkey }, "Up",
-            function(c)
-              awful.client.focus.global_bydirection("up")
-              c:lower()
-            end,
-            { description="focus next window down", group="client" }),
+    function(c)
+      awful.client.focus.global_bydirection("up")
+      c:lower()
+    end,
+    { description="focus next window down", group="client" }),
   awful.key({ modkey }, "Right",
-            function(c)
-              awful.client.focus.global_bydirection("right")
-              c:lower()
-            end,
-            { description="focus next window right", group="client" }),
+    function(c)
+      awful.client.focus.global_bydirection("right")
+      c:lower()
+    end,
+    { description="focus next window right", group="client" }),
   awful.key({ modkey }, "Left",
-            function(c)
-              awful.client.focus.global_bydirection("left")
-              c:lower()
-            end,
-            { description="focus next window left", group="client" }),
-  awful.key({ modkey }, "n",
-            function()
-              scratch.toggle("alacritty --class scratch", {instance="scratch"})
-            end,
-            { description="toggle alacritty", group="client" }),
+    function(c)
+      awful.client.focus.global_bydirection("left")
+      c:lower()
+    end,
+    { description="focus next window left", group="client" }),
+  awful.key({ modkey }, "a",
+    function()
+      scratch.toggle("alacritty --class scratchpad -e tmux attach", {instance="scratchpad"})
+    end,
+    { description="toggle tmux", group="client"}),
 })
 -- }}}
 client.connect_signal("request::default_mousebindings", function()
@@ -672,7 +681,7 @@ client.connect_signal("request::default_keybindings", function()
     -- awful.key({ modkey }, "o",
     --           function(c) c:move_to_screen() end,
     --           { description="move to screen", group="client" }),
-    awful.key({ modkey }, ".",
+    awful.key({ "Mod1" }, "space",
               function(c) c.ontop = not c.ontop end,
               { description="toggle keep on top", group="client" }),
     awful.key({ modkey }, "-",
@@ -705,7 +714,7 @@ ruled.client.connect_signal("request::rules", function()
       focus     = awful.client.focus.filter,
       raise     = true,
       screen    = awful.screen.preferred,
-      placement = awful.placement.no_overlap+awful.placement.no_offscreen
+      placement = awful.placement.no_overlap+awful.placement.no_offscreen,
     }
   }
 
@@ -716,7 +725,8 @@ ruled.client.connect_signal("request::rules", function()
       instance = { "copyq", "pinentry" },
       class    = {
         "Arandr", "Blueman-manager", "Gpick", "Kruler", "Sxiv",
-        "Tor Browser", "Wpa_gui", "veromix", "xtightvncviewer", "Pavucontrol"
+        "Tor Browser", "Wpa_gui", "veromix", "xtightvncviewer",
+        "Pavucontrol"
       },
       -- Note that the name property shown in xprop might be set slightly after creation of the client
       -- and the name shown there might not match defined rules here.
@@ -732,93 +742,32 @@ ruled.client.connect_signal("request::rules", function()
     properties = { floating=true, ontop=true }
   }
 
-  -- Add titlebars to normal clients and dialogs
-  ruled.client.append_rule {
-    id         = "titlebars",
-    rule_any   = { type = { "normal", "dialog" } },
-    properties = { titlebars_enabled=false      }
-  }
+  -- ruled.client.append_rule {
+  --   rule_any   = { class={"discord", "slack"}   },
+  --   properties = { tag=tags[2], size_hints_honor=false }
+  -- }
 
   ruled.client.append_rule {
-    rule       = { class="discord"   },
-    properties = { tag="2" }
-  }
-
-  ruled.client.append_rule {
-    rule       = { instance="scratch"   },
-    properties = { floating=true, titlebars_enabled=false }
+    rule       = { instance="scratchpad"   },
+    properties = {
+      floating = true,
+      minimized = true,
+      sticky = false,
+      above = true,
+      skip_taskbar=true,
+    }
   }
   ruled.client.append_rule {
     rule       = { class="Steam" },
-    properties = { tag="5" }
+    properties = { tag=tags[5], size_hints_honor=false }
   }
-end)
-
-
--- Make floating windows behave like they should (always on top)
-client.connect_signal("property::floating", function(c)
-  if c.floating then
-    c.ontop = true
-  else
-    c.ontop = false
-  end
-  end)
-  client.connect_signal("manage", function(c)
-  if c.floating or c.first_tag.layout.name == "floating" then
-    c.ontop = true
-  else
-    c.ontop = false
-  end
-  end)
-  tag.connect_signal("property::layout", function(t)
-  local clients = t:clients()
-  for k,c in pairs(clients) do
-    if c.floating or c.first_tag.layout.name == "floating" then
-      c.ontop = true
-    else
-      c.ontop = false
-    end
-  end
+  ruled.client.append_rule {
+    rule       = { class="Spotify" },
+    properties = { tag = tags[4] }
+  }
 end)
 
 -- }}}
-
--- {{{ Titlebars
--- Add a titlebar if titlebars_enabled is set to true in the rules.
-client.connect_signal("request::titlebars", function(c)
-  -- buttons for the titlebar
-  local buttons = {
-    awful.button({ }, 1,
-                 function() c:activate { context="titlebar", action="mouse_move" } end),
-    awful.button({ }, 3,
-                 function() c:activate { context="titlebar", action="mouse_resize" } end),
-  }
-
-  awful.titlebar(c).widget = {
-    { -- Left
-      awful.titlebar.widget.iconwidget(c),
-      buttons = buttons,
-      layout  = wibox.layout.fixed.horizontal
-    },
-    { -- Middle
-      { -- Title
-        align  = "center",
-        widget = awful.titlebar.widget.titlewidget(c)
-      },
-      buttons = buttons,
-      layout  = wibox.layout.flex.horizontal
-    },
-    { -- Right
-      awful.titlebar.widget.floatingbutton (c),
-      awful.titlebar.widget.maximizedbutton(c),
-      awful.titlebar.widget.stickybutton   (c),
-      awful.titlebar.widget.ontopbutton    (c),
-      awful.titlebar.widget.closebutton    (c),
-      layout = wibox.layout.fixed.horizontal()
-    },
-    layout = wibox.layout.align.horizontal
-  }
-end) -- }}}
 
 -- {{{ Notifications
 
@@ -860,18 +809,45 @@ tag.connect_signal("request::screen", function(t)
 end
 ) --}}}
 
+-- {{{ Make floating windows behave like they should (always on top)
+client.connect_signal("property::floating", function(c)
+  if c.floating then
+    c.ontop = true
+  else
+    c.ontop = false
+  end
+  end)
+  client.connect_signal("manage", function(c)
+  if c.floating or c.first_tag.layout.name == "floating" then
+    c.ontop = true
+  else
+    c.ontop = false
+  end
+  end)
+  tag.connect_signal("property::layout", function(t)
+  local clients = t:clients()
+  for k,c in pairs(clients) do
+    if c.floating or c.first_tag.layout.name == "floating" then
+      c.ontop = true
+    else
+      c.ontop = false
+    end
+  end
+end)
+-- }}}
+
 -- {{{Make clients spawn "normally"
 client.connect_signal("manage", function (c)
 if not awesome.startup then
   awful.client.setslave(c)
-  -- local prev_focused = awful.client.focus.history.get(awful.screen.focused(), 1, nil)
-  -- local prev_c = awful.client.next(-1, c)
-  -- if prev_c and prev_focused then
-  --   while prev_c ~= prev_focused do
-  --     c:swap(prev_c)
-  --     prev_c = awful.client.next(-1, c)
-  --   end
-  -- end
+  local prev_focused = awful.client.focus.history.get(awful.screen.focused(), 1, nil)
+  local prev_c = awful.client.next(-1, c)
+  if prev_c and prev_focused then
+    while prev_c ~= prev_focused do
+      c:swap(prev_c)
+      prev_c = awful.client.next(-1, c)
+    end
+  end
 end
 
 if awesome.startup
@@ -888,7 +864,7 @@ end)
 screen.connect_signal("arrange", function (s)
     local only_one = #s.tiled_clients == 1
     for _, c in pairs(s.clients) do
-        if only_one and not c.floating or c.maximized then
+        if only_one and not c.floating then--or c.maximized then
             c.border_width = 0
         else
             c.border_width = beautiful.border_width -- your border width

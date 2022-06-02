@@ -13,3 +13,6 @@
 [submodule ".config/awesome/zen"]
 	path = .config/awesome/zen
 	url = https://github.com/atsepkov/awesome-zen
+[submodule ".config/awesome/scratch"]
+	path = .config/awesome/scratch
+	url = https://github.com/notnew/awesome-scratch.git
