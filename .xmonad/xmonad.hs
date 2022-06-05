@@ -382,7 +382,8 @@ myStartupHook = do
         spawnOnce "feh --bg-scale $HOME/.config/wall.png &"
         spawnOnce "picom -b &"
         spawnOnce "xrdb $HOME/.Xresources"
-        spawnOnce "$HOME/.xmonad/panel.sh"
+        -- spawnOnce "$HOME/.xmonad/panel.sh"
+        spawnOnce "eww open-many bar_0 bar_1 bar_2"
         spawnOnce "xsetroot -cursor_name left_ptr"
         setWMName "LG3D"
 --}}}

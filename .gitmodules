@@ -16,3 +16,9 @@
 [submodule ".config/awesome/scratch"]
 	path = .config/awesome/scratch
 	url = https://github.com/notnew/awesome-scratch.git
+[submodule ".config/awesome/ez"]
+	path = .config/awesome/ez
+	url = https://github.com/jcrd/awesome-ez
+[submodule ".config/awesome/sharedtags"]
+	path = .config/awesome/sharedtags
+	url = https://github.com/Drauthius/awesome-sharedtags

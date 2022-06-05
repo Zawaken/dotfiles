@@ -1,0 +1,60 @@
+set notification-error-bg       "#B7A2E8" # Red
+set notification-error-fg       "#f8f8f2" # Foreground
+set notification-warning-bg     "#ffb86c" # Orange
+set notification-warning-fg     "#44475a" # Selection
+set notification-bg             "#282a36" # Background
+set notification-fg             "#f8f8f2" # Foreground
+
+set completion-bg               "#282a36" # Background
+set completion-fg               "#B7A2E8" # Comment
+set completion-group-bg         "#282a36" # Background
+set completion-group-fg         "#B7A2E8" # Comment
+set completion-highlight-bg     "#B7A2E8" # Selection
+set completion-highlight-fg     "#f8f8f2" # Foreground
+
+set index-bg                    "#000000" # Background
+set index-fg                    "#f8f8f2" # Foreground
+set index-active-bg             "#C9D1F1" # Current Line
+set index-active-fg             "#f8f8f2" # Foreground
+
+set inputbar-bg                 "#282a36" # Background
+set inputbar-fg                 "#f8f8f2" # Foreground
+set statusbar-bg                "#262643" # Background
+set statusbar-fg                "#F8F2EC" # Foreground
+
+set highlight-color             "#C9D1F1" # Orange
+set highlight-active-color      "#B7A2E8" # Pink
+
+set default-bg                  "#000000" # Background
+set default-fg                  "#f8f8f2" # Foreground
+
+set render-loading              true
+set render-loading-fg           "#000000" # Background
+set render-loading-bg           "#f8f8f2" # Foreground
+
+#
+# Recolor mode settings
+#
+
+set recolor-lightcolor          "#000000" # Background
+set recolor-darkcolor           "#f8f8f2" # Foreground
+
+set window-title-basename true
+set statusbar-v-padding  15
+set statusbar-h-padding  75
+set selection-clipboard clipboard
+set font "mononoki Nerd Font 11"
+set adjust-open width
+set recolor                     true
+set pages-per-row 1
+set statusbar-basename          true
+set page-padding 1
+set sandbox none
+map u scroll half-up
+map d scroll half-down
+map D toggle_page_mode
+map r reload
+map R rotate
+map K zoom in
+map J zoom out
+
