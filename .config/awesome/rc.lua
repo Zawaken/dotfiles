@@ -26,6 +26,7 @@ local wibox = require("wibox")
 local naughty = require("naughty")
 -- theme handling
 local beautiful = require("beautiful")
+
 -- Declarative object management
 local ruled = require("ruled")
 local menubar = require("menubar")
@@ -44,7 +45,9 @@ end)
 
 -- {{{ variables
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
-
+-- bling utils
+local bling = require("bling")
+bling.module.window_swallowing.start()
 -- nice()
 
 awesome.set_preferred_icon_size(32)
@@ -97,7 +100,7 @@ tag.connect_signal("request::default_layouts", function()
     awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier,
     -- awful.layout.suit.corner.nw,
-    lain.layout.centerwork,
+    bling.layout.centered,
     -- lain.layout.cascade,
   })
 end)
@@ -192,6 +195,9 @@ screen.connect_signal("request::desktop_decoration", function(s)
   s.mytaglist = awful.widget.taglist({
     screen = s,
     filter = awful.widget.taglist.filter.all,
+    buttons = gears.table.join(
+      awful.button({}, 1, function(t) charitable.select_tag(t, awful.screen.focused()) end)
+    ),
     source = function(screen, args) return tags end,
   })
 
@@ -206,7 +212,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
       awful.button({ }, 3, function() awful.menu.client_list { theme = { width = 250 } } end),
       awful.button({ }, 4, function() awful.client.focus.byidx(-1) end),
       awful.button({ }, 5, function() awful.client.focus.byidx( 1) end),
-    }
+    },
   }
 
   -- Create the wibox
@@ -217,6 +223,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
     -- margins  = beautiful.useless_gap + beautiful.border_width,
     widget   = {
       layout = wibox.layout.align.horizontal,
+      expand = "none",
       { -- Left widgets
         layout = wibox.layout.fixed.horizontal,
         mylauncher,
@@ -250,8 +257,9 @@ end)
 local globalkeys = {
   -- {{{general
   ["M-Return"]  = {awful.spawn, terminal},
-  ["M-d"]       = {function() awful.screen.focused().mypromptbox:run() end}, -- run prompt (rofilike)
-  ["M-r"]       = {function() menubar.show() end},
+  -- ["M-d"]       = {function() awful.screen.focused().mypromptbox:run() end}, -- run prompt (rofilike)
+  ["M-d"]       = {awful.util.spawn, "rofi -show run"}, -- run prompt (rofilike)
+  -- ["M-r"]       = {function() menubar.show() end},
   ["M-w"]       = {function() mymainmenu:show() end}, -- show awesome menu
   ["M-S-r"]     = {awesome.restart}, -- restart/recompile awesome, to update config
   -- ["M-C-q"]     = {awesome.quit},
@@ -315,10 +323,10 @@ local clientkeys = {
 -- {{{general clientkeys
   ["M-q"]         = function(c) c:kill() end,
   ["M-minus"]     = function(c) c.minimized = true end,
-  ["M-f"]         = function(c) c.maximized = not c.maximized c:raise() end,
+  ["M-r"]         = function(c) c.maximized = not c.maximized c:raise() end,
   ["A-Return"]    = function(c) c.fullscreen = not c.fullscreen c:raise() end,
   ["M-S-Return"]  = function(c) c:swap(awful.client.getmaster()) end,
-  ["M-S-f"]       = {awful.client.floating.toggle},
+  ["M-s"]       = {awful.client.floating.toggle},
   ["A-space"]     = function(c) c.ontop = not c.ontop end,-- }}}
 
   -- {{{Focus
@@ -394,8 +402,10 @@ local clientkeys = {
 local clientbtns = {
 -- {{{Mouse client buttons
   ["1"]   = function(c) c:activate { context="mouse_click"} end,
-  ["M-1"] = function(c) c:activate { context="mouse_click", action="mouse_move"} end,
-  ["M-3"] = function(c) c:activate { context="mouse_click", action="mouse_resize"} end,
+  -- ["M-1"] = function(c) c:activate { context="mouse_click", action="mouse_move"} end,
+  -- ["M-3"] = function(c) c:activate { context="mouse_click", action="mouse_resize"} end,
+  ["M-1"] = awful.mouse.client.move,
+  ["M-3"] = awful.mouse.client.resize,
 -- }}}
 }
 
@@ -499,37 +509,57 @@ awful.keyboard.append_global_keybindings({
 awful.keyboard.append_global_keybindings(ez.keytable(globalkeys))
 awful.keyboard.append_global_keybindings(numkeys)
 awful.keyboard.append_client_keybindings(ez.keytable(clientkeys))
-awful.keyboard.append_client_keybindings(ez.btntable(clientbtns))
+awful.mouse.append_client_mousebindings(ez.btntable(clientbtns))
 -- }}}
 
 -- {{{ Rules
--- Rules to apply to new clients.
-client.connect_signal("property::class", function(c)
-  if c.class == "[Ss]potify" then
-    local tag = tags[4]
-    c:move_to_tag(tag)
-    if tag then
-      charitable.select_tag(tag)
-    end
+local rule = function(rules, clients)
+  -- (2 -> {["tag"]=tags[2]})
+  if type(rules) ~= "table" then
+    rules = { tag=tags[rules] }
+  end
+  -- ("firefox" -> {"firefox"})
+  if type(clients) ~= "table" then
+    clients = { clients }
   end
 
-  if c.class == "discord" or "Slack" then
-    c:move_to_tag(tags[2])
-    local tag = tags[2]
-    if tag then
-      charitable.select_tag(tag)
-    end
-  end
+  -- When the client requests a class
+  client.connect_signal("property::class", function(c)
+    -- Loop through all clients the rule(s) should apply to
+    for client_k, client_v in pairs(clients) do
+      -- "number" in this sense means that the key is undefined, so we assume it should be a class
+      -- ([1]="firefox" -> ["class"]="firefox")
+      if type(client_k) == "number" then
+        client_k = "class"
+      end
 
-  if c.class == "Steam" then
-    c:move_to_tag(tags[5])
-    local tag = awful.tag.gettags[5]
-    if tag then
-      charitable.select_tag(tag)
+      -- Check if the rule matches the client
+      if (client_k == "class"    and string.match(c.class,    client_v)) or
+         (client_k == "instance" and string.match(c.instance, client_v)) then
+        -- Loop through all rules
+        for rule_k, rule_v in pairs(rules) do
+          -- Apply rules
+          if rule_k == "tag" then
+            c:move_to_tag(rule_v)
+            -- charitable.select_tag(rule_v, awful.screen.focused())
+          end
+        end
+      end
     end
-  end
-end)
+  end)
+end
 ruled.client.connect_signal("request::rules", function()
+  rule(2, {
+    "discord",
+  })
+  rule(4, "[Ss]potify")
+  rule(5, "[Ss]team")
+
+  ruled.client.append_rule {
+    rule_any   = { class={"Steam", "discord"} },
+    properties = { size_hints_honor=false }
+  }
+
   -- All clients will match this rule.
   ruled.client.append_rule {
     id         = "global",
@@ -561,23 +591,9 @@ ruled.client.connect_signal("request::rules", function()
         "AlarmWindow",    -- Thunderbird's calendar.
         "ConfigManager",  -- Thunderbird's about:config.
         "pop-up",         -- e.g. Google Chrome's (detached) Developer Tools.
-        "Popup",          -- firefox popup
       }
     },
     properties = { floating=true, border_width=0, above=true }
-  }
-
-  ruled.client.append_rule {
-    rule       = { class="Steam" },
-    properties = { size_hints_honor=false }
-  }
-  ruled.client.append_rule {
-    rule_any   = { class={"[Ss]potify"} },
-    properties = { tag = tags[4] }
-  }
-  ruled.client.append_rule {
-    rule       = { class="discord"   },
-    properties = { size_hints_honor=false }
   }
 
   ruled.client.append_rule {
@@ -702,6 +718,14 @@ end)
 -- client.connect_signal("request::border", set_border)
 -- client.connect_signal("property::maximized", set_border)
 --}}}
+
+-- {{{ make scratchpads appear in the middle of the screen
+client.connect_signal("request::manage", function(c)
+  if c.floating and c.instance == "scratchpad" then
+    awful.placement.centered()
+  end
+end)
+-- }}}
 
 -- {{{ fix wrong warping tags
 awful.tag.history.restore = function() end

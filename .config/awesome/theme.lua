@@ -74,6 +74,11 @@ theme.fg_urgent                             = theme.fg
 -- theme.wibar_fg                              = theme.gray
 -- theme.wibar_bg                              = theme.black
 
+-- theme.dont_swallow_classname_list           = {"firefox", "[Dd]iscord"}
+-- theme.dont_swallow_filter_activated         = true
+theme.parent_filter_list = {"firefox", "[Dd]iscord"}
+theme.child_filter_list  = {"[Dd]iscord"}
+theme.swallowing_filter = true
 theme.gap_single_client                     = false
 theme.border_single_client                  = false
 theme.useless_gap                           = dpi(4)
