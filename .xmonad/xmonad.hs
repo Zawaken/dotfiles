@@ -17,7 +17,9 @@ import qualified Codec.Binary.UTF8.String as UTF8
 import qualified Data.Map        as M
 -- }}}
 
+-- {{{ Graphics
 import Graphics.X11.ExtraTypes.XF86
+-- }}}
 
 -- Hooks {{{
 import XMonad.Hooks.DynamicLog
@@ -49,6 +51,7 @@ import XMonad.Util.Run
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.SpawnOnce
 import XMonad.Util.WorkspaceCompare
+import XMonad.Util.EZConfig
 -- }}}
 
 -- }}}
@@ -56,6 +59,7 @@ import XMonad.Util.WorkspaceCompare
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
+myTerminal      :: String
 myTerminal      = "alacritty"
 
 myFocusFollowsMouse :: Bool
@@ -112,86 +116,88 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm]
                 l = 0.95 -w
 -- }}}
 -- keybinds {{{
-myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
+-- myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
+myKeys :: [(String, X ())]
+myKeys =
 -- terminal, launcher, and misc {{{
     [
-      ((modm,               xK_Return), spawn $ XMonad.terminal conf) -- start $term
-    , ((modm,               xK_a     ), namedScratchpadAction myScratchPads "terminal")
-    , ((modm,               xK_d     ), spawn "rofi -show") -- launcher
+      ("M-<Return>",  spawn (myTerminal)) -- start $term
+    , ("M-a",         namedScratchpadAction myScratchPads "terminal")
+    , ("M-d",         spawn "rofi -show") -- launcher
     -- , ((modm,               xK_d     ), shellPrompt myPrompt) -- launcher
-    , ((modm .|. shiftMask, xK_d     ), spawn "dmenu_run")
-    , ((controlMask .|. shiftMask, xK_c), spawn "screenshot -m region --open 'sharenix -n -c'") -- screenshot section
-    , ((controlMask .|. shiftMask, xK_x), spawn "screenshot -m window --open 'sharenix -n -c'")
-    , ((modm              , xK_q     ), kill)
-    , ((modm .|. shiftMask, xK_c     ), spawn "toggleprogram 'picom' '-b'")
-    , ((modm .|. shiftMask, xK_v     ), spawn "xclip -selection clipboard -out | xdotool selectwindow windowfocus type --clearmodifiers --delay 25 --window %@ --file -")
+    , ("M-S-d", spawn "dmenu_run")
+    , ("C-S-c", spawn "screenshot -m region --open 'sharenix -n -c'") -- screenshot section
+    , ("C-S-x", spawn "screenshot -m window --open 'sharenix -n -c'")
+    , ("M-q",   kill)
+    , ("M-S-c", spawn "toggleprogram 'picom' '-b'")
+    , ("M-S-v", spawn "xclip -selection clipboard -out | xdotool selectwindow windowfocus type --clearmodifiers --delay 25 --window %@ --file -")
 -- }}}
 -- layout, focus and swap {{{
-    , ((modm,               xK_r     ), sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
-    , ((modm,               xK_space ), sendMessage NextLayout) -- Rotate through the available layout algorithms
-    , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf) --  Reset the layouts on the current workspace to default
-    , ((modm,               xK_n     ), refresh) -- Resize viewed windows to the correct size
-    , ((modm,               xK_Tab   ), windows W.focusDown) -- Move focus to the next window
-    , ((modm,               xK_j     ), windows W.focusDown)
-    , ((modm,               xK_k     ), windows W.focusUp  ) -- Move focus to the previous window
-    , ((modm,               xK_m     ), windows W.focusMaster  ) -- Move focus to the master window
+    , ("M-r",       sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
+    , ("M-<Space>", sendMessage NextLayout) -- Rotate through the available layout algorithms
+    -- , ("M-S-<Space>", setLayout $ XMonad.layoutHook conf) --  Reset the layouts on the current workspace to default
+    , ("M-n",       refresh) -- Resize viewed windows to the correct size
+    , ("M-<Tab>",     windows W.focusDown) -- Move focus to the next window
+    , ("M-j",       windows W.focusDown)
+    , ("M-k",       windows W.focusUp  ) -- Move focus to the previous window
+    , ("M-m",       windows W.focusMaster  ) -- Move focus to the master window
     -- Swap the focused window and the master window
 --    , ((modm,               xK_Return), windows W.swapMaster)
-    , ((modm,                 xK_Right), sendMessage $ WN.Go R)
-    , ((modm,                 xK_Left ), sendMessage $ WN.Go L)
-    , ((modm,                 xK_Up   ), sendMessage $ WN.Go U)
-    , ((modm,                 xK_Down ), sendMessage $ WN.Go D)
-    , ((modm .|. shiftMask,   xK_Right), sendMessage $ WN.Swap R)
-    , ((modm .|. shiftMask,   xK_Left ), sendMessage $ WN.Swap L)
-    , ((modm .|. shiftMask,   xK_Up   ), sendMessage $ WN.Swap U)
-    , ((modm .|. shiftMask,   xK_Down ), sendMessage $ WN.Swap D)
-    , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    ) -- Swap the focused window with the previous window
-    , ((modm .|. shiftMask, xK_j     ), windows W.swapDown  ) -- Swap the focused window with the next window
+    , ("M-<Right>",   sendMessage $ WN.Go R)
+    , ("M-<Left>",    sendMessage $ WN.Go L)
+    , ("M-<Up>",      sendMessage $ WN.Go U)
+    , ("M-<Down>",    sendMessage $ WN.Go D)
+    , ("M-S-<Right>", sendMessage $ WN.Swap R)
+    , ("M-S-<Left>",  sendMessage $ WN.Swap L)
+    , ("M-S-<Up>",    sendMessage $ WN.Swap U)
+    , ("M-S-<Down>",  sendMessage $ WN.Swap D)
+    , ("M-S-k",       windows W.swapUp    ) -- Swap the focused window with the previous window
+    , ("M-S-j",       windows W.swapDown  ) -- Swap the focused window with the next window
 
 -- }}}
 -- resizing {{{
     -- Shrink the master area
-    , ((modm,               xK_h     ), sendMessage Shrink)
+    , ("M-h",       sendMessage Shrink)
 
     -- Expand the master area
-    , ((modm,               xK_l     ), sendMessage Expand)
+    , ("M-l",       sendMessage Expand)
 
     -- Push window back into tiling
-    , ((modm,               xK_t     ), withFocused $ windows . W.sink)
+    , ("M-t",       withFocused $ windows . W.sink)
 
     -- Increment the number of windows in the master area
-    , ((modm              , xK_comma ), sendMessage (IncMasterN 1))
+    , ("M-,",   sendMessage (IncMasterN 1))
 
     -- Deincrement the number of windows in the master area
-    , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
+    , ("M-.",  sendMessage (IncMasterN (-1)))
 -- }}}
 -- media keys {{{
-    , ((0, xF86XK_AudioPlay          ), spawn "playerctl play-pause") -- play/pause audio
-    , ((0, xF86XK_AudioPause         ), spawn "playerctl play-pause") -- play/pause audio
-    , ((0, xF86XK_AudioNext          ), spawn "playerctl next") -- next song
-    , ((0, xF86XK_AudioPrev          ), spawn "playerctl previous") -- previous song
-    , ((0, xF86XK_AudioLowerVolume   ), spawn "pactl set-sink-volume 2 -5%") -- volume down
-    , ((0, xF86XK_AudioRaiseVolume   ), spawn "pactl set-sink-volume 2 +5%") -- volume up
+    , ("<XF86AudioPlay>",         spawn "playerctl play-pause") -- play/pause audio
+    , ("<XF86AudioPause>",        spawn "playerctl play-pause") -- play/pause audio
+    , ("<XF86AudioNext>",         spawn "playerctl next") -- next song
+    , ("<XF86AudioPrev>",         spawn "playerctl previous") -- previous song
+    , ("<XF86AudioLowerVolume>",  spawn "pactl set-sink-volume 2 -5%") -- volume down
+    , ("<XF86AudioRaiseVolume>",  spawn "pactl set-sink-volume 2 +5%") -- volume up
 -- }}}
 -- quit reload and ToggleStruts {{{
-    , ((modm              , xK_b     ), sendMessage ToggleStruts) -- Toggle the status bar gap
-    , ((modm .|. shiftMask .|. mod1Mask, xK_q     ), io (exitWith ExitSuccess)) -- Quit xmonad
-    , ((modm .|. mod1Mask , xK_r     ), spawn "xmonad --recompile; xmonad --restart") -- Restart/reload xmonad
+    , ("M-b",       sendMessage ToggleStruts) -- Toggle the status bar gap
+    , ("M-S-M1-q",  io (exitWith ExitSuccess)) -- Quit xmonad
+    , ("M-S-r",    spawn "xmonad --recompile; xmonad --restart") -- Restart/reload xmonad
     ]
     ++
 -- }}}
 -- workspace switching {{{
     -- mod-[1..9], Switch to workspace N
     -- mod-shift-[1..9], Move client to workspace N
-    [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) ([xK_1 .. xK_9] ++ [xK_0])
-        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+    [(mask ++ "M-" ++ [key], action tag)
+        | (tag, key) <- zip myWorkspaces "1234567890"
+        , (mask, action) <- [ ("", windows . W.greedyView), ("S-", windows . W.shift) ]]
     ++
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
     -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
-    [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_f, xK_p, xK_w] [0..]
-        , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+    [(mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
+        | (key, scr) <- zip "wfp" [2,0,1]
+        , (action, mask) <- [(W.view, ""), (W.shift, "S-")]]
 -- }}}
 -- }}}
 -- Mouse bindings: default actions bound to mouse events {{{
@@ -219,9 +225,7 @@ myLayout
     $ mkToggle (NOBORDERS ?? FULL ?? EOT)
     $ WN.windowNavigation
     (tiled |||
-    Mirror tiled |||
     ThreeColMid 1 (3/100) (1/2) |||
-    Grid |||
     Full |||
     emptyBSP)
   where
@@ -249,10 +253,11 @@ myLayout
 --
 myManageHook = composeAll
     [ className =? "discord"        --> doShift (myWorkspaces !! 1)
+    , className =? "Slack"          --> doShift (myWorkspaces !! 1)
     , className =? "Steam"          --> doShift (myWorkspaces !! 4)
     , className =? "Pavucontrol"    --> doCenterFloat
     , className =? "Sxiv"           --> doFloat
-    , className =? "Spotify"        --> doShift (myWorkspaces !! 8)
+    , className =? "Spotify"        --> doShift (myWorkspaces !! 3)
     , title     =? "scratchpad"     --> doCenterFloat
     , resource  =? "desktop_window" --> doIgnore
     , className =? "eww-bar_0"      --> doLower
@@ -429,7 +434,7 @@ defaults = def {
         focusedBorderColor = myFocusedBorderColor,
 
       -- key bindings
-        keys               = myKeys,
+        -- keys               = myKeys,
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts
@@ -438,5 +443,5 @@ defaults = def {
         handleEventHook    = myEventHook,
         -- logHook            = myLogHook,
         startupHook        = myStartupHook
-    }
+    } `additionalKeysP` myKeys
 -- }}}

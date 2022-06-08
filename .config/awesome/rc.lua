@@ -1,5 +1,6 @@
 -- {{{ Packages
 -- standard awesome libs
+require("signals")
 pcall(require, "luarocks.loader")
 
 -- Xmonad-like workspaces
@@ -9,8 +10,6 @@ local charitable = require("charitable")
 require("eminent.eminent")
 -- lain utils, widgets & layouts
 local lain = require("lain")
--- zen widgets
-local zen = require("zen.bootstrap")
 -- scratchpads
 local scratch = require("scratch.scratch")
 -- awesome-ez. unpack = table.unpack is needed because unpack does not exist in lua 5.2+
@@ -47,7 +46,7 @@ end)
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 -- bling utils
 local bling = require("bling")
-bling.module.window_swallowing.start()
+-- bling.module.window_swallowing.start()
 -- nice()
 
 awesome.set_preferred_icon_size(32)
@@ -59,7 +58,34 @@ editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
 
 modkey = "Mod4"
+
+local term_scratch = bling.module.scratchpad {
+  command = "alacritty --class scratchpad -e tmux attach",
+  rule = { instance="scratchpad" },
+  sticky = true,
+  autoclose = false,
+  floating = true,
+  geometry = { x=360, y=90, height=800, width=1200 },
+  reapply = false,
+  dont_focus_before_close = true,
+}
 -- }}}
+
+-- {{{Helpers
+local debug = function(text)
+  if text then
+    if type(text) == "table" then
+      text = inspect(text)
+    end
+    naughty.notify({text=tostring(text)})
+  end
+end
+
+client.connect_signal("property::class", function(c)
+  debug(c.class)
+  debug(c.instance)
+end)
+--}}}
 
 -- {{{ Menu
 myawesomemenu = {
@@ -88,20 +114,9 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 tag.connect_signal("request::default_layouts", function()
   awful.layout.append_default_layouts({
     awful.layout.suit.tile,
-    -- awful.layout.suit.floating,
-    -- awful.layout.suit.tile.left,
-    -- awful.layout.suit.tile.bottom,
-    -- awful.layout.suit.tile.top,
-    awful.layout.suit.fair,
-    -- awful.layout.suit.fair.horizontal,
-    awful.layout.suit.spiral,
-    -- awful.layout.suit.spiral.dwindle,
-    -- awful.layout.suit.max,
-    awful.layout.suit.max.fullscreen,
-    awful.layout.suit.magnifier,
-    -- awful.layout.suit.corner.nw,
     bling.layout.centered,
-    -- lain.layout.cascade,
+    awful.layout.suit.magnifier,
+    awful.layout.suit.max.fullscreen,
   })
 end)
 -- }}}
@@ -264,7 +279,8 @@ local globalkeys = {
   ["M-S-r"]     = {awesome.restart}, -- restart/recompile awesome, to update config
   -- ["M-C-q"]     = {awesome.quit},
   ["M-S-c"]     = {awful.spawn, "toggleprogram picom"},
-  ["M-a"]       = function() scratch.toggle("alacritty --class scratchpad -e tmux attach", {instance="scratchpad"}) end,
+  -- ["M-a"]       = function() scratch.toggle("alacritty --class scratchpad -e tmux attach", {instance="scratchpad"}) end,
+  ["M-a"]       = function() term_scratch:toggle() end,
   ["M-S-minus"] = function()
     local c = awful.client.restore()
     if c then
@@ -326,8 +342,15 @@ local clientkeys = {
   ["M-r"]         = function(c) c.maximized = not c.maximized c:raise() end,
   ["A-Return"]    = function(c) c.fullscreen = not c.fullscreen c:raise() end,
   ["M-S-Return"]  = function(c) c:swap(awful.client.getmaster()) end,
-  ["M-s"]       = {awful.client.floating.toggle},
-  ["A-space"]     = function(c) c.ontop = not c.ontop end,-- }}}
+  -- ["M-s"]       = {awful.client.floating.toggle},
+  ["M-s"]         = function(c)
+    if not c.fullscreen then
+      c.floating = not c.floating
+      c:raise()
+    end
+  end,
+  ["A-space"]     = function(c) c.ontop = not c.ontop end,
+-- }}}
 
   -- {{{Focus
   ["M-Up"]    = function(c) awful.client.focus.global_bydirection("up") c:lower() end,
@@ -541,6 +564,7 @@ local rule = function(rules, clients)
           -- Apply rules
           if rule_k == "tag" then
             c:move_to_tag(rule_v)
+            debug(rule_v)
             -- charitable.select_tag(rule_v, awful.screen.focused())
           end
         end
@@ -551,12 +575,13 @@ end
 ruled.client.connect_signal("request::rules", function()
   rule(2, {
     "discord",
+    "Slack",
   })
   rule(4, "[Ss]potify")
-  rule(5, "[Ss]team")
+  -- rule(5, "[Ss]team")
 
   ruled.client.append_rule {
-    rule_any   = { class={"Steam", "discord"} },
+    rule_any   = { class={"Steam" }, role={"browser-window"} },
     properties = { size_hints_honor=false }
   }
 
@@ -593,7 +618,7 @@ ruled.client.connect_signal("request::rules", function()
         "pop-up",         -- e.g. Google Chrome's (detached) Developer Tools.
       }
     },
-    properties = { floating=true, border_width=0, above=true }
+    properties = { floating=true, above=true }
   }
 
   ruled.client.append_rule {
@@ -632,15 +657,6 @@ end)
 
 -- }}}
 
--- Enable sloppy focus, so that focus follows mouse. {{{
-client.connect_signal("mouse::enter", function(c)
-  c:activate { context="mouse_enter", raise=false }
-end)
-
-client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
--- }}}
-
 -- {{{ make sure that removing screens doesn't kill tags
 tag.connect_signal("request::screen", function(t)
   t.selected = false
@@ -653,80 +669,52 @@ tag.connect_signal("request::screen", function(t)
 end
 ) --}}}
 
--- {{{ Make floating windows behave like they should (always on top)
-client.connect_signal("property::floating", function(c)
-  if c.floating then
-    c.ontop = true
-  else
-    c.ontop = false
-  end
-  end)
-  client.connect_signal("manage", function(c)
-  if c.floating or c.first_tag.layout.name == "floating" then
-    c.ontop = true
-  else
-    c.ontop = false
-  end
-  end)
-  tag.connect_signal("property::layout", function(t)
-  local clients = t:clients()
-  for k,c in pairs(clients) do
-    if c.floating or c.first_tag.layout.name == "floating" then
-      c.ontop = true
-    else
-      c.ontop = false
-    end
-  end
-end)
--- }}}
-
--- {{{Make clients spawn "normally"
-client.connect_signal("manage", function (c)
-if not awesome.startup then
-  awful.client.setslave(c)
-  local prev_focused = awful.client.focus.history.get(awful.screen.focused(), 1, nil)
-  local prev_c = awful.client.next(-1, c)
-  if prev_c and prev_focused then
-    while prev_c ~= prev_focused do
-      c:swap(prev_c)
-      prev_c = awful.client.next(-1, c)
-    end
-  end
-end
-
-if awesome.startup
-  and not c.size_hints.user_position
-  and not c.size_hints.program_position then
-    -- Prevent clients from being unreachable after screen count changes.
-    awful.placement.no_offscreen(c)
-end
-end)
--- }}}
-
--- {{{Remove borders when only one client visible in tag
--- No borders when rearranging only 1 non-floating or maximized client
-screen.connect_signal("arrange", function (s)
-    local only_one = #s.tiled_clients == 1
-    for _, c in pairs(s.clients) do
-        if only_one and not c.floating then--or c.maximized then
-            c.border_width = 0
-        else
-            c.border_width = beautiful.border_width -- your border width
-        end
-    end
-end)
--- client.connect_signal("request::border", set_border)
--- client.connect_signal("property::maximized", set_border)
---}}}
-
--- {{{ make scratchpads appear in the middle of the screen
-client.connect_signal("request::manage", function(c)
-  if c.floating and c.instance == "scratchpad" then
-    awful.placement.centered()
-  end
-end)
--- }}}
-
 -- {{{ fix wrong warping tags
 awful.tag.history.restore = function() end
 -- }}}
+
+-- Center floating nodes and give them a titlebar {{{
+local floating_handler = function(c)
+if not (c.maximized or c.fullscreen) then
+  if c.floating or c.screen.selected_tag.layout.name == "floating" then
+    -- awful.titlebar.show(c)
+    c.above = true
+    return true
+  else
+    -- awful.titlebar.hide(c)
+    c.above = false
+  end
+end
+return false
+end
+
+client.connect_signal("property::floating", function(c)
+if floating_handler(c) then
+  awful.placement.centered(c)
+end
+end)
+client.connect_signal("manage", function(c)
+floating_handler(c)
+end)
+tag.connect_signal("property::layout", function(t)
+local clients = t:clients()
+for k,c in pairs(clients) do
+  floating_handler(c)
+end
+end)
+-- }}}
+
+-- local shape_handler = function(c)
+--   if c.fullscreen then
+--     c.shape = gears.shape.rectangle
+--   else
+--     c.shape = function(cr,w,h)
+--       gears.shape.rounded_rect(cr,w,h,5)
+--       -- gears.shape.star(cr,w,h,100)
+--       -- gears.shape.pie(cr,w,h,0,360)
+--     end
+--   end
+-- end
+--
+-- client.connect_signal("manage", shape_handler)
+-- client.connect_signal("property::fullscreen", shape_handler)
