@@ -1,5 +1,10 @@
 -- imports {{{
 
+--{{{actions
+import XMonad.Actions.FloatKeys
+import XMonad.Actions.MouseResize
+--}}}
+
 -- base {{{
 import XMonad
 import XMonad.Actions.Commands
@@ -29,6 +34,7 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ServerMode
 import XMonad.Hooks.WindowSwallowing
+import XMonad.Hooks.InsertPosition
 -- }}}
 
 -- Layout {{{
@@ -52,24 +58,45 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.SpawnOnce
 import XMonad.Util.WorkspaceCompare
 import XMonad.Util.EZConfig
-import XMonad (title)
+import XMonad (title, appName, doShift)
 -- }}}
 
 -- }}}
--- defaults {{{
+-- main {{{
+------------------------------------------------------------------------
+main :: IO ()
+main = do
+    dbus <- D.connectSession
+        -- Request access to the DBus name
+    D.requestName dbus (D.busName_ "org.xmonad.Log")
+        [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+-- main = do
+--     dbus <- XD.connect
+--     --Request access
+--     XD.requestAccess dbus
+
+    xmonad
+        $ docks
+        . setEwmhWorkspaceSort mySort
+        . ewmhFullscreen
+        . ewmh
+        $ myConfig { logHook = dynamicLogWithPP $ filterOutWsPP ["NSP"] (myLogHook dbus)}
+-- }}}
+myConfig = def { -- {{{
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will
 -- use the defaults defined in xmonad/XMonad/Config.hs
-defaults = def {
       -- simple stuff
         terminal           = myTerminal,
-        -- focusFollowsMouse  = True,
+        focusFollowsMouse  = True,
         clickJustFocuses   = False,
-        borderWidth        = 1,
+        borderWidth        = 2,
         modMask            = mod4Mask,
-        workspaces         = myWorkspaces,
-        normalBorderColor  = myNormalBorderColor,
-        focusedBorderColor = myFocusedBorderColor,
+        workspaces         = ["1","2","3","4","5","6","7","8","9", "10"],
+        normalBorderColor  = "#262643",
+        focusedBorderColor = "#876A97",
+        -- normalBorderColor  = "2e2e2e",
+        -- focusedBorderColor = "ebdbb2",
 
       -- key bindings
         -- keys               = myKeys,
@@ -91,13 +118,11 @@ myTerminal      = "alacritty"
 -- Width of the window border in pixels.
 myBorderWidth   = 1
 
--- The default number of workspaces (virtual screens) and their names.
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9", "10"]
-
--- myNormalBorderColor  = "#2e2e2e"
-myNormalBorderColor  = "#262643"
-myFocusedBorderColor = "#876A97"
--- myFocusedBorderColor = "#ebdbb2"
+-- Get the name of the active layout.
+getActiveLayoutDescription :: X String
+getActiveLayoutDescription = do
+    workspaces <- gets windowset
+    return $ description . W.layout . W.workspace . W.current $ workspaces
 
 myPrompt = def
         {
@@ -170,9 +195,8 @@ myKeys =
       ("M-<Return>",  spawn (myTerminal)) -- start $term
     , ("M-a",         namedScratchpadAction myScratchPads "terminal")
     , ("M-d",         spawn "rofi -show") -- launcher
-    -- , ((modm,               xK_d     ), shellPrompt myPrompt) -- launcher
-    , ("M-S-d",       spawn "dmenu_run")
-    , ("C-S-c",       spawn "screenshot -m region --open 'sharenix -n -c'") -- screenshot section
+    -- , ("M-d", shellPrompt myPrompt) -- xmonad prompt
+    , ("C-S-c",       spawn "screenshot -m region --open 'sharenix -n -c'")
     , ("C-S-x",       spawn "screenshot -m window --open 'sharenix -n -c'")
     , ("M-q",         kill)
     , ("M-S-c",       spawn "toggleprogram 'picom' '-b'")
@@ -181,7 +205,7 @@ myKeys =
     , ("M-r",         sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
     , ("M-s",         toggleFloat)
     , ("M-<Space>",   sendMessage NextLayout) -- Rotate through the available layout algorithms
-    -- , ("M-S-<Space>", setLayout $ XMonad.layoutHook conf) --  Reset the layouts on the current workspace to default
+    , ("M-S-<Space>", sendMessage FirstLayout) --  Reset the layouts on the current workspace to default
     , ("M-n",         refresh) -- Resize viewed windows to the correct size
     , ("M-<Tab>",     windows W.focusDown) -- Move focus to the next window
     , ("M-j",         windows W.focusDown)
@@ -191,12 +215,24 @@ myKeys =
 --    , ((modm,               xK_Return), windows W.swapMaster)
     , ("M-<Right>",   sendMessage $ WN.Go R)
     , ("M-<Left>",    sendMessage $ WN.Go L)
-    , ("M-<Up>",      sendMessage $ WN.Go U)
-    , ("M-<Down>",    sendMessage $ WN.Go D)
-    , ("M-S-<Right>", sendMessage $ WN.Swap R)
-    , ("M-S-<Left>",  sendMessage $ WN.Swap L)
-    , ("M-S-<Up>",    sendMessage $ WN.Swap U)
-    , ("M-S-<Down>",  sendMessage $ WN.Swap D)
+    , ("M-<Up>",    do
+      layout <- getActiveLayoutDescription
+      case layout of
+        x | elem x ["Spacing Full","Full"] -> windows W.focusUp
+        _                                  -> sendMessage $ WN.Go U)
+    , ("M-<Down>",  do
+      layout <- getActiveLayoutDescription
+      case layout of
+        x | elem x ["Spacing Full","Full"] -> windows W.focusDown
+        _                                  -> sendMessage $ WN.Go D)
+    , ("M-S-<Right>", floatOrNot (withFocused (keysMoveWindow   ( 20, 0)))  (sendMessage $ WN.Swap R))
+    , ("M-S-<Left>",  floatOrNot (withFocused (keysMoveWindow   ( -20, 0))) (sendMessage $ WN.Swap L))
+    , ("M-S-<Up>",    floatOrNot (withFocused (keysMoveWindow   ( 0, -20))) (sendMessage $ WN.Swap U))
+    , ("M-S-<Down>",  floatOrNot (withFocused (keysMoveWindow   ( 0, 20)))  (sendMessage $ WN.Swap D))
+    , ("M-C-<Right>", floatOrNot (withFocused (keysResizeWindow ( 20, 0) (0,0))) (sendMessage Expand))
+    , ("M-C-<Left>",  floatOrNot (withFocused (keysResizeWindow ( -20,0) (0,0))) (sendMessage Shrink))
+    , ("M-C-<Up>",    floatOrNot (withFocused (keysResizeWindow ( 0,-20) (0,0))) (sendMessage Expand))
+    , ("M-C-<Down>",  floatOrNot (withFocused (keysResizeWindow ( 0,20)  (0,0))) (sendMessage Shrink))
     , ("M-S-k",       windows W.swapUp    ) -- Swap the focused window with the previous window
     , ("M-S-j",       windows W.swapDown  ) -- Swap the focused window with the next window
 -- }}}
@@ -218,13 +254,13 @@ myKeys =
 -- quit reload and ToggleStruts {{{
     , ("M-b",       sendMessage ToggleStruts) -- Toggle the status bar gap
     , ("M-S-M1-q",  io (exitWith ExitSuccess)) -- Quit xmonad
-    , ("M-S-r",    spawn "xmonad --recompile; xmonad --restart") -- Restart/reload xmonad
+    , ("M-S-r",     spawn "xmonad --recompile; xmonad --restart") -- Restart/reload xmonad
     ]
     ++
 -- }}}
 -- workspace switching {{{
     [(mask ++ "M-" ++ [key], action tag)
-        | (tag, key) <- zip myWorkspaces "1234567890"                                     -- mod-[1..9], Switch to workspace N
+        | (tag, key) <- zip (workspaces myConfig) "1234567890"                                     -- mod-[1..9], Switch to workspace N
         , (mask, action) <- [ ("", windows . W.greedyView), ("S-", windows . W.shift) ]]  -- mod-shift-[1..9], Move client to workspace N
     ++
     [(mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
@@ -237,19 +273,22 @@ myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
 
     -- mod-button1, Set the window to floating mode and move by dragging
     [
-    -- ((modm, button1), \w -> focus w >> mouseMoveWindow w
-    --                                    >> windows W.shiftMaster)
+    ((modm, button1), \w -> focus w >> mouseMoveWindow w
+                                       >> windows W.shiftMaster)
     -- mod-button2, Raise the window to the top of the stack
-    -- , ((modm, button2), \w -> focus w >> windows W.shiftMaster)
+    , ((modm, button2), \w -> focus w >> windows W.shiftMaster)
     -- mod-button3, Set the window to floating mode and resize by dragging
-    -- , ((modm, button3), \w -> focus w >> mouseResizeWindow w
-    --                                    >> windows W.shiftMaster)
-    ] -- }}}
+    , ((modm, button3), \w -> focus w >> mouseResizeWindow w
+                                       >> windows W.shiftMaster)
+    ]
+-- }}}
 -- Layouts: {{{
 myLayout
     = mySpacing
-    $ avoidStruts
-    $ mkToggle (NOBORDERS ?? FULL ?? EOT)
+    . avoidStruts
+    . mouseResize
+    . smartBorders
+    . mkToggle (NOBORDERS ?? FULL ?? EOT)
     $ WN.windowNavigation
     (tiled |||
     ThreeColMid 1 (3/100) (1/2) |||
@@ -271,18 +310,19 @@ myLayout
 -- Title    = title
 -- class    = className
 -- instance = appName
-myManageHook = composeAll
-    [ className =? "discord"        --> doShift (myWorkspaces !! 1)
-    , className =? "Slack"          --> doShift (myWorkspaces !! 1)
-    , className =? "Steam"          --> doShift (myWorkspaces !! 4)
+myManageHook = insertPosition Below Newer <> let ws = workspaces myConfig in composeAll
+    [ className =? "discord"        --> doShift (ws !! 1)
+    , className =? "Slack"          --> doShift (ws !! 1)
+    , className =? "Spotify"        --> doShift (ws !! 3)
+    , appName   =? "spotify"        --> doShift (ws !! 3)
+    , className =? "Steam"          --> doShift (ws !! 4)
     , className =? "Pavucontrol"    --> doCenterFloat
-    , className =? "Sxiv"           --> doFloat
-    , className =? "Spotify"        --> doShift (myWorkspaces !! 3)
+    , className =? "Sxiv"           --> doCenterFloat
+    , className =? "mpv"            --> doCenterFloat
     , title     =? "scratchpad"     --> doCenterFloat
     , resource  =? "desktop_window" --> doIgnore
-    , className =? "eww-bar_0"      --> doLower
-    , className =? "eww-bar_1"      --> doLower
-    , className =? "eww-bar_2"      --> doLower
+    , className ~? "eww-bar"        --> doLower
+    , className =? "Trayer"         --> doLower
     -- , className =? "eww-bar"        --> doSink
     , (className =? "firefox" <&&> resource =? "Dialog") --> doFloat
     ] <+> namedScratchpadManageHook myScratchPads
@@ -299,6 +339,7 @@ myManageHook = composeAll
 myEventHook = myServerModeEventHook <+> swallowEventHook (className =? "Alacritty") (return True)
 
 ------------------------------------------------------------------------ }}}
+-- {{{ Server mode
 -- Server mode commands{{{
 myCommands :: [(String, X ())]
 myCommands =
@@ -324,7 +365,7 @@ myCommands =
 myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
 myCommands' = ("list-commands", listMyServerCmds) : myCommands ++ wscs ++ sccs -- ++ spcs
     where
-        wscs = [((m ++ s), windows $f s) | s <- myWorkspaces
+        wscs = [((m ++ s), windows $f s) | s <- (workspaces myConfig)
                , (f, m) <- [(W.view, "focus-workspace-"), (W.shift, "send-to-workspace-")] ]
 
         sccs = [((m ++ show sc), screenWorkspace (fromIntegral sc) >>= flip whenJust (windows . f))
@@ -336,6 +377,7 @@ myCommands' = ("list-commands", listMyServerCmds) : myCommands ++ wscs ++ sccs -
 listMyServerCmds :: X ()
 listMyServerCmds = spawn ("echo '" ++ asmc ++ "' | xmessage -file -")
     where asmc = concat $ "Available commands:" : map (\(x, _)-> "    " ++ x) myCommands'
+-- }}}
 -- }}}
 -- Status bars and logging {{{
 
@@ -398,7 +440,7 @@ dbusOutput dbus str = do
 -- Perform an arbitrary action each time xmonad starts or is restarted
 myStartupHook = do
         spawnOnce "autorandr --change &"
-        spawnOnce "feh --bg-scale $HOME/.config/wall.png &"
+        -- spawnOnce "feh --bg-scale $HOME/.config/wall.png &"
         spawnOnce "picom -b &"
         spawnOnce "xrdb $HOME/.Xresources"
         -- spawnOnce "$HOME/.xmonad/panel.sh"
@@ -406,22 +448,3 @@ myStartupHook = do
         spawnOnce "xsetroot -cursor_name left_ptr"
         setWMName "LG3D"
 --}}}
--- main {{{
-------------------------------------------------------------------------
-main :: IO ()
-main = do
-    dbus <- D.connectSession
-        -- Request access to the DBus name
-    D.requestName dbus (D.busName_ "org.xmonad.Log")
-        [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
--- main = do
---     dbus <- XD.connect
---     --Request access
---     XD.requestAccess dbus
-
-    xmonad
-        $ docks
-        . setEwmhWorkspaceSort mySort
-        . ewmh
-        $ defaults { logHook = dynamicLogWithPP $ filterOutWsPP ["NSP"] (myLogHook dbus)}
--- }}}
