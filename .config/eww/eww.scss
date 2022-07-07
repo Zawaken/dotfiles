@@ -13,6 +13,12 @@ window {
   }
 }
 
+.bar_1 {
+  padding-right: 135px;
+  & > * > * {
+    padding: 0 5px;
+  }
+}
 // Styles on classes (see eww.yuck for more information)
 
 .sidestuff {

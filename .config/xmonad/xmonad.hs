@@ -20,6 +20,7 @@ import qualified DBus as D
 import qualified DBus.Client as D
 import qualified Codec.Binary.UTF8.String as UTF8
 import qualified Data.Map        as M
+import Data.Ratio
 -- }}}
 
 -- {{{ Graphics
@@ -92,7 +93,7 @@ myConfig = def { -- {{{
         clickJustFocuses   = False,
         borderWidth        = 2,
         modMask            = mod4Mask,
-        workspaces         = ["1","2","3","4","5","6","7","8","9", "10"],
+        workspaces         = myWorkspaces,
         normalBorderColor  = "#262643",
         focusedBorderColor = "#876A97",
         -- normalBorderColor  = "2e2e2e",
@@ -117,6 +118,8 @@ myTerminal      = "alacritty"
 
 -- Width of the window border in pixels.
 myBorderWidth   = 1
+
+myWorkspaces = ["1","2","3","4","5","6","7","8","9","X"]
 
 -- Get the name of the active layout.
 getActiveLayoutDescription :: X String
@@ -150,12 +153,16 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm]
     where
         spawnTerm  = myTerminal ++ " --class scratchpad -t scratchpad -e tmux attach"
         findTerm   = appName =? "scratchpad"
-        manageTerm = customFloating $ W.RationalRect l t w h
+        manageTerm = customFloating $ W.RationalRect l t width height
             where
-                h = 0.9
-                w = 0.9
-                t = 0.95 -h
-                l = 0.95 -w
+                height  = 0.4
+                width   = 0.4
+                t = 0.70 -height
+                l = 0.70 -width
+                -- h = 0.9
+                -- w = 0.9
+                -- t = 0.95 -h
+                -- l = 0.95 -w
 -- }}}
 -- {{{bad floating toggle
 centreRect = W.RationalRect 0.25 0.25 0.5 0.5
@@ -195,7 +202,7 @@ myKeys =
       ("M-<Return>",  spawn (myTerminal)) -- start $term
     , ("M-a",         namedScratchpadAction myScratchPads "terminal")
     , ("M-d",         spawn "rofi -show") -- launcher
-    -- , ("M-d", shellPrompt myPrompt) -- xmonad prompt
+    -- , ("M-S-d",       shellPrompt myPrompt) -- xmonad prompt
     , ("C-S-c",       spawn "screenshot -m region --open 'sharenix -n -c'")
     , ("C-S-x",       spawn "screenshot -m window --open 'sharenix -n -c'")
     , ("M-q",         kill)
@@ -248,8 +255,8 @@ myKeys =
     , ("<XF86AudioPause>",        spawn "playerctl play-pause") -- play/pause audio
     , ("<XF86AudioNext>",         spawn "playerctl next") -- next song
     , ("<XF86AudioPrev>",         spawn "playerctl previous") -- previous song
-    , ("<XF86AudioLowerVolume>",  spawn "pactl set-sink-volume 2 -5%") -- volume down
-    , ("<XF86AudioRaiseVolume>",  spawn "pactl set-sink-volume 2 +5%") -- volume up
+    , ("<XF86AudioLowerVolume>",  spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%") -- volume down
+    , ("<XF86AudioRaiseVolume>",  spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%") -- volume up
 -- }}}
 -- quit reload and ToggleStruts {{{
     , ("M-b",       sendMessage ToggleStruts) -- Toggle the status bar gap
@@ -316,15 +323,18 @@ myManageHook = insertPosition Below Newer <> let ws = workspaces myConfig in com
     , className =? "Spotify"        --> doShift (ws !! 3)
     , appName   =? "spotify"        --> doShift (ws !! 3)
     , className =? "Steam"          --> doShift (ws !! 4)
-    , className =? "Pavucontrol"    --> doCenterFloat
+    -- , className =? "Pavucontrol"    --> doRectFloat(W.RationalRect (1 % 4) (1 % 4) (2560 % 5120) (1440 % 2880))
+    , className =? "Pavucontrol"    --> doRectFloat(W.RationalRect (1/4) (1/4) (50/100) (50/100))
     , className =? "Sxiv"           --> doCenterFloat
-    , className =? "mpv"            --> doCenterFloat
-    , title     =? "scratchpad"     --> doCenterFloat
+    , className =? "mpv"            --> doRectFloat(W.RationalRect 0.15 0.15 0.9 0.9)
+    -- , title     =? "scratchpad"     --> doCenterFloat
     , resource  =? "desktop_window" --> doIgnore
     , className ~? "eww-bar"        --> doLower
     , className =? "Trayer"         --> doLower
     -- , className =? "eww-bar"        --> doSink
-    , (className =? "firefox" <&&> resource =? "Dialog") --> doFloat
+    , (className =? "firefox" <&&>
+    resource =? "Dialog")           --> doFloat
+    , isDialog                      --> doFloat
     ] <+> namedScratchpadManageHook myScratchPads
 ------------------------------------------------------------------------ }}}
 -- Event handling {{{
@@ -336,7 +346,8 @@ myManageHook = insertPosition Below Newer <> let ws = workspaces myConfig in com
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
 -- myEventHook = serverModeEventHookCmd <+> serverModeEventHook <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn) <+> swallowEventHook (className =? "Alacritty") (return True)
-myEventHook = myServerModeEventHook <+> swallowEventHook (className =? "Alacritty") (return True)
+myEventHook = myServerModeEventHook
+  <+> swallowEventHook (className =? "Alacritty") (return True)
 
 ------------------------------------------------------------------------ }}}
 -- {{{ Server mode
@@ -405,12 +416,18 @@ myLogHook dbus = def
         -- , ppTitle = const "(box :orientation \"h\" :class \"workspaces\" :space-evenly true :halign \"center\" :valign \"center\" :vexpand true "
         , ppLayout = (\x -> case x of
            -- Icons found on https://nerdfonts.net/cheat-sheet
-           "Spacing Tall"        -> "Tall" -- "\xfb3f  "
-           "Spacing Mirror Tall" -> "MTall" -- "\xfcf6  "
-           "Spacing Full"        -> "Full" -- "\xf2d0  "
-           "Spacing Grid"        -> "Grid" -- "\xfa6f  "
-           "Spacing BSP"         -> "BSP" -- "\xfa6d  "
-           "Spacing ThreeCol"    -> "ThreeColM"
+           "Spacing Tall"        -> "\n[|]" -- "\xfb3f  "
+           "Spacing Mirror Tall" -> "\n[-]" -- "\xfcf6  "
+           "Spacing Full"        -> "\n[M]" -- "\xf2d0  "
+           "Spacing Grid"        -> "\n[+]" -- "\xfa6f  "
+           "Spacing BSP"         -> "\n[B]" -- "\xfa6d  "
+           "Spacing ThreeCol"    -> "\n[||]"
+           -- "Spacing Tall"        -> "\nTall" -- "\xfb3f  "
+           -- "Spacing Mirror Tall" -> "\nMTall" -- "\xfcf6  "
+           -- "Spacing Full"        -> "\nFull" -- "\xf2d0  "
+           -- "Spacing Grid"        -> "\nGrid" -- "\xfa6f  "
+           -- "Spacing BSP"         -> "\nBSP" -- "\xfa6d  "
+           -- "Spacing ThreeCol"    -> "\nThreeColM"
         --     _             -> " " ++ x ++ " "
         )
         }

@@ -1,4 +1,21 @@
 ; audio cpu temperature memory date layout
+
+; Variables {{{
+(defvar eww "eww -c ~/.config/eww")
+(defvar revealmusic false)
+(defvar revealvol false)
+(defvar revealbat false)
+(defvar revealram false)
+(defvar revealcpu false)
+(defvar revealdisk false)
+(defvar revealtime false)
+(defvar reveallight false)
+(defvar revealpower false)
+(defvar revealpowera false)
+(defvar revealpowerb false)
+(defvar revealpowerc false)
+; }}}
+
 (defwidget bar [] ; {{{
   (centerbox :orientation "h"
     (workspaces)
@@ -6,47 +23,87 @@
     (sidestuff)))
 ; }}}
 (defwidget sidestuff [] ; {{{
-  (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end"
-    (metric :label "🔊"
-            :value volume
-            :onchange "amixer -D pulse sset Master {}%")
-    (metric :label ""
-            :value {EWW_RAM.used_mem_perc}
-            :onchange "")
-    (metric :label "xd"
-            :value {EWW_CPU.avg}
-            :onchange "")
-    (metric :label "💾"
-            :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}
-            :onchange "")
-    time))
+  (bbox :class "sidestuff"
+        :halign "end"
+    (bbox
+      (hover-left :var revealmusic
+                  :varname "revealmusic"
+        (bbox
+          {music != "" ? "${music} " : ""})
+        (bbutton :onclick "(sleep 1; ${eww} update revealmusic=true)"
+          (label :text "🎵"))))
+    (delim)
+    (bbox :tooltip "Memory"
+      (bbox
+        (label :text " ${round(memory_used_mb / 1024, 2)}/${round(memory_total_mb / 1024, 2)}GB")))
+    (delim)
+    (bbox :tooltip "CPU"
+      (metric :value {EWW_CPU.avg})
+      (label :text "﬙ ${round(EWW_CPU.avg, 0)}%"))
+    (delim)
+    (bbox
+      (hover-double :var revealtime
+                    :varname "revealtime"
+                    :class "condensed"
+      (label :text "${date}-")
+      (label :text ":${seconds}")
+      (label :text time)))
+    ))
+; }}}
+
+;(defwidget sidestuff [] ; {{{
+;  (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end"
+;    (metric :label "🔊"
+;            :value volume
+;            :onchange "amixer -D pulse sset Master {}%")
+;    (metric :label ""
+;            :value {EWW_RAM.used_mem_perc}
+;            :onchange "")
+;    (metric :label "xd"
+;            :value {EWW_CPU.avg}
+;            :onchange "")
+;    (metric :label "💾"
+;            :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}
+;            :onchange "")
+;    time))
 ; }}}
 (defwidget workspaces [] ; {{{
-    ; (box :class layout (label :text layout)))
-    (literal :content workspaces_listen))
+    (bbox :halign "start"
+      (bbox
+        (eventbox
+          (literal :content workspaces_listen)))
+      (delim)
+      (bbox
+        (bbutton :onclick "scripts/getlayout"
+          (label :text layout)))))
 (deflisten workspaces_listen "scripts/workspace")
 ; }}}
 (defwidget music [] ; {{{
-  (box :class "music"
-       :orientation "h"
-       :space-evenly false
-       :halign "center"
-    {music != "" ? "🎵${music}" : ""}))
+  ; (bbox :class "music"
+  ;      :orientation "h"
+  ;      :space-evenly false
+  ;      :halign "center"
+  ;   {music != "" ? "🎵{music}" : ""}
+  ; (delim)
+  (bbox :class title
+    (label :text title)))
 ; }}}
-(defwidget metric [label value onchange] ; {{{
-  (box :orientation "h"
-       :class "metric"
-       :space-evenly false
-    (box :class "label" label)
-    (scale :min 0
-           :max 101
-           :active {onchange != ""}
-           :value value
-           :onchange onchange)))
+;(defwidget metric [label value onchange] ; {{{
+;  (box :orientation "h"
+;       :class "metric"
+;       :space-evenly false
+;    (box :class "label" label)
+;    (scale :min 0
+;           :max 101
+;           :active {onchange != ""}
+;           :value value
+;           :onchange onchange)))
 ; }}}
 
 (deflisten layout :initial "Tall"
-  "scripts/getlayout")
+  "xmonad-log")
+(defpoll polllayout :interval "1s"
+  "xmonad-log")
 (deflisten music :initial ""
   "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
 
@@ -56,8 +113,21 @@
 (defpoll volume :interval "1s"
   "scripts/getvol")
 
+; (defpoll time :interval "10s"
+;   "date '+%H:%M %b %d, %Y'")
+(defpoll seconds :interval "1s"
+  "date '+%S'")
+(defpoll date :interval "30m"
+  "date '+%a %b %d'")
 (defpoll time :interval "10s"
-  "date '+%H:%M %b %d, %Y'")
+  "date '+%H:%M'")
+
+(defpoll memory_used_mb  :interval "2m" "scripts/memory-ad used")
+(defpoll memory_total_mb :interval "2m" "scripts/memory-ad total")
+(defpoll memory_free_mb  :interval "2m" "scripts/memory-ad free")
+(defpoll title :initial ""
+               :interval "250ms"
+  "xdotool getactivewindow getwindowname | awk -v len=60 '{ if (length($0) > len) print substr($0, 1, len-1) \"…\"; else print; }'")
 
 ; defwindow bars {{{
 (defwindow bar_0
@@ -97,3 +167,125 @@
   :reserve (struts :side "top" :distance "36px")
   (bar))
 ; }}}
+
+
+(defwidget bbutton [?class ?onclick ?onmiddleclick ?onrightclick ?timeout] ; Based button with pointer-cursor {{{
+  (eventbox :cursor {"${onclick}${onmiddleclick}${onrightclick}" != "" ? "pointer" : "default"}
+    (button :onclick onclick
+            :onmiddleclick onmiddleclick
+            :onrightclick onrightclick
+            :class {"${onclick}${onmiddleclick}${onrightclick}" != "" ? "clickable ${class}" : class}
+      (children)))) ; }}}
+
+(defwidget dlabel [?class ?style ?text ?markup] ; A dynamic label {{{
+  (label :class class
+         :style {text != "" ? style : "padding: 0 0px; ${style}"}
+         :text text
+         :markup markup
+    (children))) ; }}}
+
+(defwidget bbox [?class ?style ?tooltip ?orientation ?space-evenly ?spacing ?halign ?valign] ; A based box {{{
+  (box :class class
+       :style style
+       :tooltip tooltip
+       :orientation {orientation ?: "h"}
+       :space-evenly {space-evenly ?: false}
+       :spacing {spacing ?: 0}
+       :halign {halign ?: "center"}
+       :valign {valign ?: "fill"}
+    (children))) ; }}}
+
+(defwidget metric [value ?class ?onchange ?min ?max] ; {{{
+  (eventbox :cursor {onchange != "" ? "col-resize" : "default"}
+    (scale :min {min ?: 0}
+           :max {max ?: 101}
+           :active {onchange != ""}
+           :value value
+           :onchange onchange
+           :class "metric ${class} ${onchange != "" ? 'modifiable' : ''}"
+      (children))))
+; }}}
+
+(defwidget hover-left [var varname ?class ?duration] ; {{{
+  (eventbox :onhover "${eww} update ${varname}=true"
+            :onhoverlost "${eww} update ${varname}=false"
+            :class "hover ${class}"
+    (box :orientation "h"
+         :space-evenly false
+      (revealer :reveal var
+                :transition "slideleft"
+                :duration {duration ?: "350ms"}
+        (box :class "child"
+             :space-evenly false
+          (children :nth 0)))
+      (box :class "main"
+           :space-evenly false
+        (children :nth 1)))))
+; }}}
+
+(defwidget hover-right [var varname ?class ?duration] ; {{{
+  (eventbox :onhover "${eww} update ${varname}=true"
+            :onhoverlost "${eww} update ${varname}=false"
+            :class "hover ${class}"
+    (box :orientation "h"
+         :space-evenly false
+      (revealer :reveal var
+                :transition "slideright"
+                :duration {duration ?: "350ms"}
+        (box :class "child"
+             :space-evenly false
+          (children :nth 0)))
+      (box :class "main"
+           :space-evenly false
+        (children :nth 1)))))
+; }}}
+
+(defwidget hover-double [var varname ?class ?duration] ; {{{
+  (eventbox :onhover "${eww} update ${varname}=true"
+            :onhoverlost "${eww} update ${varname}=false"
+            :class "${class} hover hover-double"
+    (box :orientation "h"
+         :space-evenly false
+      (box :class "child"
+           :space-evenly false
+        (revealer :reveal var
+                  :transition "slideleft"
+                  :duration {duration ?: "350ms"}
+          (children :nth 0)))
+      (box :class "main"
+           :space-evenly false
+        (children :nth 2))
+      (box :class "child"
+           :space-evenly false
+        (revealer :reveal var
+                :transition "slideright"
+                :duration {duration ?: "350ms"}
+          (children :nth 1))))))
+; }}}
+
+(defwidget click-left [var varname ?class ?duration] ; {{{
+  (eventbox :onhoverlost "${eww} update ${varname}=false"
+            :class "hover ${class}"
+            :cursor "pointer"
+    (box :orientation "h"
+         :space-evenly false
+      (revealer :reveal var
+                :transition "slideleft"
+                :duration {duration ?: "350ms"}
+        (box :class "child"
+             :space-evenly false
+          (children :nth 0)))
+      (button :class "main"
+              :onclick "${eww} update ${varname}=true"
+        (children :nth 1)))))
+; }}}
+
+(defwidget delim [] ; A module delimiter {{{
+  (box :style "margin: 0 5px; padding: 0;"
+       ;:tooltip tooltip
+       :orientation "h"
+       :space-evenly false
+       :spacing 0
+       :halign "center"
+       :valign "fill"
+    (children))) ; }}}

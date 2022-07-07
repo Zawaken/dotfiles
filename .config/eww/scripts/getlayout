@@ -1,3 +1,2 @@
 #!/bin/sh
-xmonad-log > xmonad-log.log
-
+xmonad-log | grep -v "%.*"
