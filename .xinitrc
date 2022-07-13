@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+DESKTOP=xmonad
+
 test -f ~/.xprofile && source ~/.xprofile
 
 autorandr --change &
@@ -9,7 +11,7 @@ if test "${DESKTOP}" = "xmonad"; then
 fi
 
 if grep -q "=Gentoo" /etc/os-release; then
-  exec dbus-launch xmonad
+  exec dbus-launch ${DESKTOP}
 else
-  exec xmonad
+  exec ${DESKTOP}
 fi
