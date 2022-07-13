@@ -149,17 +149,23 @@ myPrompt = def
         }
 
 myScratchPads :: [NamedScratchpad]
-myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm]
-    where
-        spawnTerm  = myTerminal ++ " --class scratchpad -t scratchpad -e tmux attach"
-        findTerm   = appName =? "scratchpad"
-        manageTerm = customFloating $ W.RationalRect l t width height
-            where
-                height  = 0.4
-                width   = 0.4
-                t = 0.70 -height
-                l = 0.70 -width
-                -- h = 0.9
+myScratchPads = [ NS "terminal"
+        (myTerminal ++ " --class scratchpad -t scratchpad -e tmux attach")
+        (appName =? "scratchpad")
+        (customFloating $ W.RationalRect 0.3 0.3 0.4 0.4) -- l t width height
+      ]
+
+-- myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm]
+--     where
+--         spawnTerm  = myTerminal ++ " --class scratchpad -t scratchpad -e tmux attach"
+--         findTerm   = appName =? "scratchpad"
+--         manageTerm = customFloating $ W.RationalRect l t width height
+--             where
+--                 height  = 0.4
+--                 width   = 0.4
+--                 t = 0.70 -height
+--                 l = 0.70 -width
+--                 -- h = 0.9
                 -- w = 0.9
                 -- t = 0.95 -h
                 -- l = 0.95 -w
