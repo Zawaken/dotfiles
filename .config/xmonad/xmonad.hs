@@ -115,7 +115,6 @@ myConfig = def { -- {{{
 myTerminal      :: String
 myTerminal      = "alacritty"
 
-
 -- Width of the window border in pixels.
 myBorderWidth   = 1
 
@@ -150,9 +149,9 @@ myPrompt = def
 
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [ NS "terminal"
-        (myTerminal ++ " --class scratchpad -t scratchpad -e tmux attach")
-        (appName =? "scratchpad")
-        (customFloating $ W.RationalRect 0.3 0.3 0.4 0.4) -- l t width height
+        (myTerminal ++ " --class scratchpad -t scratchpad -e tmux attach") -- command to run
+        (appName =? "scratchpad") -- set appname
+        (customFloating $ W.RationalRect 0.3 0.3 0.4 0.4) -- x y width height
       ]
 
 -- myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm]
@@ -337,7 +336,6 @@ myManageHook = insertPosition Below Newer <> let ws = workspaces myConfig in com
     , resource  =? "desktop_window" --> doIgnore
     , className ~? "eww-bar"        --> doLower
     , className =? "Trayer"         --> doLower
-    -- , className =? "eww-bar"        --> doSink
     , (className =? "firefox" <&&>
     resource =? "Dialog")           --> doFloat
     , isDialog                      --> doFloat
@@ -463,7 +461,6 @@ dbusOutput dbus str = do
 -- Perform an arbitrary action each time xmonad starts or is restarted
 myStartupHook = do
         spawnOnce "autorandr --change &"
-        -- spawnOnce "feh --bg-scale $HOME/.config/wall.png &"
         spawnOnce "picom -b &"
         spawnOnce "xrdb $HOME/.Xresources"
         -- spawnOnce "$HOME/.xmonad/panel.sh"
