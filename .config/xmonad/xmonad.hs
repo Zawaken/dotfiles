@@ -213,6 +213,7 @@ myKeys =
     , ("M-q",         kill)
     , ("M-S-c",       spawn "toggleprogram 'picom' '-b'")
     , ("M-S-v",       spawn "xclip -selection clipboard -out | xdotool selectwindow windowfocus type --clearmodifiers --delay 25 --window %@ --file -")-- }}}
+    , ("M-i",         spawn "slock")
 -- layout, focus and swap {{{
     , ("M-r",         sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
     , ("M-s",         toggleFloat)
@@ -460,11 +461,9 @@ dbusOutput dbus str = do
 
 -- Perform an arbitrary action each time xmonad starts or is restarted
 myStartupHook = do
-        spawnOnce "autorandr --change &"
         spawnOnce "picom -b &"
         spawnOnce "xrdb $HOME/.Xresources"
         -- spawnOnce "$HOME/.xmonad/panel.sh"
         spawnOnce "eww open-many bar_0 bar_1 bar_2"
-        spawnOnce "xsetroot -cursor_name left_ptr"
         setWMName "LG3D"
 --}}}
