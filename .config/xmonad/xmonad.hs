@@ -84,9 +84,7 @@ main = do
         $ myConfig { logHook = dynamicLogWithPP $ filterOutWsPP ["NSP"] (myLogHook dbus)}
 -- }}}
 myConfig = def { -- {{{
--- A structure containing your configuration settings, overriding
--- fields in the default config. Any you don't override, will
--- use the defaults defined in xmonad/XMonad/Config.hs
+-- A structure containing your configuration settings, overriding fields in the default config.
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = True,
@@ -153,21 +151,6 @@ myScratchPads = [ NS "terminal"
         (appName =? "scratchpad") -- set appname
         (customFloating $ W.RationalRect 0.3 0.3 0.4 0.4) -- x y width height
       ]
-
--- myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm]
---     where
---         spawnTerm  = myTerminal ++ " --class scratchpad -t scratchpad -e tmux attach"
---         findTerm   = appName =? "scratchpad"
---         manageTerm = customFloating $ W.RationalRect l t width height
---             where
---                 height  = 0.4
---                 width   = 0.4
---                 t = 0.70 -height
---                 l = 0.70 -width
---                 -- h = 0.9
-                -- w = 0.9
-                -- t = 0.95 -h
-                -- l = 0.95 -w
 -- }}}
 -- {{{bad floating toggle
 centreRect = W.RationalRect 0.25 0.25 0.5 0.5
@@ -206,14 +189,16 @@ myKeys =
     [
       ("M-<Return>",  spawn (myTerminal)) -- start $term
     , ("M-a",         namedScratchpadAction myScratchPads "terminal")
+    , ("M-e",         dynamicNSPAction "dyn1")
+    , ("M-S-e",       withFocused $ toggleDynamicNSP "dyn1")
     , ("M-d",         spawn "rofi -show") -- launcher
     -- , ("M-S-d",       shellPrompt myPrompt) -- xmonad prompt
     , ("C-S-c",       spawn "screenshot -m region --open 'sharenix -n -c'")
     , ("C-S-x",       spawn "screenshot -m window --open 'sharenix -n -c'")
     , ("M-q",         kill)
+    , ("M-i",         spawn "slock")
     , ("M-S-c",       spawn "toggleprogram 'picom' '-b'")
     , ("M-S-v",       spawn "xclip -selection clipboard -out | xdotool selectwindow windowfocus type --clearmodifiers --delay 25 --window %@ --file -")-- }}}
-    , ("M-i",         spawn "slock")
 -- layout, focus and swap {{{
     , ("M-r",         sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
     , ("M-s",         toggleFloat)
@@ -318,8 +303,7 @@ myLayout
 ------------------------------------------------------------------------ }}}
 -- Window rules: {{{
 
--- Execute arbitrary actions and WindowSet manipulations when managing
--- a new window.
+-- Execute arbitrary actions and WindowSet manipulations when managing a new window.
 -- Title    = title
 -- class    = className
 -- instance = appName
@@ -340,16 +324,11 @@ myManageHook = insertPosition Below Newer <> let ws = workspaces myConfig in com
     , (className =? "firefox" <&&>
     resource =? "Dialog")           --> doFloat
     , isDialog                      --> doFloat
+    , title =? "Picture-in-Picture" --> doFloat
     ] <+> namedScratchpadManageHook myScratchPads
 ------------------------------------------------------------------------ }}}
 -- Event handling {{{
 
--- * EwmhDesktops users should change this to ewmhDesktopsEventHook
---
--- Defines a custom handler function for X Events. The function should
--- return (All True) if the default handler is to be run afterwards. To
--- combine event hooks use mappend or mconcat from Data.Monoid.
---
 -- myEventHook = serverModeEventHookCmd <+> serverModeEventHook <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn) <+> swallowEventHook (className =? "Alacritty") (return True)
 myEventHook = myServerModeEventHook
   <+> swallowEventHook (className =? "Alacritty") (return True)
