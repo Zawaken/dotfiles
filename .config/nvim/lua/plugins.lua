@@ -44,6 +44,24 @@ local plugins = function(use)
       require("config.lualine")
     end
   })
+
+  use({ "norcalli/nvim-terminal.lua",
+    ft = {
+      "terminal",
+      "toggleterm"
+    },
+    config = function()
+      require("terminal").setup()
+    end,
+  })
+
+  use({ "akinsho/toggleterm.nvim",
+    -- keys = "<M-n>",
+    -- cmd = { "ToggleTerm" },
+    config = function()
+      require("config.toggleterm")
+    end,
+  })
   -- use({"akinsho/toggleterm.nvim", config = function() require("config.toggleterm") end})
 
   -- use({"ahmedkhalf/project.nvim"
