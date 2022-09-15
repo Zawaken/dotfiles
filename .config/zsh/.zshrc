@@ -7,17 +7,30 @@ esac
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
-zstyle :compinstall filename '/home/zawaken/.zshrc'
+zstyle :compinstall filename '${HOME}/.config/zsh/.zshrc'
 
 autoload -Uz compinit
-compinit
 
+# If zsh completion cache was updated today
+if test "$(date +'%j')" != "$(date -r ${ZDOTDIR:-$HOME}/.zcompdump +'%j')"; then
+  compinit
+else
+  # Bypass the check for rebuilding the dump file and the usual call to compaudit
+  compinit -C
+fi
+
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+if [ -d "${HOME}/.cache/zinit/completions" ]; then
+else
+  mkdir ${HOME}/.cache/zinit/completions
+fi
 # }}}
 # --- Variables --- # {{{
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 HIST_STAMPS="dd.mm.yyyy"
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME:-~}/.local/share}/zinit"
 bindkey -e
 export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$HOME/.gem/ruby/*/bin:$HOME/.local/share/gem/ruby/*/bin:$PATH
 export EDITOR=/usr/bin/nvim
@@ -43,79 +56,90 @@ pastor() {
 #}}}
 # --- Plugins --- # {{{
 
-# --- Antigen --- # {{{
-ANTIGEN=$HOME/.config/.antigen/
-[ -f $ANTIGEN/antigen.zsh ] || git clone\
-	https://github.com/zsh-users/antigen.git $ANTIGEN
-if [[ -f $ANTIGEN/antigen.zsh ]]; then
-	source $ANTIGEN/antigen.zsh
-	antigen use oh-my-zsh
-	antigen bundle archlinux
-	antigen bundle zpm-zsh/colorize
-	antigen bundle command-not-found
-	antigen bundle common-aliases
-	antigen bundle chrissicool/zsh-256color
-	antigen bundle dnf
-	antigen bundle docker
-	antigen bundle akarzim/zsh-docker-aliases
-	antigen bundle git
-	antigen bundle git-extras
-	antigen bundle kubectl
-	antigen bundle MichaelAquilina/zsh-you-should-use
-	antigen bundle systemd
-	antigen bundle thefuck
-	antigen bundle tmux
-	# antigen bundle unixorn/autoupdate-antigen.zshplugin
-	antigen bundle yum
-	antigen bundle zdharma-continuum/fast-syntax-highlighting
-	antigen bundle zdharma-continuum/zsh-diff-so-fancy
-	antigen bundle zsh-users/zsh-autosuggestions
-	antigen bundle zsh-users/zsh-history-substring-search
-	# antigen bundle zsh-users/zsh-syntax-highlighting
-
-	# antigen prompt theme
-	# antigen theme romkatv/powerlevel10k
-	#antigen theme miloshadzic
-
-	antigen apply
+# Install and load zinit {{{
+if test ! -f "${ZINIT_HOME}/zinit.git/zinit.zsh"; then
+  print -P '%F{33} %F{220}Installing %F{33}Zinit%F{220}...%f'
+  mkdir -p "${ZINIT_HOME}" \
+    && chmod g-rwX "${ZINIT_HOME}"
+  git clone https://github.com/zdharma-continuum/zinit.git "${ZINIT_HOME}/zinit.git" \
+    && print -P '%F{33} %F{34}Installation successful!%f%b' \
+    || print -P '%F{160} Cloning failed...%f%b'
 fi
+
+source "${HOME:-~}/.local/share/zinit/zinit.git/zinit.zsh"
+
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 # }}}
 
-# --- Antibody --- # {{{
 
-#command -v antibody > /dev/null 2>&1 \
-#  || (echo "Installing Antibody."; curl -sfL -v https://raw.githubusercontent.com/getantibody/installer/master/install | sudo sh -v -s - -b /usr/local/bin -d) \
-#  && source <(antibody init)
-## heredoc must be indented with tabs
-#antibody bundle <<-EOBUNDLES
-#	robbyrussell/oh-my-zsh path:plugins/git
-#	robbyrussell/oh-my-zsh path:plugins/git-extras
-#	robbyrussell/oh-my-zsh path:plugins/colorize
-#	robbyrussell/oh-my-zsh path:plugins/colored-man-pages
-#	robbyrussell/oh-my-zsh path:plugins/jump
-#	robbyrussell/oh-my-zsh path:plugins/lol
-#	robbyrussell/oh-my-zsh path:plugins/emoji
-#	robbyrussell/oh-my-zsh path:plugins/thefuck
-#	robbyrussell/oh-my-zsh path:plugins/dnf
-#	robbyrussell/oh-my-zsh path:plugins/archlinux
-#	robbyrussell/oh-my-zsh path:plugins/common-aliases
-#	robbyrussell/oh-my-zsh path:plugins/docker
-#	robbyrussell/oh-my-zsh path:plugins/systemd
-#	robbyrussell/oh-my-zsh path:plugins/tmux
-#	robbyrussell/oh-my-zsh path:plugins/yum
-#	chrissicool/zsh-256color
-#	# zsh-users/zsh-syntax-highlighting
-#	zsh-users/zsh-autosuggestions
-#	zsh-users/zsh-history-substring-search
-#	zsh-users/zsh-completions
-#	zdharma/fast-syntax-highlighting
-#	# djui/alias-tips
-#	mollifier/cd-gitroot
-#	# desyncr/auto-ls
-#	romkatv/powerlevel10k
-#EOBUNDLES
+# Prezto {{{
+# https://github.com/sorin-ionescu/prezto/tree/master/modules
+# https://github.com/sorin-ionescu/prezto/blob/master/runcoms/zpreztorc
 
+zinit snippet PZT::modules/environment/init.zsh
+
+zstyle ':prezto:module:terminal' auto-title 'yes'
+zinit snippet PZT::modules/terminal/init.zsh
+
+zstyle ':prezto:module:editor' dot-expansion 'yes'
+zstyle ':prezto:module:editor' key-bindings 'emacs'
+zstyle ':prezto:module:editor' ps-context 'yes'
+zstyle ':prezto:module:prompt' managed 'yes'
+zinit snippet PZTM::editor
+
+zinit snippet PZT::modules/history/init.zsh
+
+zinit ice wait'1' lucid
+zinit snippet PZT::modules/directory/init.zsh
+
+zinit ice wait'1' lucid
+zinit snippet PZT::modules/spectrum/init.zsh
+
+zinit snippet PZT::modules/gnu-utility/init.zsh
+zstyle ':prezto:module:utility' safe-ops 'no'
+zinit snippet PZTM::utility
+
+zinit snippet PZT::modules/completion/init.zsh
+# zinit snippet PZT::modules/gpg/init.zsh
+
+# zinit ice wait'1' lucid
+# zinit snippet PZT::modules/history-substring-search/init.zsh
+
+zstyle ':prezto:*:*' case-sensitive 'no'
+zstyle ':prezto:*:*' color 'yes'
+
+zstyle ':completion:*' special-dirs true
 # }}}
+
+# oh-my-zsh plugins {{{
+zinit snippet OMZP::archlinux
+zinit snippet OMZP::colored-man-pages
+zinit snippet OMZP::command-not-found
+zinit snippet OMZP::common-aliases
+zinit snippet OMZP::dnf
+zinit snippet OMZP::docker
+zinit snippet OMZP::git
+zinit snippet OMZP::git-extras
+zinit snippet OMZP::kubectl
+zinit snippet OMZP::systemd
+zinit snippet OMZP::thefuck
+zinit snippet OMZP::tmux
+zinit snippet OMZP::yum
+# }}}
+
+zinit light zpm-zsh/colorize
+zinit light akarzim/zsh-docker-aliases
+zinit light chrissicool/zsh-256color
+zinit light MichaelAquilina/zsh-you-should-use
+zinit light zdharma-continuum/fast-syntax-highlighting
+zinit light zdharma-continuum/zsh-diff-so-fancy
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-history-substring-search
+
+
+
 command -v starship >/dev/null 2>&1 || (curl -fsSL https://starship.rs/install.sh | bash)
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
@@ -172,7 +196,13 @@ alias dp='dotfiles push'
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 # }}}
 # --- Sourcing --- # {{{
-eval "$(starship init zsh)"
+# eval "$(starship init zsh)"
+
+zinit ice as'command' from'gh-r' \
+  atclone'./starship init zsh > init.zsh; ./starship completions zsh > _starship' \
+  atpull'%atclone' src'init.zsh'
+zinit light starship/starship
+
 source <(kubectl completion zsh)
 if [[ -f $HOME/.aliases ]]; then
   source $HOME/.aliases
