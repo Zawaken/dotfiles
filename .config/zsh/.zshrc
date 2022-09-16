@@ -9,16 +9,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 zstyle :compinstall filename '${HOME}/.config/zsh/.zshrc'
 
-autoload -Uz compinit
-
-# If zsh completion cache was updated today
-if test "$(date +'%j')" != "$(date -r ${ZDOTDIR:-$HOME}/.zcompdump +'%j')"; then
-  compinit
-else
-  # Bypass the check for rebuilding the dump file and the usual call to compaudit
-  compinit -C
-fi
-
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 if [ -d "${HOME}/.cache/zinit/completions" ]; then
 else
@@ -143,6 +133,16 @@ zinit light zsh-users/zsh-history-substring-search
 command -v starship >/dev/null 2>&1 || (curl -fsSL https://starship.rs/install.sh | bash)
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
+
+autoload -Uz compinit
+
+# If zsh completion cache was updated today
+if test "$(date +'%j')" != "$(date -r ${ZDOTDIR:-$HOME}/.zcompdump +'%j')"; then
+  compinit
+else
+  # Bypass the check for rebuilding the dump file and the usual call to compaudit
+  compinit -C
+fi
 # }}}
 # --- Aliases --- # {{{
 alias sudo='sudo '
