@@ -9,7 +9,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 zstyle :compinstall filename '${HOME}/.config/zsh/.zshrc'
 
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 if [ -d "${HOME}/.cache/zinit/completions" ]; then
 else
   mkdir ${HOME}/.cache/zinit/completions
@@ -90,7 +89,7 @@ zinit snippet PZT::modules/gnu-utility/init.zsh
 zstyle ':prezto:module:utility' safe-ops 'no'
 zinit snippet PZTM::utility
 
-zinit snippet PZT::modules/completion/init.zsh
+# zinit snippet PZT::modules/completion/init.zsh
 # zinit snippet PZT::modules/gpg/init.zsh
 
 # zinit ice wait'1' lucid
@@ -103,6 +102,7 @@ zstyle ':completion:*' special-dirs true
 # }}}
 
 # oh-my-zsh plugins {{{
+zinit snippet OMZL::completion.zsh
 zinit snippet OMZP::archlinux
 zinit snippet OMZP::colored-man-pages
 zinit snippet OMZP::command-not-found
