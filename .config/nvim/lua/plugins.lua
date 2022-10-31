@@ -84,9 +84,13 @@ local plugins = function(use)
   -- })
 
   use({"anuvyklack/pretty-fold.nvim",
-    requires = 'anuvyklack/nvim-keymap-amend',
+    requires = {
+      'anuvyklack/nvim-keymap-amend',
+      'anuvyklack/fold-preview.nvim'
+    },
     config = function ()
       require("config.prettyfold")
+      require('fold-preview').setup()
     end
   })
 

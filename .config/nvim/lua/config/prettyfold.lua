@@ -1,7 +1,8 @@
 local ok, plugin = pcall(require, "pretty-fold")
 if not ok then return end
 
-require('pretty-fold.preview').setup()
+--[[ require('fold-preview').setup() ]]
+--[[ require('pretty-fold.preview').setup() ]]
 
 plugin.setup({
    sections = {

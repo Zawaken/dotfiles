@@ -145,7 +145,7 @@ else
 fi
 # }}}
 # --- Aliases --- # {{{
-alias sudo='sudo '
+# alias sudo='nocorrect sudo '
 alias vim='${EDITOR}'
 alias vi='${EDITOR}'
 alias reload='source $ZDOTDIR/.zshrc'
