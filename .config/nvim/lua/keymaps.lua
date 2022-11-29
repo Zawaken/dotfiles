@@ -18,23 +18,11 @@ vim.g.maplocalleader = ","
 --   command_mode = "c",
 
 
-keymap("n", "<leader>n", "<cmd>lua require'util'.CopyMode()<CR>", opts)
--- keymap("n", "<leader>n", "<cmd>lua ToggleNumbers()<CR>", opts)
-keymap("n", "<leader>f", "<cmd>lua require'telescope.builtin'.find_files(require('telescope.themes').get_dropdown())<cr>", opts)
-keymap("n", "<leader>c", ":noh<CR>", opts)
-
 -- line, word and character-count
 keymap("", "<F3>", ":!wc <C-R>%<CR>", opts)
 
 -- Spell-check set to F6
 keymap("", "<F6>", ":setlocal spell! spelllang=en_us,es<CR>", opts)
-
--- Tabs
-keymap("n", "<C-t>", ":tabnew<CR>", opts)
-keymap("n", "<leader>t", ":tabnew<CR>", opts)
-keymap("n", "<leader>j", ":tabprevious<CR>", opts)
-keymap("n", "<leader>k", ":tabnext<CR>", opts)
-keymap("n", "<leader>q", ":tabclose<CR>", opts)
 
 -- Normal --
 -- Better window navigation
