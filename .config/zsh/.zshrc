@@ -111,6 +111,7 @@ zinit snippet OMZP::dnf
 zinit snippet OMZP::docker
 zinit snippet OMZP::git
 zinit snippet OMZP::git-extras
+zinit snippet OMZP::helm
 zinit snippet OMZP::kubectl
 zinit snippet OMZP::systemd
 zinit snippet OMZP::thefuck

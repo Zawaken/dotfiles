@@ -1,6 +1,7 @@
 -- imports {{{
 
 --{{{actions
+import XMonad.Actions.CycleWS as CWS
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.MouseResize
 --}}}
@@ -30,12 +31,13 @@ import Graphics.X11.ExtraTypes.XF86
 -- Hooks {{{
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ServerMode
+import XMonad.Hooks.TaffybarPagerHints (pagerHints)
 import XMonad.Hooks.WindowSwallowing
-import XMonad.Hooks.InsertPosition
 -- }}}
 
 -- Layout {{{
@@ -78,9 +80,10 @@ main = do
 
     xmonad
         $ docks
-        . setEwmhWorkspaceSort mySort
+        -- . setEwmhWorkspaceSort mySort
         . ewmhFullscreen
         . ewmh
+        . pagerHints
         $ myConfig { logHook = dynamicLogWithPP $ filterOutWsPP ["NSP"] (myLogHook dbus)}
 -- }}}
 myConfig = def { -- {{{
@@ -259,6 +262,7 @@ myKeys =
 -- workspace switching {{{
     [(mask ++ "M-" ++ [key], action tag)
         | (tag, key) <- zip (workspaces myConfig) "1234567890"                                     -- mod-[1..9], Switch to workspace N
+        -- , (mask, action) <- [ ("", windows . W.greedyView), ("S-", windows . W.shift) ]]  -- mod-shift-[1..9], Move client to workspace N
         , (mask, action) <- [ ("", windows . W.greedyView), ("S-", windows . W.shift) ]]  -- mod-shift-[1..9], Move client to workspace N
     ++
     [(mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))

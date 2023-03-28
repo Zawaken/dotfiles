@@ -11,3 +11,9 @@ ssh_only = true
 min_time = 10000
 show_milliseconds = false
 format = "[$duration]($style)"
+
+[kubernetes]
+disabled = false
+
+[directory]
+truncation_length = 2

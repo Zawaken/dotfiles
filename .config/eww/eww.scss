@@ -93,11 +93,18 @@ window {
       border-radius: 3px;
     }
     &.visible {
-      background-color: #3c3836;
+      /* background-color: #3c3836; */
+      background-color: #787999;
+      color: #000;
+      padding: 0px 5px;
+      border-radius: 3px;
     }
     &.inactive {
       background-color: #302D41;
       padding: 0px 5px;
+    }
+    &:not(.occupied) {
+      color: #465059;
     }
   }
   button:hover {

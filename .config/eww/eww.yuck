@@ -76,7 +76,7 @@
       (bbox
         (bbutton :onclick "scripts/getlayout"
           (label :text layout)))))
-(deflisten workspaces_listen "scripts/workspace")
+(deflisten workspaces_listen "scripts/workspacewip")
 ; }}}
 (defwidget music [] ; {{{
   ; (bbox :class "music"

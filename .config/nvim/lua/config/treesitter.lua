@@ -15,6 +15,7 @@ configs.setup {
     "lua",
     "markdown",
     "ruby",
+    "rust",
     "scss",
     "typescript",
     "vim",
