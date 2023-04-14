@@ -114,6 +114,7 @@ zinit snippet OMZP::git-extras
 zinit snippet OMZP::helm
 zinit snippet OMZP::kubectl
 zinit snippet OMZP::systemd
+zinit snippet OMZP::terraform
 zinit snippet OMZP::thefuck
 zinit snippet OMZP::tmux
 zinit snippet OMZP::yum

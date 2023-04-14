@@ -41,9 +41,7 @@ import XMonad.Hooks.WindowSwallowing
 -- }}}
 
 -- Layout {{{
-import XMonad.Layout.BinarySpacePartition
 import XMonad.Layout.ThreeColumns
-import XMonad.Layout.Gaps
 import XMonad.Layout.Grid
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.MultiToggle
@@ -214,22 +212,22 @@ myKeys =
     , ("M-m",         windows W.focusMaster  ) -- Move focus to the master window
     -- Swap the focused window and the master window
 --    , ((modm,               xK_Return), windows W.swapMaster)
-    , ("M-<Right>",   sendMessage $ WN.Go R)
-    , ("M-<Left>",    sendMessage $ WN.Go L)
+    , ("M-<Right>",   sendMessage $ WN.Go WN.R)
+    , ("M-<Left>",    sendMessage $ WN.Go WN.L)
     , ("M-<Up>",    do
       layout <- getActiveLayoutDescription
       case layout of
         x | elem x ["Spacing Full","Full"] -> windows W.focusUp
-        _                                  -> sendMessage $ WN.Go U)
+        _                                  -> sendMessage $ WN.Go WN.U)
     , ("M-<Down>",  do
       layout <- getActiveLayoutDescription
       case layout of
         x | elem x ["Spacing Full","Full"] -> windows W.focusDown
-        _                                  -> sendMessage $ WN.Go D)
-    , ("M-S-<Right>", floatOrNot (withFocused (keysMoveWindow   ( 20, 0)))  (sendMessage $ WN.Swap R))
-    , ("M-S-<Left>",  floatOrNot (withFocused (keysMoveWindow   ( -20, 0))) (sendMessage $ WN.Swap L))
-    , ("M-S-<Up>",    floatOrNot (withFocused (keysMoveWindow   ( 0, -20))) (sendMessage $ WN.Swap U))
-    , ("M-S-<Down>",  floatOrNot (withFocused (keysMoveWindow   ( 0, 20)))  (sendMessage $ WN.Swap D))
+        _                                  -> sendMessage $ WN.Go WN.D)
+    , ("M-S-<Right>", floatOrNot (withFocused (keysMoveWindow   ( 20, 0)))  (sendMessage $ WN.Swap WN.R))
+    , ("M-S-<Left>",  floatOrNot (withFocused (keysMoveWindow   ( -20, 0))) (sendMessage $ WN.Swap WN.L))
+    , ("M-S-<Up>",    floatOrNot (withFocused (keysMoveWindow   ( 0, -20))) (sendMessage $ WN.Swap WN.U))
+    , ("M-S-<Down>",  floatOrNot (withFocused (keysMoveWindow   ( 0, 20)))  (sendMessage $ WN.Swap WN.D))
     , ("M-C-<Right>", floatOrNot (withFocused (keysResizeWindow ( 20, 0) (0,0))) (sendMessage Expand))
     , ("M-C-<Left>",  floatOrNot (withFocused (keysResizeWindow ( -20,0) (0,0))) (sendMessage Shrink))
     , ("M-C-<Up>",    floatOrNot (withFocused (keysResizeWindow ( 0,-20) (0,0))) (sendMessage Expand))
@@ -294,8 +292,7 @@ myLayout
     $ WN.windowNavigation
     (tiled |||
     ThreeColMid 1 (3/100) (1/2) |||
-    Full |||
-    emptyBSP)
+    Full)
   where
      mySpacing = spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True
      tiled   = Tall nmaster delta ratio -- default tiling algorithm partitions the screen into two panes
@@ -303,7 +300,6 @@ myLayout
      ratio   = 1/2 -- Default proportion of screen occupied by master pane
      delta   = 3/100 -- Percent of screen to increment by when resizing panes
 
--- gaps
 ------------------------------------------------------------------------ }}}
 -- Window rules: {{{
 
@@ -325,6 +321,7 @@ myManageHook = insertPosition Below Newer <> let ws = workspaces myConfig in com
     , resource  =? "desktop_window" --> doIgnore
     , className ~? "eww-bar"        --> doLower
     , className =? "Trayer"         --> doLower
+    -- , className =? "battle.net.exe" --> doIgnore
     , (className =? "firefox" <&&>
     resource =? "Dialog")           --> doFloat
     , isDialog                      --> doFloat
@@ -408,7 +405,6 @@ myLogHook dbus = def
            "Spacing Mirror Tall" -> "\n[-]" -- "\xfcf6  "
            "Spacing Full"        -> "\n[M]" -- "\xf2d0  "
            "Spacing Grid"        -> "\n[+]" -- "\xfa6f  "
-           "Spacing BSP"         -> "\n[B]" -- "\xfa6d  "
            "Spacing ThreeCol"    -> "\n[||]"
            -- "Spacing Tall"        -> "\nTall" -- "\xfb3f  "
            -- "Spacing Mirror Tall" -> "\nMTall" -- "\xfcf6  "
