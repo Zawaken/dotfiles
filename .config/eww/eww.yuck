@@ -41,6 +41,12 @@
       (metric :value {EWW_CPU.avg})
       (label :text "﬙ ${round(EWW_CPU.avg, 0)}%"))
     (delim)
+    (bbox :tooltip "Battery"
+      (bbox
+      (metric :value battery)
+      ; (label :text " ${battery <= 15 ? "${battery}%" : ""}")))
+      (label :text " ${battery}%")))
+    (delim)
     (bbox
       (hover-double :var revealtime
                     :varname "revealtime"
@@ -76,7 +82,7 @@
       (bbox
         (bbutton :onclick "scripts/getlayout"
           (label :text layout)))))
-(deflisten workspaces_listen "scripts/workspacewip")
+(deflisten workspaces_listen "scripts/workspace")
 ; }}}
 (defwidget music [] ; {{{
   ; (bbox :class "music"
@@ -109,6 +115,8 @@
 
 ; (defpoll layout :interval "1s"
 ;   "scripts/getlayout")
+(defpoll battery :interval "1m"
+  "cat /sys/class/power_supply/BAT0/capacity")
 
 (defpoll volume :interval "1s"
   "scripts/getvol")
