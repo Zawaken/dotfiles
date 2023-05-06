@@ -307,6 +307,8 @@ myLayout
 -- Title    = title
 -- class    = className
 -- instance = appName
+isPopupMenu :: Query Bool
+isPopupMenu = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_POPUP_MENU"
 myManageHook = insertPosition Below Newer <> let ws = workspaces myConfig in composeAll
     [ className =? "discord"        --> doShift (ws !! 1)
     , className =? "Slack"          --> doShift (ws !! 1)
@@ -324,6 +326,8 @@ myManageHook = insertPosition Below Newer <> let ws = workspaces myConfig in com
     -- , className =? "battle.net.exe" --> doIgnore
     , (className =? "firefox" <&&>
     resource =? "Dialog")           --> doFloat
+    , (className =? "steamwebhelper" <&&>
+    isPopupMenu)                    --> doIgnore
     , isDialog                      --> doFloat
     , title =? "Picture-in-Picture" --> doFloat
     ] <+> namedScratchpadManageHook myScratchPads
