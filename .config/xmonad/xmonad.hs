@@ -2,6 +2,8 @@
 
 --{{{actions
 import XMonad.Actions.CycleWS as CWS
+import XMonad.Actions.CopyWindow
+import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.MouseResize
 --}}}
@@ -200,6 +202,11 @@ myKeys =
     , ("M-i",         spawn "slock")
     , ("M-S-c",       spawn "toggleprogram 'picom' '-b'")
     , ("M-S-v",       spawn "xclip -selection clipboard -out | xdotool selectwindow windowfocus type --clearmodifiers --delay 25 --window %@ --file -")-- }}}
+-- DynamicWorkspaces {{{
+    , ("M-S-d", removeWorkspace)
+    , ("M-æ", selectWorkspace def)
+    , ("M-S-a", addWorkspacePrompt def)
+--  }}}
 -- layout, focus and swap {{{
     , ("M-r",         sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
     , ("M-s",         toggleFloat)
@@ -310,27 +317,47 @@ myLayout
 isPopupMenu :: Query Bool
 isPopupMenu = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_POPUP_MENU"
 myManageHook = insertPosition Below Newer <> let ws = workspaces myConfig in composeAll
-    [ className =? "discord"        --> doShift (ws !! 1)
-    , className =? "Slack"          --> doShift (ws !! 1)
-    , className =? "Spotify"        --> doShift (ws !! 3)
-    , appName   =? "spotify"        --> doShift (ws !! 3)
-    , className =? "Steam"          --> doShift (ws !! 4)
-    -- , className =? "Pavucontrol"    --> doRectFloat(W.RationalRect (1 % 4) (1 % 4) (2560 % 5120) (1440 % 2880))
-    , className =? "Pavucontrol"    --> doRectFloat(W.RationalRect (1/4) (1/4) (50/100) (50/100))
-    , className =? "Sxiv"           --> doCenterFloat
+    [ className =? "Pavucontrol"    --> doRectFloat(W.RationalRect (1/4) (1/4) (50/100) (50/100))
     , className =? "mpv"            --> doRectFloat(W.RationalRect 0.15 0.15 0.9 0.9)
-    -- , title     =? "scratchpad"     --> doCenterFloat
     , resource  =? "desktop_window" --> doIgnore
     , className ~? "eww-bar"        --> doLower
-    , className =? "Trayer"         --> doLower
-    -- , className =? "battle.net.exe" --> doIgnore
     , (className =? "firefox" <&&>
     resource =? "Dialog")           --> doFloat
     , (className =? "steamwebhelper" <&&>
     isPopupMenu)                    --> doIgnore
     , isDialog                      --> doFloat
     , title =? "Picture-in-Picture" --> doFloat
-    ] <+> namedScratchpadManageHook myScratchPads
+    ]
+    <+> (composeAll . concat $
+    [ [ className =? n --> doCenterFloat    | n <- myFloats  ]
+    , [ className =? n --> doIgnore         | n <- myIgnores       ]
+    , [ className =? n --> doLower          | n <- myLowers        ]
+    , [ className =? n --> doShift (head ws) | n <- ws1             ]
+    , [ className =? n --> doShift (ws !! 1) | n <- ws2             ]
+    , [ className =? n --> doShift (ws !! 2) | n <- ws3             ]
+    , [ className =? n --> doShift (ws !! 3) | n <- ws4             ]
+    , [ className =? n --> doShift (ws !! 4) | n <- ws5             ]
+    , [ className =? n --> doShift (ws !! 5) | n <- ws6             ]
+    , [ className =? n --> doShift (ws !! 6) | n <- ws7             ]
+    , [ className =? n --> doShift (ws !! 7) | n <- ws8             ]
+    , [ className =? n --> doShift (ws !! 8) | n <- ws9             ]
+    , [ className =? n --> doShift (ws !! 9) | n <- ws0             ]
+    ])
+    <+> namedScratchpadManageHook myScratchPads
+    where
+      myFloats  = ["Sxiv"]
+      myIgnores = []
+      myLowers  = ["Trayer"]
+      ws1       = []
+      ws2       = ["discord", "Slack"]
+      ws3       = []
+      ws4       = ["Spotify"]
+      ws5       = ["Steam"]
+      ws6       = []
+      ws7       = []
+      ws8       = []
+      ws9       = []
+      ws0       = []
 ------------------------------------------------------------------------ }}}
 -- Event handling {{{
 
