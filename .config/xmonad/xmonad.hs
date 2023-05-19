@@ -190,7 +190,7 @@ myKeys :: [(String, X ())]
 myKeys =
 -- terminal, launcher, and misc {{{
     [
-      ("M-<Return>",  spawn (myTerminal)) -- start $term
+      ("M-<Return>",  spawn myTerminal) -- start $term
     , ("M-a",         namedScratchpadAction myScratchPads "terminal")
     , ("M-e",         dynamicNSPAction "dyn1")
     , ("M-S-e",       withFocused $ toggleDynamicNSP "dyn1")
@@ -259,7 +259,7 @@ myKeys =
 -- }}}
 -- quit reload and ToggleStruts {{{
     , ("M-b",       sendMessage ToggleStruts) -- Toggle the status bar gap
-    , ("M-S-M1-q",  io (exitWith ExitSuccess)) -- Quit xmonad
+    , ("M-S-M1-q",  io exitSuccess) -- Quit xmonad
     , ("M-S-r",     spawn "xmonad --recompile; xmonad --restart") -- Restart/reload xmonad
     ]
     ++
@@ -316,8 +316,9 @@ myLayout
 -- instance = appName
 isPopupMenu :: Query Bool
 isPopupMenu = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_POPUP_MENU"
-myManageHook = insertPosition Below Newer <> let ws = workspaces myConfig in composeAll
-    [ className =? "Pavucontrol"    --> doRectFloat(W.RationalRect (1/4) (1/4) (50/100) (50/100))
+myManageHook = let ws = workspaces myConfig in composeAll
+    [ fmap not willFloat            --> insertPosition Below Newer
+    , className =? "Pavucontrol"     --> doRectFloat(W.RationalRect (1/4) (1/4) (50/100) (50/100))
     , className =? "mpv"            --> doRectFloat(W.RationalRect 0.15 0.15 0.9 0.9)
     , resource  =? "desktop_window" --> doIgnore
     , className ~? "eww-bar"        --> doLower
@@ -345,7 +346,7 @@ myManageHook = insertPosition Below Newer <> let ws = workspaces myConfig in com
     ])
     <+> namedScratchpadManageHook myScratchPads
     where
-      myFloats  = ["Sxiv"]
+      myFloats  = ["Sxiv", "XClock"]
       myIgnores = []
       myLowers  = ["Trayer"]
       ws1       = []

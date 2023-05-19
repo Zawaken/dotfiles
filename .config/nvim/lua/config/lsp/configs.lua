@@ -8,6 +8,7 @@ mason.setup()
 local lspconfig = require("lspconfig")
 
 local servers = { "clangd"
+  , "cssls"
   , "hls"
   , "jsonls"
   , "lua_ls"

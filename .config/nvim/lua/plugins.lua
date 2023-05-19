@@ -2,17 +2,23 @@ local pkg = require("util.pkg")
 
 local plugins = function(use)
   -- My plugins here
-  use({ "wbthomason/packer.nvim" }) -- Have packer manage itself
-  use({ "nvim-lua/popup.nvim" }) -- An implementation of the Popup API from vim in Neovim
-  use({ "nvim-lua/plenary.nvim" }) -- Useful lua functions used ny lots of plugins
-  use({ "antoinemadec/FixCursorHold.nvim" }) -- This is needed to fix lsp doc highlight
-  use({"lewis6991/impatient.nvim",
+  use({ "wbthomason/packer.nvim" })           -- Have packer manage itself
+  use({ "nvim-lua/popup.nvim" })              -- An implementation of the Popup API from vim in Neovim
+  use({ "nvim-lua/plenary.nvim" })            -- Useful lua functions used ny lots of plugins
+  use({ "antoinemadec/FixCursorHold.nvim" })  -- This is needed to fix lsp doc highlight
+  use({"lewis6991/impatient.nvim",            -- speed up lua module loading
     config = function ()
       require("config.impatient")
     end
   })
 
-  use({ "windwp/nvim-autopairs",
+  use({"folke/which-key.nvim", -- Plugin for handling and showing keybindings
+    config = function ()
+      require("config.whichkey")
+    end
+  })
+
+  use({ "windwp/nvim-autopairs", -- Automatically add in the pairing for (, [, {, etc
     event = 'InsertEnter',
     config = function()
       require("config.autopairs")
@@ -26,12 +32,12 @@ local plugins = function(use)
   })
 
   use "kyazdani42/nvim-web-devicons"
-  use({"kyazdani42/nvim-tree.lua",
+  use({"kyazdani42/nvim-tree.lua", -- Neovim file explorer
     config = function ()
       require("config.nvim-tree")
     end
   })
-  use({"akinsho/bufferline.nvim",
+  use({"akinsho/bufferline.nvim", -- Customize the bufferline
     config = function()
       require("config.bufferline")
     end
@@ -39,13 +45,13 @@ local plugins = function(use)
 
   -- use "moll/vim-bbye"
 
-  use({"nvim-lualine/lualine.nvim",
+  use({"nvim-lualine/lualine.nvim", -- Customize the Neovim statusline
     config = function()
       require("config.lualine")
     end
   })
 
-  use({ "norcalli/nvim-terminal.lua",
+  use({ "norcalli/nvim-terminal.lua", -- Terminal, in neovim
     ft = {
       "terminal",
       "toggleterm"
@@ -55,35 +61,22 @@ local plugins = function(use)
     end,
   })
 
-  use({ "akinsho/toggleterm.nvim",
+  use({ "akinsho/toggleterm.nvim", -- Open the terminals in neovim
     -- keys = "<M-n>",
     -- cmd = { "ToggleTerm" },
     config = function()
       require("config.toggleterm")
     end,
   })
-  -- use({"akinsho/toggleterm.nvim", config = function() require("config.toggleterm") end})
-
-  -- use({"ahmedkhalf/project.nvim"
-  --   config = function ()
-  --     require("config.project")
-  --   end
-  -- })
 
 
-  use({"lukas-reineke/indent-blankline.nvim",
+  use({"lukas-reineke/indent-blankline.nvim", -- Indents newlines
     config = function ()
       require("config.indentline")
     end
   })
 
-  -- use({"goolord/alpha-nvim",
-  --   config = function ()
-  --     require("config.alpha")
-  --   end
-  -- })
-
-  use({"anuvyklack/pretty-fold.nvim",
+  use({"anuvyklack/pretty-fold.nvim", -- Allows for folds that look a lot better than the default folds
     requires = {
       'anuvyklack/nvim-keymap-amend',
       'anuvyklack/fold-preview.nvim'
@@ -94,18 +87,11 @@ local plugins = function(use)
     end
   })
 
-  use({"folke/which-key.nvim",
-    config = function ()
-      require("config.whichkey")
-    end
-  })
+
 
   -- Colorschemes
   use({
-    -- use "lunarvim/colorschemes" -- A bunch of colorschemes you can try out
-    -- use "lunarvim/darkplus.nvim"
     "folke/tokyonight.nvim",
-
     config = function()
       require("config.theme").scheme("tokyonight")
     end,
@@ -130,9 +116,8 @@ local plugins = function(use)
   -- LSP
   use({ "neovim/nvim-lspconfig", -- enable LSP
     requires = {
-      --[[ "williamboman/nvim-lsp-installer", -- simple to use language server installer ]]
-      "williamboman/mason-lspconfig.nvim",
-      "williamboman/mason.nvim",
+      "williamboman/mason.nvim", -- simple to use language server installer, replacement for nvim-lsp-installer
+      "williamboman/mason-lspconfig.nvim", -- binding between mason and nvim-lspconfig
       "tamago324/nlsp-settings.nvim", -- language server settings defined in json for
       "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
     },
@@ -149,7 +134,7 @@ local plugins = function(use)
 
   -- -- Treesitter
   use ({
-    "nvim-treesitter/nvim-treesitter",
+    "nvim-treesitter/nvim-treesitter", -- Syntax highlighting
     run = ":TSUpdate",
     config = function ()
       require("config.treesitter")
@@ -170,6 +155,34 @@ local plugins = function(use)
     end
   })
 
+  use({ "folke/trouble.nvim",
+    config = function ()
+      require("trouble").setup({})
+    end,
+    requires = {
+      "kyazdani42/nvim-web-devicons"
+    }
+  })
+
+  use({
+    "kwkarlwang/bufjump.nvim",
+    config = function ()
+      require("bufjump").setup({
+        forward = "<C-l>",
+        backward = "<C-h>",
+      })
+    end
+  })
+
+  use({ "norcalli/nvim-colorizer.lua",
+    config = function ()
+      require("colorizer").setup({})
+    end
+  })
+
+  use({ "elkowar/yuck.vim",
+    ft = {"yuck", "lisp"},
+  })
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
   if pkg.Bootstrap then
