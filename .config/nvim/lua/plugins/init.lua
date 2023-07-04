@@ -1,5 +1,12 @@
 return {
   { import = "lazyvim.plugins.extras.formatting.prettier" },
+
+  { "LazyVim/Lazyvim",
+    opts = {
+      colorscheme = "tokyonight",
+    }
+  },
+
   { "nvim-lua/popup.nvim" }, -- An implementation of the Popup API from vim in Neovim
   { "nvim-lua/plenary.nvim" }, -- Useful lua functions used ny lots of plugins
   { "antoinemadec/FixCursorHold.nvim" }, -- This is needed to fix lsp doc highlight
@@ -61,13 +68,20 @@ return {
   { "folke/which-key.nvim",
     opts = {
       defaults = {
-       ["<leader>"] = {
+        ["<leader>"] = {
           c = {
-            ["c"] = { "<CMD>noh<CR>", "No Highlight"},
+            ["c"] = { "<CMD>noh<CR>", "No Highlight" },
           },
           ["n"] = {
             "<cmd>lua require'util'.CopyMode()<CR>",
             "CopyMode",
+          },
+          f = {
+            g = { "<cmd>Telescope live_grep theme=ivy<CR>", "Live Grep Files" },
+            f = {
+              "<cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown())<cr>",
+              "Find files",
+            },
           },
         },
       },
@@ -90,7 +104,7 @@ return {
   --   end
   -- })
 
-  { "nvim-treesitter/nvim-treesitter", -- {{{
+  { "nvim-treesitter/nvim-treesitter",
     dependencies = {
       "mrjones2014/nvim-ts-rainbow",
       "JoosepAlviste/nvim-ts-context-commentstring",
@@ -117,7 +131,7 @@ return {
         max_file_lines = nil,
       }
     end,
-  }, -- }}}
+  },
 
   { "williamboman/mason.nvim",
     opts = {
@@ -134,6 +148,13 @@ return {
       },
     },
   },
+
+  { "L3MON4D3/LuaSnip",
+    keys = function()
+      return {}
+    end,
+  },
+
   -- { "neovim/nvim-lspconfig", -- enable LSP
   --   requires = {
   --     "williamboman/mason.nvim", -- simple to use language server installer, replacement for nvim-lsp-installer
@@ -155,7 +176,7 @@ return {
 
   { "elkowar/yuck.vim", ft = { "yuck", "lisp" } },
 
-  {"anuvyklack/pretty-fold.nvim", -- Allows for folds that look a lot better than the default folds
+  { "anuvyklack/pretty-fold.nvim", -- Allows for folds that look a lot better than the default folds
     dependencies = {
       "anuvyklack/nvim-keymap-amend",
       "anuvyklack/fold-preview.nvim",
