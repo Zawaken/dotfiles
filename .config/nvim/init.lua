@@ -1,7 +1,2 @@
-require "options"
-require "keymaps"
-vim.defer_fn(function ()
-  require "plugins"
-end, 0)
-require "autocommands"
--- require "config.treesitter"
+-- bootstrap lazy.nvim, LazyVim and your plugins
+require("config.lazy")

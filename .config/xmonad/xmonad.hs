@@ -73,10 +73,6 @@ main = do
         -- Request access to the DBus name
     D.requestName dbus (D.busName_ "org.xmonad.Log")
         [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
--- main = do
---     dbus <- XD.connect
---     --Request access
---     XD.requestAccess dbus
 
     xmonad
         $ docks
@@ -86,30 +82,24 @@ main = do
         . pagerHints
         $ myConfig { logHook = dynamicLogWithPP $ filterOutWsPP ["NSP"] (myLogHook dbus)}
 -- }}}
-myConfig = def { -- {{{
--- A structure containing your configuration settings, overriding fields in the default config.
-      -- simple stuff
-        terminal           = myTerminal,
-        focusFollowsMouse  = True,
-        clickJustFocuses   = False,
-        borderWidth        = 2,
-        modMask            = mod4Mask,
-        workspaces         = myWorkspaces,
-        normalBorderColor  = "#262643",
-        focusedBorderColor = "#876A97",
-        -- normalBorderColor  = "2e2e2e",
-        -- focusedBorderColor = "ebdbb2",
-
-      -- key bindings
-        -- keys               = myKeys,
-        mouseBindings      = myMouseBindings,
-
-      -- hooks, layouts
-        layoutHook         = myLayout,
-        manageHook         = myManageHook,
-        handleEventHook    = myEventHook,
-        -- logHook            = myLogHook,
-        startupHook        = myStartupHook
+myConfig = def  -- {{{
+        { terminal           = myTerminal
+        , focusFollowsMouse  = True
+        , clickJustFocuses   = False
+        , borderWidth        = 2
+        , modMask            = mod4Mask
+        , workspaces         = myWorkspaces
+        , normalBorderColor  = "#262643"
+        , focusedBorderColor = "#876A97"
+        -- , normalBorderColor  = "2e2e2e"
+        -- , focusedBorderColor = "ebdbb2"
+        -- , keys               = myKeys
+        , mouseBindings      = myMouseBindings
+        , layoutHook         = myLayout
+        , manageHook         = myManageHook
+        , handleEventHook    = myEventHook
+        -- , logHook            = myLogHook
+        , startupHook        = myStartupHook
     } `additionalKeysP` myKeys
 -- }}}
 -- variables {{{
@@ -155,8 +145,7 @@ myScratchPads = [ NS "terminal"
         (customFloating $ W.RationalRect 0.3 0.3 0.4 0.4) -- x y width height
       ]
 -- }}}
--- {{{bad floating toggle
-centreRect = W.RationalRect 0.25 0.25 0.5 0.5
+-- {{{ floating toggle
 
 -- If the window is floating then (f), if tiled then (n)
 floatOrNot f n = withFocused $ \windowId -> do
@@ -172,7 +161,7 @@ centreFloat win = do
     return ()
 
 -- Float a window in the centre
-centreFloat' w = windows $ W.float w centreRect
+centreFloat' w = windows $ W.float w (W.RationalRect 0.25 0.25 0.5 0.5)
 
 -- Make a window my 'standard size' (half of the screen) keeping the centre of the window fixed
 standardSize win = do
@@ -224,12 +213,12 @@ myKeys =
     , ("M-<Up>",    do
       layout <- getActiveLayoutDescription
       case layout of
-        x | elem x ["Spacing Full","Full"] -> windows W.focusUp
+        x | x `elem` ["Spacing Full","Full"] -> windows W.focusUp
         _                                  -> sendMessage $ WN.Go WN.U)
     , ("M-<Down>",  do
       layout <- getActiveLayoutDescription
       case layout of
-        x | elem x ["Spacing Full","Full"] -> windows W.focusDown
+        x | x `elem` ["Spacing Full","Full"] -> windows W.focusDown
         _                                  -> sendMessage $ WN.Go WN.D)
     , ("M-S-<Right>", floatOrNot (withFocused (keysMoveWindow   ( 20, 0)))  (sendMessage $ WN.Swap WN.R))
     , ("M-S-<Left>",  floatOrNot (withFocused (keysMoveWindow   ( -20, 0))) (sendMessage $ WN.Swap WN.L))
@@ -318,7 +307,7 @@ isPopupMenu :: Query Bool
 isPopupMenu = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_POPUP_MENU"
 myManageHook = let ws = workspaces myConfig in composeAll
     [ fmap not willFloat            --> insertPosition Below Newer
-    , className =? "Pavucontrol"     --> doRectFloat(W.RationalRect (1/4) (1/4) (50/100) (50/100))
+    , className =? "Pavucontrol"    --> doRectFloat(W.RationalRect (1/4) (1/4) (50/100) (50/100))
     , className =? "mpv"            --> doRectFloat(W.RationalRect 0.15 0.15 0.9 0.9)
     , resource  =? "desktop_window" --> doIgnore
     , className ~? "eww-bar"        --> doLower
@@ -346,67 +335,27 @@ myManageHook = let ws = workspaces myConfig in composeAll
     ])
     <+> namedScratchpadManageHook myScratchPads
     where
-      myFloats  = ["Sxiv", "XClock"]
+      myFloats  = [ "Sxiv" ]
       myIgnores = []
-      myLowers  = ["Trayer"]
+      myLowers  = [ "Trayer" ]
       ws1       = []
-      ws2       = ["discord", "Slack"]
+      ws2       = [ "discord", "Slack" ]
       ws3       = []
-      ws4       = ["Spotify"]
-      ws5       = ["Steam"]
+      ws4       = [ "Spotify" ]
+      ws5       = [ "Steam" ]
       ws6       = []
       ws7       = []
       ws8       = []
       ws9       = []
-      ws0       = []
+      ws0       = [ "org.remmina.Remmina" ]
 ------------------------------------------------------------------------ }}}
 -- Event handling {{{
 
 -- myEventHook = serverModeEventHookCmd <+> serverModeEventHook <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn) <+> swallowEventHook (className =? "Alacritty") (return True)
-myEventHook = myServerModeEventHook
-  <+> swallowEventHook (className =? "Alacritty") (return True)
+myEventHook =
+  swallowEventHook (className =? "Alacritty") (return True)
 
 ------------------------------------------------------------------------ }}}
--- {{{ Server mode
--- Server mode commands{{{
-myCommands :: [(String, X ())]
-myCommands =
-    [ ("decrease-master-size"   , sendMessage Shrink                                                )
-    , ("increase-master-size"   , sendMessage Expand                                                )
-    , ("decrease-master-count"  , sendMessage $ IncMasterN (-1)                                     )
-    , ("increase-master-count"  , sendMessage $ IncMasterN (1)                                      )
-    , ("focus-prev"             , windows W.focusUp                                                 )
-    , ("focus-next"             , windows W.focusDown                                               )
-    , ("focus-master"           , windows W.focusMaster                                             )
-    , ("swap-with-prev"         , windows W.swapUp                                                  )
-    , ("swap-with-next"         , windows W.swapDown                                                )
-    , ("swap-with-master"       , windows W.swapMaster                                              )
-    , ("kill-window"            , kill                                                              )
-    , ("quit"                   , io $ exitWith ExitSuccess                                         )
-    , ("restart"                , spawn "xmonad --recompile; xmonad --restart"                      )
-    , ("change-layout"          , sendMessage NextLayout                                            )
-    -- , ("reset-layout"           , setLayout $ XMonad.layoutHook conf                                )
-    , ("fullscreen"             , sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts]   )
-    ]
--- }}}
--- Server mode event hook {{{
-myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
-myCommands' = ("list-commands", listMyServerCmds) : myCommands ++ wscs ++ sccs -- ++ spcs
-    where
-        wscs = [((m ++ s), windows $f s) | s <- (workspaces myConfig)
-               , (f, m) <- [(W.view, "focus-workspace-"), (W.shift, "send-to-workspace-")] ]
-
-        sccs = [((m ++ show sc), screenWorkspace (fromIntegral sc) >>= flip whenJust (windows . f))
-               | sc <- [0..3], (f, m) <- [(W.view, "focus-screen-"), (W.shift, "send-to-screen-")]]
-
---        spcs = [("toggle-" ++ sp, namedScratchpadAction myScratchpads sp)
---               | sp <- (flip map) (myScratchpads) (\(NS x _ _ _) -> x) ]
-
-listMyServerCmds :: X ()
-listMyServerCmds = spawn ("echo '" ++ asmc ++ "' | xmessage -file -")
-    where asmc = concat $ "Available commands:" : map (\(x, _)-> "    " ++ x) myCommands'
--- }}}
--- }}}
 -- Status bars and logging {{{
 
 -- Perform an arbitrary action on each internal state change or X event.
@@ -414,38 +363,21 @@ mySort = getSortByXineramaRule
 myLogHook :: D.Client -> PP
 myLogHook dbus = def
         { ppOutput = dbusOutput dbus
-        -- , ppCurrent = wrap "(button :class \"occupied active\" :onclick \"wmctrl -s 0\" \"" "\")"
-        -- , ppVisible = wrap "(button :class \"occupied visible\" :onclick \"wmctrl -s 0\" \"" "\")"
-        -- , ppUrgent = wrap "" " "
-        -- , ppHidden = wrap "(button :class \"occupied inactive\" :onclick \"wmctrl -s 0\" \"" "\")"
         , ppCurrent = wrap ("%{B" ++ purple ++ "}  ") "  %{B-}"
         , ppVisible = wrap ("%{B" ++ gray ++ "}  ") "  %{B-}"
         , ppUrgent = wrap ("%{F" ++ red ++ "} ") " %{F-}"
         , ppHidden = wrap "  " "  "
 
-        -- , ppWsSep = ""
         , ppSep = " | "
-        -- , ppSep = ""
         , ppTitle = const ""
-        -- , ppOrder = \(ws:_:l:_:t:_) -> [l,ws,t]
         , ppOrder = \(ws:l:t:_) -> [t,ws,l]
-        -- , ppTitle = wrap "Arst" "\n(box :orientation \"h\" :class \"workspaces\" :space-evenly true :halign \"center\" :valign \"center\" :vexpand true "
-        -- , ppTitle = const "(box :orientation \"h\" :class \"workspaces\" :space-evenly true :halign \"center\" :valign \"center\" :vexpand true "
-        , ppLayout = (\x -> case x of
+        , ppLayout = \x -> case x of
            -- Icons found on https://nerdfonts.net/cheat-sheet
            "Spacing Tall"        -> "\n[|]" -- "\xfb3f  "
            "Spacing Mirror Tall" -> "\n[-]" -- "\xfcf6  "
            "Spacing Full"        -> "\n[M]" -- "\xf2d0  "
            "Spacing Grid"        -> "\n[+]" -- "\xfa6f  "
            "Spacing ThreeCol"    -> "\n[||]"
-           -- "Spacing Tall"        -> "\nTall" -- "\xfb3f  "
-           -- "Spacing Mirror Tall" -> "\nMTall" -- "\xfcf6  "
-           -- "Spacing Full"        -> "\nFull" -- "\xf2d0  "
-           -- "Spacing Grid"        -> "\nGrid" -- "\xfa6f  "
-           -- "Spacing BSP"         -> "\nBSP" -- "\xfa6d  "
-           -- "Spacing ThreeCol"    -> "\nThreeColM"
-        --     _             -> " " ++ x ++ " "
-        )
         }
         where
             purple  = "#846DCF"

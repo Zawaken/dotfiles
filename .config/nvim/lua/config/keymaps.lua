@@ -1,3 +1,5 @@
+-- Overrides https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
+
 local opts = { noremap = true, silent = true }
 
 local term_opts = { silent = true }
@@ -16,7 +18,6 @@ vim.g.maplocalleader = ","
 --   visual_block_mode = "x",
 --   term_mode = "t",
 --   command_mode = "c",
-
 
 -- line, word and character-count
 keymap("", "<F3>", ":!wc <C-R>%<CR>", opts)
@@ -68,8 +69,7 @@ keymap("v", ">", ">gv", opts)
 
 -- Terminal --
 -- Better terminal navigation
--- keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)
--- keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)
--- keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
--- keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
-
+keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)
+keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)
+keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
+keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
