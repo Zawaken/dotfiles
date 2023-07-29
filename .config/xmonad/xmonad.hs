@@ -51,6 +51,7 @@ import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Reflect
 import XMonad.Layout.Spacing
+import qualified XMonad.Layout.Magnifier as Mag
 import qualified XMonad.Layout.WindowNavigation as WN
 -- }}}
 
@@ -199,6 +200,7 @@ myKeys =
 -- layout, focus and swap {{{
     , ("M-r",         sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
     , ("M-s",         toggleFloat)
+    , ("M-S-m", sendMessage Mag.Toggle)
     , ("M-<Space>",   sendMessage NextLayout) -- Rotate through the available layout algorithms
     , ("M-S-<Space>", sendMessage FirstLayout) --  Reset the layouts on the current workspace to default
     , ("M-n",         refresh) -- Resize viewed windows to the correct size
@@ -279,6 +281,8 @@ myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
     ]
 -- }}}
 -- Layouts: {{{
+custommaximizeVertical :: l a -> ModifiedLayout Mag.Magnifier l a
+custommaximizeVertical = ModifiedLayout (Mag.Mag 1 (1, 1000) Mag.On (Mag.AllWins 3))
 myLayout
     = mySpacing
     . avoidStruts
@@ -288,14 +292,16 @@ myLayout
     $ WN.windowNavigation
     (tiled |||
     ThreeColMid 1 (3/100) (1/2) |||
+    cmv |||
     Full)
   where
+     cmv = custommaximizeVertical (Tall 1 (3/100) (1/2))
      mySpacing = spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True
      tiled   = Tall nmaster delta ratio -- default tiling algorithm partitions the screen into two panes
      nmaster = 1 -- The default number of windows in the master pane
      ratio   = 1/2 -- Default proportion of screen occupied by master pane
      delta   = 3/100 -- Percent of screen to increment by when resizing panes
-
+-- sendMessage Mag.ToggleOn
 ------------------------------------------------------------------------ }}}
 -- Window rules: {{{
 
@@ -332,8 +338,8 @@ myManageHook = let ws = workspaces myConfig in composeAll
     , [ className =? n --> doShift (ws !! 7) | n <- ws8             ]
     , [ className =? n --> doShift (ws !! 8) | n <- ws9             ]
     , [ className =? n --> doShift (ws !! 9) | n <- ws0             ]
-    ])
-    <+> namedScratchpadManageHook myScratchPads
+      ])
+      <+> namedScratchpadManageHook myScratchPads
     where
       myFloats  = [ "Sxiv" ]
       myIgnores = []
@@ -373,11 +379,13 @@ myLogHook dbus = def
         , ppOrder = \(ws:l:t:_) -> [t,ws,l]
         , ppLayout = \x -> case x of
            -- Icons found on https://nerdfonts.net/cheat-sheet
-           "Spacing Tall"        -> "\n[|]" -- "\xfb3f  "
-           "Spacing Mirror Tall" -> "\n[-]" -- "\xfcf6  "
-           "Spacing Full"        -> "\n[M]" -- "\xf2d0  "
-           "Spacing Grid"        -> "\n[+]" -- "\xfa6f  "
-           "Spacing ThreeCol"    -> "\n[||]"
+           "Spacing Tall"                   -> "\n[|]" -- "\xfb3f  "
+           "Spacing Mirror Tall"            -> "\n[-]" -- "\xfcf6  "
+           "Spacing Full"                   -> "\n[M]" -- "\xf2d0  "
+           "Spacing Grid"                   -> "\n[+]" -- "\xfa6f  "
+           "Spacing ThreeCol"               -> "\n[||]"
+           "Spacing Magnifier (off) Tall"   -> "\n[Mag] (off)"
+           "Spacing Magnifier Tall"   -> "\n[Mag]"
         }
         where
             purple  = "#846DCF"

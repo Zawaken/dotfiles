@@ -1,18 +1,17 @@
 return {
   { import = "lazyvim.plugins.extras.formatting.prettier" },
 
-  { "LazyVim/Lazyvim",
-    opts = {
-      colorscheme = "tokyonight",
-    }
-  },
+  { "LazyVim/Lazyvim", opts = {
+    colorscheme = "tokyonight",
+  } },
 
   { "nvim-lua/popup.nvim" }, -- An implementation of the Popup API from vim in Neovim
   { "nvim-lua/plenary.nvim" }, -- Useful lua functions used ny lots of plugins
   { "antoinemadec/FixCursorHold.nvim" }, -- This is needed to fix lsp doc highlight
   { "lewis6991/impatient.nvim" }, -- speed up lua module loading
 
-  { "norcalli/nvim-terminal.lua", -- Terminal, in neovim
+  {
+    "norcalli/nvim-terminal.lua", -- Terminal, in neovim
     ft = {
       "terminal",
       "toggleterm",
@@ -22,7 +21,8 @@ return {
     end,
   },
 
-  { "akinsho/toggleterm.nvim", -- Open the terminals in neovim
+  {
+    "akinsho/toggleterm.nvim", -- Open the terminals in neovim
     -- keys = "<M-n>",
     -- cmd = { "ToggleTerm" },
     config = function()
@@ -42,7 +42,8 @@ return {
     },
   },
 
-  { "telescope.nvim",
+  {
+    "telescope.nvim",
     dependencies = {
       "nvim-telescope/telescope-fzf-native.nvim",
       "nvim-lua/plenary.nvim",
@@ -53,7 +54,8 @@ return {
     },
   },
 
-  { "neovim/nvim-lspconfig",
+  {
+    "neovim/nvim-lspconfig",
     ---@class PluginLspOpts
     opts = {
       ---@type lspconfig.options
@@ -65,7 +67,8 @@ return {
     },
   },
 
-  { "folke/which-key.nvim",
+  {
+    "folke/which-key.nvim",
     opts = {
       defaults = {
         ["<leader>"] = {
@@ -104,8 +107,10 @@ return {
   --   end
   -- })
 
-  { "nvim-treesitter/nvim-treesitter",
+  {
+    "nvim-treesitter/nvim-treesitter",
     dependencies = {
+      -- TODO: switch out nvim-ts-rainbow for 'HiPhish/rainbow-delimiters.nvim'
       "mrjones2014/nvim-ts-rainbow",
       "JoosepAlviste/nvim-ts-context-commentstring",
     },
@@ -133,7 +138,8 @@ return {
     end,
   },
 
-  { "williamboman/mason.nvim",
+  {
+    "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
         "clangd",
@@ -149,7 +155,8 @@ return {
     },
   },
 
-  { "L3MON4D3/LuaSnip",
+  {
+    "L3MON4D3/LuaSnip",
     keys = function()
       return {}
     end,
@@ -176,7 +183,8 @@ return {
 
   { "elkowar/yuck.vim", ft = { "yuck", "lisp" } },
 
-  { "anuvyklack/pretty-fold.nvim", -- Allows for folds that look a lot better than the default folds
+  {
+    "anuvyklack/pretty-fold.nvim", -- Allows for folds that look a lot better than the default folds
     dependencies = {
       "anuvyklack/nvim-keymap-amend",
       "anuvyklack/fold-preview.nvim",
