@@ -1,6 +1,7 @@
 ; audio cpu temperature memory date layout
 
 ; Variables {{{
+(include "./bars.yuck")
 (defvar eww "eww -c ~/.config/eww")
 (defvar revealmusic false)
 (defvar revealvol false)
@@ -16,7 +17,14 @@
 (defvar revealpowerc false)
 ; }}}
 
-(defwidget bar [] ; {{{
+(defwidget bar [] ;{{{
+  (centerbox :orientation "h"
+    (workspaces)
+    (music)
+    (bbox :halign "end"
+      (sidestuff)
+      (tray)))); }}}
+(defwidget alt-bar [] ; {{{
   (centerbox :orientation "h"
     (workspaces)
     (music)
@@ -56,23 +64,6 @@
       (label :text time)))
     ))
 ; }}}
-
-;(defwidget sidestuff [] ; {{{
-;  (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end"
-;    (metric :label "🔊"
-;            :value volume
-;            :onchange "amixer -D pulse sset Master {}%")
-;    (metric :label ""
-;            :value {EWW_RAM.used_mem_perc}
-;            :onchange "")
-;    (metric :label "xd"
-;            :value {EWW_CPU.avg}
-;            :onchange "")
-;    (metric :label "💾"
-;            :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}
-;            :onchange "")
-;    time))
-; }}}
 (defwidget workspaces [] ; {{{
     (bbox :halign "start"
       (bbox
@@ -105,7 +96,14 @@
 ;           :value value
 ;           :onchange onchange)))
 ; }}}
+(defwidget tray [] ; {{{
+  (box  :halign "end"
+        :style "padding-right: ${traysize}px;"
+    (children)))
+(deflisten traysize :initial "0"
+  "scripts/traysize") ; }}}
 
+; pollers and listeners {{{
 (deflisten layout :initial "Tall"
   "xmonad-log")
 (defpoll polllayout :interval "1s"
@@ -136,45 +134,45 @@
 (defpoll title :initial ""
                :interval "250ms"
   "xdotool getactivewindow getwindowname | awk -v len=60 '{ if (length($0) > len) print substr($0, 1, len-1) \"…\"; else print; }'")
-
-; defwindow bars {{{
-(defwindow bar_0
-  :monitor 0
-  ; :wm-ignore true
-  :stacking "bg"
-  :windowtype "dock"
-  :geometry (geometry :x "0%"
-                      :y "0%"
-                      :width "99%"
-                      :height "10px"
-                      :anchor "top center")
-  :reserve (struts :side "top" :distance "36px")
-  (bar))
-(defwindow bar_1
-  :monitor 1
-  ; :wm-ignore true
-  :stacking "bg"
-  :windowtype "dock"
-  :geometry (geometry :x "0%"
-                      :y "0%"
-                      :width "99%"
-                      :height "10px"
-                      :anchor "top center")
-  :reserve (struts :side "top" :distance "36px")
-  (bar))
-(defwindow bar_2
-  :monitor 2
-  ; :wm-ignore true
-  :stacking "bg"
-  :windowtype "dock"
-  :geometry (geometry :x "0%"
-                      :y "0%"
-                      :width "99%"
-                      :height "10px"
-                      :anchor "top center")
-  :reserve (struts :side "top" :distance "36px")
-  (bar))
 ; }}}
+; ; defwindow bars {{{
+; (defwindow bar_0 ; {{{
+;   ; :monitor 0
+;   ; :wm-ignore true
+;   :stacking "bg"
+;   :windowtype "dock"
+;   :geometry (geometry :x "0%"
+;                       :y "0%"
+;                       :width "99%"
+;                       :height "10px"
+;                       :anchor "top center")
+;   :reserve (struts :side "top" :distance "36px")
+;   (primarybar)) ; }}}
+; (defwindow bar_1 ; {{{
+;   ; :monitor 1
+;   ; :wm-ignore true
+;   :stacking "bg"
+;   :windowtype "dock"
+;   :geometry (geometry :x "0%"
+;                       :y "0%"
+;                       :width "99%"
+;                       :height "10px"
+;                       :anchor "top center")
+;   :reserve (struts :side "top" :distance "36px")
+;   (bar)) ; }}}
+; (defwindow bar_2 ; {{{
+;   ; :monitor 2
+;   ; :wm-ignore true
+;   :stacking "bg"
+;   :windowtype "dock"
+;   :geometry (geometry :x "0%"
+;                       :y "0%"
+;                       :width "99%"
+;                       :height "10px"
+;                       :anchor "top center")
+;   :reserve (struts :side "top" :distance "36px")
+;   (bar)) ; }}}
+; ; }}}
 
 
 (defwidget bbutton [?class ?onclick ?onmiddleclick ?onrightclick ?timeout] ; Based button with pointer-cursor {{{

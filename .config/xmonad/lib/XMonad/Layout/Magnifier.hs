@@ -26,26 +26,29 @@ module XMonad.Layout.Magnifier
 
       -- * General combinators
       magnify,
+      magnifyxy,
 
       -- * Magnify Everything
       magnifier,
       magnifierOff,
       magnifiercz,
       magnifierczOff,
+      magnifierxy,
+      magnifierxyOff,
       maxMagnifierOff,
       maximizeVertical,
-      maximizeVerticalOn,
 
       -- * Don't Magnify the Master Window
       magnifier',
       magnifiercz',
       magnifierczOff',
+      magnifierxy',
+      magnifierxyOff',
 
       -- * Messages and Types
       MagnifyMsg (..),
       MagnifyThis(..),
-      Magnifier(..),
-      Toggle(..),
+      Magnifier,
     ) where
 
 import Numeric.Natural (Natural)
@@ -68,7 +71,7 @@ import XMonad.StackSet
 --
 -- By default 'magnifier' increases the focused window's size by @1.5@.
 --
--- You can also use @'magnifiercz' 1.2@ to use a custom level of
+-- You can also use @'magnifiercz' 1.2@ or @'magnifierxy' 1 1000@ to use a custom level of
 -- magnification.  You can even make the focused window smaller for a
 -- pop in effect.  There's also the possibility of starting out not
 -- magnifying anything at all ('magnifierOff'); see below for ways to
@@ -121,6 +124,17 @@ magnify
 magnify cz mt start = ModifiedLayout $
     Mag 1 (fromRational cz, fromRational cz) (bool Off On start) mt
 
+magnifyxy
+    :: Rational      -- ^ Amount to magnify horizontally
+    -> Rational      -- ^ Amount to magnify vertically
+    -> MagnifyThis   -- ^ What to magnify
+    -> Bool          -- ^ Whether magnification should start out on
+                     --   (@True@) or off (@False@)
+    -> l a
+    -> ModifiedLayout Magnifier l a
+magnifyxy cx cy mt start = ModifiedLayout $
+    Mag 1 (fromRational cx, fromRational cy) (bool Off On start) mt
+
 -- | Increase the size of the window that has focus
 magnifier :: l a -> ModifiedLayout Magnifier l a
 magnifier = magnifiercz 1.5
@@ -139,6 +153,24 @@ magnifier' = magnifiercz' 1.5
 magnifiercz' :: Rational -> l a -> ModifiedLayout Magnifier l a
 magnifiercz' cz = magnify cz (NoMaster 1) True
 
+-- | Increase the size of the window that has focus by a custom zoom
+-- in both directions.
+magnifierxy :: Rational -> Rational -> l a -> ModifiedLayout Magnifier l a
+magnifierxy cx cy = magnifyxy cx cy (AllWins 1) True
+
+-- | Like 'magnifierxy', but default to @Off@.
+magnifierxyOff :: Rational -> Rational -> l a -> ModifiedLayout Magnifier l a
+magnifierxyOff cx cy = magnifyxy cx cy (AllWins 1) False
+
+-- | Increase the size of the window that has focus by a custom zoom
+-- in both directions, unless it is one of the master windows.
+magnifierxy' :: Rational -> Rational -> l a -> ModifiedLayout Magnifier l a
+magnifierxy' cx cy = magnifyxy cx cy (NoMaster 1) True
+
+-- | Like 'magnifierxy'', but defaults to @Off@.
+magnifierxyOff' :: Rational -> Rational -> l a -> ModifiedLayout Magnifier l a
+magnifierxyOff' cx cy = magnifyxy cx cy (NoMaster 1) False
+
 -- | Magnifier that defaults to Off
 magnifierOff :: l a -> ModifiedLayout Magnifier l a
 magnifierOff = magnifierczOff 1.5
@@ -156,12 +188,9 @@ magnifierczOff cz = magnify cz (AllWins 1) False
 magnifierczOff' :: Rational -> l a -> ModifiedLayout Magnifier l a
 magnifierczOff' cz = magnify cz (NoMaster 1) False
 
--- | A magnifier that greatly magnifies just the vertical direction
+-- | A magnifier that greatly magnifies just the vertical direction, defaults to @Off@
 maximizeVertical :: l a -> ModifiedLayout Magnifier l a
 maximizeVertical = ModifiedLayout (Mag 1 (1, 1000) Off (AllWins 1))
-
-maximizeVerticalOn :: l a -> ModifiedLayout Magnifier l a
-maximizeVerticalOn = ModifiedLayout (Mag 1 (1, 1000) On (AllWins 1))
 
 data MagnifyMsg = MagnifyMore | MagnifyLess | ToggleOn | ToggleOff | Toggle
 instance Message MagnifyMsg

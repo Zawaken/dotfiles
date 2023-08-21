@@ -6,6 +6,7 @@ import XMonad.Actions.CopyWindow
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.MouseResize
+import XMonad.Actions.ToggleFullFloat
 --}}}
 
 -- base {{{
@@ -62,7 +63,7 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.SpawnOnce
 import XMonad.Util.WorkspaceCompare
 import XMonad.Util.EZConfig
-import XMonad (title, appName, doShift)
+import XMonad (title, appName, doShift, sendMessage)
 -- }}}
 
 -- }}}
@@ -78,6 +79,7 @@ main = do
     xmonad
         $ docks
         -- . setEwmhWorkspaceSort mySort
+        . toggleFullFloatEwmhFullscreen
         . ewmhFullscreen
         . ewmh
         . pagerHints
@@ -198,9 +200,12 @@ myKeys =
     , ("M-S-a", addWorkspacePrompt def)
 --  }}}
 -- layout, focus and swap {{{
+    , ("M1-<Return>",  withFocused toggleFullFloat)
     , ("M-r",         sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
     , ("M-s",         toggleFloat)
     , ("M-S-m", sendMessage Mag.Toggle)
+    , ("M1-S-,", sendMessage Mag.MagnifyMore)
+    , ("M1-S-.", sendMessage Mag.MagnifyLess)
     , ("M-<Space>",   sendMessage NextLayout) -- Rotate through the available layout algorithms
     , ("M-S-<Space>", sendMessage FirstLayout) --  Reset the layouts on the current workspace to default
     , ("M-n",         refresh) -- Resize viewed windows to the correct size
@@ -281,8 +286,8 @@ myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
     ]
 -- }}}
 -- Layouts: {{{
-custommaximizeVertical :: l a -> ModifiedLayout Mag.Magnifier l a
-custommaximizeVertical = ModifiedLayout (Mag.Mag 1 (1, 1000) Mag.On (Mag.AllWins 3))
+-- custommaximizeVertical :: l a -> ModifiedLayout Mag.Magnifier l a
+-- custommaximizeVertical = ModifiedLayout (Mag.Mag 1 (1, 1000) Mag.On (Mag.AllWins 3))
 myLayout
     = mySpacing
     . avoidStruts
@@ -291,13 +296,15 @@ myLayout
     . mkToggle (NOBORDERS ?? FULL ?? EOT)
     $ WN.windowNavigation
     (tiled |||
-    ThreeColMid 1 (3/100) (1/2) |||
-    cmv |||
+    tcm |||
+    Mag.magnifierxy 1 1000 (Tall 1 (3/100) (1/2)) |||
+    -- cmv |||
     Full)
   where
-     cmv = custommaximizeVertical (Tall 1 (3/100) (1/2))
+     -- cmv = custommaximizeVertical (Tall 1 (3/100) (1/2))
      mySpacing = spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True
      tiled   = Tall nmaster delta ratio -- default tiling algorithm partitions the screen into two panes
+     tcm = ThreeColMid nmaster delta ratio
      nmaster = 1 -- The default number of windows in the master pane
      ratio   = 1/2 -- Default proportion of screen occupied by master pane
      delta   = 3/100 -- Percent of screen to increment by when resizing panes
@@ -359,7 +366,7 @@ myManageHook = let ws = workspaces myConfig in composeAll
 
 -- myEventHook = serverModeEventHookCmd <+> serverModeEventHook <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn) <+> swallowEventHook (className =? "Alacritty") (return True)
 myEventHook =
-  swallowEventHook (className =? "Alacritty") (return True)
+  swallowEventHook (className =? "Alacritty") (return False)
 
 ------------------------------------------------------------------------ }}}
 -- Status bars and logging {{{
@@ -415,6 +422,7 @@ myStartupHook = do
         spawnOnce "picom -b &"
         spawnOnce "xrdb $HOME/.Xresources"
         -- spawnOnce "$HOME/.xmonad/panel.sh"
-        spawnOnce "eww open-many bar_0 bar_1 bar_2"
+        -- spawnOnce "eww open-many bar_0 bar_1 bar_2"
+        spawnOnce "$HOME/.config/eww/start-panel.sh"
         setWMName "LG3D"
 --}}}
