@@ -181,6 +181,26 @@ return {
   --   end,
   -- },
 
+  {
+    "nvim-neorg/neorg",
+    config = function()
+      require("neorg").setup {
+        load = {
+          ["core.defaults"] = {},
+          ["core.concealer"] = {},
+          ["core.dirman"] = {
+            config = {
+              workspaces = {
+                home = "~/notes/home",
+                work = "~/notes/work",
+              },
+              default_workspace = "home"
+            }
+          }
+        }
+      }
+    end
+  },
   { "elkowar/yuck.vim", ft = { "yuck", "lisp" } },
 
   {
