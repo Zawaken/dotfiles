@@ -252,6 +252,7 @@ myKeys =
     , ("<XF86AudioPrev>",         spawn "playerctl previous") -- previous song
     , ("<XF86AudioLowerVolume>",  spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%") -- volume down
     , ("<XF86AudioRaiseVolume>",  spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%") -- volume up
+    , ("<XF86AudioMicMute>",      spawn "mic-mute")
 -- }}}
 -- quit reload and ToggleStruts {{{
     , ("M-b",       sendMessage ToggleStruts) -- Toggle the status bar gap
