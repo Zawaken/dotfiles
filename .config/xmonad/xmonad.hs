@@ -367,7 +367,7 @@ myManageHook = let ws = workspaces myConfig in composeAll
 
 -- myEventHook = serverModeEventHookCmd <+> serverModeEventHook <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn) <+> swallowEventHook (className =? "Alacritty") (return True)
 myEventHook =
-  swallowEventHook (className =? "Alacritty") (return True)
+  swallowEventHook (className =? "Alacritty") (return False)
 
 ------------------------------------------------------------------------ }}}
 -- Status bars and logging {{{
