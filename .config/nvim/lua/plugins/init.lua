@@ -63,7 +63,6 @@ return {
         -- pyright will be automatically installed with mason and loaded with lspconfig
         pyright = {},
       },
-      autoformat = false,
     },
   },
 
@@ -113,6 +112,7 @@ return {
       -- TODO: switch out nvim-ts-rainbow for 'HiPhish/rainbow-delimiters.nvim'
       "mrjones2014/nvim-ts-rainbow",
       "JoosepAlviste/nvim-ts-context-commentstring",
+      "theRealCarneiro/hyprland-vim-syntax",
     },
     opts = function(_, opts)
       vim.list_extend(opts.ensure_installed, {

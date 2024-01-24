@@ -1,6 +1,7 @@
 -- Overrides https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 
 local globals = {
+  autoformat = false,
   mapleader = ",",
 }
 

@@ -18,6 +18,11 @@ export QT_AUTO_SCREEN_SCALE_FACTOR=0
 export GDK_SCALE=1
 export GDK_DPI_SCALE=1
 
+export DOT_DIR="${HOME}/.config/dotfiles/.git"
+export DOT_TREE="${HOME}"
+export DOTBARE_DIR="${DOT_DIR}"
+export DOTBARE_TREE="${DOT_TREE}"
+
 if test -f "$HOME/.cargo/env"; then
   . "$HOME/.cargo/env"
 fi

@@ -21,12 +21,8 @@ SAVEHIST=10000
 HIST_STAMPS="dd.mm.yyyy"
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME:-~}/.local/share}/zinit"
 bindkey -e
-export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$HOME/.gem/ruby/*/bin:$HOME/.local/share/gem/ruby/*/bin:$PATH
-export EDITOR=/usr/bin/nvim
-export VISUAL=/usr/bin/nvim
 export BSPWM_VIM_INSERT=#FF0000
 export BSPWM_VIM_NORMAL=#00FF00
-export STARSHIP_CONFIG=$HOME/.config/starship.toml
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 if [ ! -S ~/.ssh/ssh_auth_sock ]; then
   eval `ssh-agent`
@@ -160,11 +156,6 @@ alias yay="paru "
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # }}}
 # --- dotfiles --- # {{{
-export DOT_DIR="${HOME}/.config/dotfiles/.git"
-export DOT_TREE="${HOME}"
-export DOTBARE_DIR="${DOT_DIR}"
-export DOTBARE_TREE="${DOT_TREE}"
-
 alias dotfiles='git --git-dir="${HOME}/dotfiles" --work-tree="${HOME}"'
 alias dots='dotfiles'
 alias dirtydots='GIT_DIR="${HOME}/dotfiles" WORK_TREE="${HOME}" GIT_ADD="-u" dirtygit'
