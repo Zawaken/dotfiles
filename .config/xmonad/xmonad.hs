@@ -351,7 +351,7 @@ myManageHook = let ws = workspaces myConfig in composeAll
     where
       myFloats  = [ "Sxiv" ]
       myIgnores = []
-      myLowers  = [ "Trayer" ]
+      myLowers  = ["Trayer", "trayer"]
       ws1       = []
       ws2       = [ "discord", "Slack" ]
       ws3       = []
