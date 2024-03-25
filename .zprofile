@@ -1,1 +1,1 @@
-/nix/store/8fhj2fqh3pbmm58id1s8x8y6fb5jn9ry-home-manager-files/.zprofile
+.profile
